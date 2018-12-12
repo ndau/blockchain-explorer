@@ -1,32 +1,36 @@
 import React, { Component } from 'react'
-import Container from '../../atoms/container'
-import Grid from '../../atoms/grid'
-import Column from '../../atoms/column'
+import { Grid, Box } from 'grommet'
 
 class Navbar extends Component {
   constructor(props) {
     super(props);
 
     this.customStyle = {
-      background: props.background || "#777",
+      background: props.background || "#1c2227",
+      color: "#ddd",
     };
   }
   
-
   render() {
     return(
       <div className="navbar" style={this.customStyle}>
-        <Container>
-          <Grid>
-            <Column start="1" end="span 2">
-              <h1 className="brand">Oneiro</h1>
-            </Column>
+        <Grid
+          columns={["flex", "flex"]}
+          rows={["auto"]}
+          areas={[
+            { name: "brand", start: [0, 0], end: [0, 0] },
+            { name: "nav", start: [1, 0], end: [1, 0] }
+          ]}
+          as="header"
+        > 
+          <Box gridArea="brand" pad={{ horizontal: "medium", vertical: "auto" }}>
+            <h1 className="brand">Oneiro</h1>
+          </Box>
 
-            <Column start="span 1" end="13">
-              <h2 className="brand">ndau</h2>
-            </Column>
-          </Grid>
-        </Container>
+          <Box gridArea="nav" pad={{ horizontal: "medium", vertical: "auto" }}>
+            <p className="tabd=s">ndau</p>
+          </Box>
+        </Grid>
       </div>
     )
   }
