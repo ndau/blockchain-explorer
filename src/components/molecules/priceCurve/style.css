@@ -1,0 +1,98 @@
+.parent {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 100%;
+  vertical-align: top;
+  overflow: hidden;
+}
+
+.graph {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ndaucurve {
+  fill: none;
+  stroke: #4d9678;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 2.5;
+}
+
+.ndaucurveglow {
+  fill: none;
+  stroke: #ffffff40;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 4.5;
+}
+
+.axis {
+  fill: none;
+  stroke: #4d9678;
+  box-shadow: -1px 1px 6px 0 #ffffff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 1.0;
+}
+
+.axis line {
+  fill: none;
+  stroke: #4d9678;
+  box-shadow: -1px 1px 6px 0 #ffffff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 1.0;
+}
+
+.axis path {
+  fill: none;
+  stroke: #4d9678;
+  box-shadow: -1px 1px 6px 0 #ffffff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 1.0;
+}
+
+.axis text {
+  fill: none;
+  stroke: #4d9678;
+  font-size: larger;
+  box-shadow: -1px 1px 6px 0 #ffffff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-width: 1.0;
+}
+
+.axislabel {
+  fill: #dea85a;
+  stroke: #dea85a;
+  font-family: 'Titillium Web';
+  font-size: 14pt;
+  text-anchor: end;
+}
+
+.axisline {
+  fill: none;
+  stroke: #4d9678;
+  box-shadow: -1px 1px 6px 0 #ffffff;
+  stroke-width: 1.0;
+}
+
+.hhairline {
+  stroke: #ffffff40;
+  stroke-width: 1;
+}
+
+.vhairline {
+  stroke: #ffffff40;
+  stroke-width: 1;
+}
+
+.highlight {
+  fill: #00007040;
+}
