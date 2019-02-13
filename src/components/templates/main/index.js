@@ -4,6 +4,8 @@ import Navbar from '../../organisms/navbar'
 
 class Main extends Component {
   render() {
+    const { children, browserHistory, selectNode } = this.props;
+  
     return(
       <main>
           <Grid
@@ -17,13 +19,16 @@ class Main extends Component {
             fill
           >
             <Box gridArea="header">
-              <Navbar />
+              <Navbar
+                browserHistory={browserHistory}
+                selectNode={selectNode}
+              />
             </Box>
           
             {/* TODO: Back button */}
 
             <Box gridArea="main" pad={{ horizontal: "medium", vertical: "medium" }}>
-              {this.props.children}
+              {children}
             </Box>
 
             <Box gridArea="footer">

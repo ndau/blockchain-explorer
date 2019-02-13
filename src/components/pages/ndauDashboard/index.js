@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
 import Dashboard from '../../templates/dashboard'
-import BlocksList from '../../organisms/blocksList'
-import TransactionsList from '../../organisms/transactionsList'
+import LatestBlocks from '../../organisms/latestBlocks'
 import NdauPriceCurve from '../../organisms/ndauPriceCurve'
 import SummaryCard from '../../molecules/summaryCard'
-import { MAX_FETCH_ATTEMPT } from '../../../constants.js'
 import {
   getNodeStatus,
   getCurrentOrder,
   getBlocks,
-  getTransactions,
-  formatBlocks,
   pollForBlocks,
 } from '../../../helpers.js'
 
@@ -25,58 +21,47 @@ class NdauDashboard extends Component {
       blocks: [],
       transactions: [],
       latestBlockHeight: 1,
-      activeBlock: null,
       currentOrder: null,
       hideEmpty: false,
-      
     }
+
+    this.getData();
   }
 
   render() {
-    const { blocks, nodeStatus={}, currentOrder={}, activeBlock } = this.state;
+    const { blocks, nodeStatus={}, currentOrder={} } = this.state;
     const summary = {...nodeStatus, ...currentOrder};
-    const formattedBlocks = formatBlocks(blocks);
-    const activeBlockHeight = activeBlock && activeBlock.height;
-    this.setTransactions(activeBlockHeight);
   
     return (
       <Dashboard
+        browserHistory={this.props.history}
+        selectNode
         topLeft={
           <SummaryCard summary={summary} />
         }
         topRight={
-          <NdauPriceCurve ndauSold={summary.endowmentSold && summary.endowmentSold / 100000000}/>
+          <NdauPriceCurve
+            ndauSold={summary.totalIssued && summary.totalIssued / 100000000}
+          />
         }
-        bottomLeft={
-          <BlocksList 
-            blocks={formattedBlocks}
-            setActiveBlock={this.setActiveBlock}
-            activeBlockHeight={activeBlockHeight} />
-        }
-        bottomRight={
-          <TransactionsList transactions={this.state.transactions} blockHeight={activeBlockHeight} />
+        bottom={
+          <LatestBlocks blocks={blocks} />
         }
       />
     )
   }
 
-  componentDidMount() {
-    this.getData();
+  componentDidUpdate(prevProps) {
+    if (this.props.location.key !== prevProps.location.key) {
+      // window.location.reload();
+      this.getData();
+    }
   }
 
-  getData = (attemps) => {
-    let counter = attemps || 0;
-
-    if(counter >= MAX_FETCH_ATTEMPT) {
-      console.log(`checked node status ${counter} times, quitting...`)
-      return null
-    }
-
+  getData = () => {
     getNodeStatus()
       .then(status => {
         if (!status) {
-          // console.log('API is probaby down, checking again..')
-          // setTimeout(() => this.getData(counter+1), POLL_INTERVAL);
           return null
         }
 
@@ -97,52 +82,35 @@ class NdauDashboard extends Component {
         const latestHeight = status.latest_block_height;
         const maximum = BLOCK_RANGE_INTERVAL  + 1;
  
-        getBlocks(null, latestHeight, maximum)
+        getBlocks(null, latestHeight, maximum, null)
           .then((blocks=[]) => {
             const latestBlocks = blocks.slice(0, maximum);
-
+            const latestBlock = latestBlocks[0];
+    
             this.setState({ 
               blocks: latestBlocks,
-              activeBlockHeight: latestHeight
             }, ()=> pollForBlocks(latestHeight, maximum, this.resetData))
+
+            return latestBlock
+
           })
       })
+      
   }
 
-  
-  
-  resetData = (newBlocks=[], newStatus, latestBlockHeight) => {
+  resetData = (newBlocks=[], newStatus, latestBlockHeight, newCurrentOrder) => {
     const maximum = BLOCK_RANGE_INTERVAL  + 1;
   
-    this.setState(({blocks=[]}) => {
+    this.setState(({blocks=[], currentOrder}) => {
       const latestBlocks = [...newBlocks, ...blocks].slice(0, maximum)
       console.log(`FOUND ${newBlocks.length} new block(s)!`)
       return {
         blocks: latestBlocks,
         nodeStatus: newStatus,
         latestBlockHeight,
+        currentOrder: newCurrentOrder || currentOrder
       }
     })
-  }
-
-  setTransactions = (blockHeight) => {
-    if (blockHeight) {
-      getTransactions(blockHeight)
-      .then(transactions => this.setState({ transactions }))
-    }
-  }
-
-  toggleHideEmpty = () => {
-    this.setState(({hideEmpty})=> {
-      return {
-        hideEmpty: !hideEmpty
-      }
-    })
-  }
-
-
-  setActiveBlock = (activeBlock) => {
-    this.setState({ activeBlock })
   }
 }
 

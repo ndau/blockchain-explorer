@@ -1,30 +1,61 @@
 import React, { Component } from 'react'
-import { Text } from "grommet"
-import Card from '../../atoms/card'
+import { Text, Anchor } from "grommet"
+import Card from '../../atoms/card';
+import { getTransaction } from '../../../helpers'
 
 class TransactionCard extends Component {
+  state = { transaction: null }
+
   render() {
-    const { index, target, quantity } = this.props;
+    const { transaction } = this.state;
+    if (!transaction) {
+      return null;
+    }
+
+    const { quantity, destination, source, hash } = transaction;
+    const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${window.location.search}`;
+  
     return (
       <Card
         header={(
           <header>
-            <Text>
-              transaction {index}
+            <Text truncate as="article">
+              transaction 
+              <Anchor href={transactionURL}>{` ${hash}`}</Anchor>
             </Text>
           </header>
         )}
+        pad="small"
       >
         <section>
-          <Text as="section">
-            <b>quantity: </b> {quantity / 100000000}
-          </Text>
-          <Text as="section">
-            <b>to: </b> {target}
-          </Text>
+          {
+            quantity && 
+            <Text as="section">
+              <b>quantity: </b> {quantity / 100000000}
+            </Text>
+          }
+          {
+            source &&
+            <Text truncate as="article">
+              <b>from: </b> {source}
+            </Text>
+          }
+          {
+            destination &&
+            <Text truncate as="article">
+              <b>to: </b> {destination}
+            </Text>
+          }
         </section> 
       </Card>
     );
+  }
+
+  componentDidMount() {
+    getTransaction(this.props.transactionHash)
+      .then(transaction => {
+        this.setState({ transaction })
+      })
   }
 }
 

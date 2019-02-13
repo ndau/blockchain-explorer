@@ -6,7 +6,7 @@ class NdauPriceCurve extends React.Component {
   render() {
     const { ndauSold } = this.props;
     if (!ndauSold) {
-      return <div />;
+      return  null;
     }
 
     return (

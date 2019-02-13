@@ -1,92 +1,132 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import { DataTable, Anchor } from 'grommet'
+import { DataTable, Anchor, Box, Text } from 'grommet'
+import qs from 'query-string';
 import Dashboard from '../../templates/dashboard'
-import { NDAU_ENDPOINT, HTTP_REQUEST_HEADER } from '../../../constants.js'
-import { getTransactions } from '../../../helpers.js'
+import { getBlocks, getBlockTransactions, getNodeStatus } from '../../../helpers'
 
 class Transactions extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      transactions: [],
-      hideEmpty: false
+      transactions: null,
+      blockHeight: null,
     }
+
+    this.getData()
   }
 
   render () {
-    // const transactionData = this.formatTransactions(this.state.hideEmpty);
-    const columns = [
-      {
-        property: 'hash',
-        header: 'Hash',
-        search: true,
-        primary: true,
-        render: ({ hash }) => (
-          <Anchor href={`/transaction/${hash}`} label={hash} />
-        )
-      },
-      {
-        property: 'quantity',
-        header: 'Quantity (in ndau)'
-      },
-      {
-        property: 'destination',
-        header: 'To'
-      },
-      {
-        property: 'time',
-        header: 'Timestamp'
-      },
-      {
-        property: 'age',
-        header: 'Age'
-      },
-      {
-        property: 'blockHeight',
-        header: 'Block',
-        search: true,
-        render: ({ blockHeight }) => (
-          <Anchor href={`/block/${blockHeight}`} label={blockHeight} />
-        )   
-      }
-    ]
-    const {transactions} = this.state;
+    const { transactions, blockHeight } = this.state;
+
+    if (!transactions) {
+      return null
+    }
 
     return (
-      <Dashboard>
-        <h2>Transactions</h2>
+      <Dashboard
+        browserHistory={this.props.history}
+        selectNode={!blockHeight}
+        bottom={
+          <Box>
+            <h2>Transactions</h2>
 
-        <DataTable
-          data={transactions}
-          columns={columns}
-          // sortable
-        />
-      </Dashboard>
+            <DataTable
+              data={transactions}
+              columns={this.columns}
+            />
+          </Box>
+        }
+      />
     )
   }
 
-  setBlock = blockHeight => {
-    const blockEndpoint = `${NDAU_ENDPOINT}/block/height/${blockHeight}`
-
-    return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
-      .then(response => {
-        return response.data.block.data.txs
-      })
-      .catch(error => console.log(error))
-  }
-
-  setTransactions = (blockHeight) => {
-    if (blockHeight) {
-      getTransactions(blockHeight)
-      .then(transactions => this.setState({ transactions }))
+  componentDidUpdate(prevProps) {
+    if (this.props.location.key !== prevProps.location.key) {
+      this.getData();
     }
   }
 
-  componentDidMount () {
-    this.setTransactions()
+  getData = () => {
+    const query = qs.parse(window.location.search);
+    const blockHeight = query.block;
+  
+    if(blockHeight) {
+      return getBlockTransactions(blockHeight)
+        .then(txns => {
+          const transactions = txns.filter(txn => txn)
+          this.setState({ transactions })
+        })  
+    }
+   
+    // getNodeStatus()
+    //   .then(status => {
+    //     if(!status) {
+    //       return
+    //     }
+
+    //     const latestBlockHeight = status.latest_block_height;
+
+    //     // getBlocks()
+    //   })
+    
   }
+
+  columns = [
+    {
+      property: 'hash',
+      header: 'Hash',
+      search: true,
+      primary: true,
+      render: ({ hash }) => {
+        const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${window.location.search}`;
+        return (
+          <Box width="150px">
+            <Text truncate>
+              <Anchor href={transactionURL} label={hash} />
+            </Text>
+          </Box>
+        );
+      }
+
+    },
+    {
+      property: 'type',
+      header: 'Type',
+      search: true,
+      // render: ({quantity}) => <Box width="150px"><Text truncate>{(quantity/100000000).toFixed(3)}</Text></Box>
+    },
+    {
+      property: 'quantity',
+      header: 'Quantity',
+      render: ({quantity}) => <Box width="150px"><Text truncate>{(quantity/100000000).toFixed(3)}</Text></Box>
+    },
+    {
+      property: 'source',
+      header: 'From',
+      render: ({source}) => <Box width="150px"><Text truncate>{source || "--"}</Text></Box>
+    },
+    {
+      property: 'destination',
+      header: 'To',
+      render: ({destination}) => <Box width="150px"><Text truncate>{destination || "--"}</Text></Box>
+    },
+    // {
+    //   property: 'age',
+    //   header: 'Age'
+    // },
+    // {
+    //   property: 'blockHeight',
+    //   header: 'Block',
+    //   search: true,
+    //   render: ({ blockHeight }) => (
+    //     <Anchor 
+    //       href={`/block/${blockHeight}/${window.location.search}`} 
+    //       label={blockHeight}
+    //     />
+    //   )   
+    // }
+  ]
 }
 
 export default Transactions

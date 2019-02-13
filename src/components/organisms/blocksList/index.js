@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
-import { Anchor, InfiniteScroll, Box } from 'grommet'
-import BlockCard from '../../molecules/blockCard'
+import { InfiniteScroll, Box } from 'grommet'
+import BlockListItem from '../../molecules/blockListItem'
 
 class BlockList extends Component {
   render() {
     const { blocks, activeBlockHeight, setActiveBlock } = this.props;
     return (
       <Box>
-        <Anchor href="/blocks" label="View all blocks" alignSelf="end" />
         <InfiniteScroll
           size="large"
           items={blocks}
-          // onMore={this.onLoadMoreBlocks}
+          // onMore={()=> {}}
         >
           { block => (
-            <BlockCard 
+            <BlockListItem
               key={block.height} 
               setAsActiveBlock={()=>setActiveBlock(block)}
               active={block.height === activeBlockHeight}
@@ -25,10 +24,6 @@ class BlockList extends Component {
       </Box>
     );
   }
-
-  // onLoadMoreBlocks = (arg1, arg2) => {
-  //   // debugger
-  // }
 }
 
 export default BlockList;

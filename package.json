@@ -8,6 +8,7 @@
     "grommet": "^2.2.0",
     "moment": "^2.23.0",
     "msgpack-lite": "^0.1.26",
+    "query-string": "^6.2.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-faux-dom": "^4.2.0",

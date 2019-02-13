@@ -1,46 +1,44 @@
 import React, { Component } from 'react'
-import { Anchor, Text } from "grommet"
+import { Text} from 'grommet'
+import TransactionList from '../../organisms/transactionsList'
 import Card from '../../atoms/card'
 
-class BlockCard extends Component {
+class BlockCard extends Component{
+  state = { showTransactions: true }
+
   render() {
-    const { height, hash, transactions, age, active, setAsActiveBlock } = this.props;
+    const { block } = this.props;
+    
+    if (!block) {
+      return <h3>Loading...</h3>;
+    }
+    
+    const { transactionHashes, height } = block;
+    const notDisplayed = ["transactions", "numberOfTransactions", "transactionHashes"];
     return (
-      <Card
-        header={(
-          <header>
-            <Text>
-              Block <Anchor href={`/block/${height}`} label={`#${height}`}/>
-            </Text>
-            
-            <Text size="xsmall" style={{float: 'right'}}>
-              {age}
-            </Text>
-          </header>
-        )}
-        onClick={setAsActiveBlock}
-        background={active && "dark-2"}
-      >
-        <section>
-          <Text>
-            {
-              transactions ?
-              <Anchor 
-                href={`/blocks/${height}/transactions`} 
-                label={`${transactions} `} 
-              />
-              :
-              'No '
-            }
-            transaction{transactions !== 1 && 's'}
-          </Text>
-          <Text truncate as="article">
-            <b>hash: </b> {hash}
-          </Text>
-        </section> 
+      <Card background="transparent">
+        {
+          Object.keys(block).map((property, i) => {
+            if(notDisplayed.includes(property)) { return null }
+
+            return (
+              <Text truncate as="article" key={i}>
+                <b>{property}:</b> {block[property]}
+              </Text>
+          )})
+        }
+        <TransactionList transactionHashes={transactionHashes} blockHeight={height} />
       </Card>
-    );
+    )
   }
-}
+
+  toggleShowTransactions = () => {
+    this.setState(({showTransactions}) => {
+      return {
+        showTransactions: !showTransactions
+      }
+    }) 
+  }
+} 
 
 export default BlockCard;

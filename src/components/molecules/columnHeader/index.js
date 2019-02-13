@@ -1,17 +1,9 @@
 import React from 'react'
-import { CheckBox, Box } from "grommet";
+import { Text } from "grommet";
 
-const ColumnHeader = ({ header, checkboxProps={} })=> {
+const ColumnHeader = ({ header })=> {
   return (
-    <span>
-      {header}
-      {
-        checkboxProps &&
-        <Box as="small">
-          <CheckBox {...checkboxProps} />
-        </Box>
-      }
-    </span>
+    <Text>{header}</Text>
   )
 }
 

@@ -1,36 +1,72 @@
 import React, { Component } from 'react'
-import { Anchor, InfiniteScroll, Box, Text } from 'grommet'
+import { InfiniteScroll, Box, Text, Anchor, Collapsible } from 'grommet'
 import TransactionCard from '../../molecules/transactionCard'
 
-class TransactionsList extends Component {
-  render() {
-    const { transactions, blockHeight } = this.props;
+class TransactionsList extends Component{
+  state = { showTransactions: true }
 
+  render() {
+    const { transactionHashes, blockHeight } = this.props;
+    
+    if (!transactionHashes) {
+      return (
+       <Text size="medium">Loading...</Text>
+      );
+    }
+
+    if(transactionHashes.length < 1) {
+      return (
+        <Text size="medium" weight="bold">
+          No transactions
+        </Text>
+      )
+    }
+    
     return (
       <Box>
-        <Anchor href="/transactions" label="View all transactions" alignSelf="end" />
-        {
-          transactions ? (
+        <Box>
+          <Anchor onClick={this.toggleShowTransactions}>
+            <b>transactions</b>
+          </Anchor>
+          <Anchor
+            href={`/transactions/${window.location.search}`}
+            alignSelf="end"
+          >
+            <b>view all</b>
+          </Anchor>
+        </Box>
+        <Collapsible open={this.state.showTransactions}>
+          <Box height="auto">
             <InfiniteScroll
               size="small"
-              items={transactions}
+              items={transactionHashes}
               scrollableAncestor="window"
             >
               {
-                transaction => <TransactionCard key={transaction.index} {...transaction} />
+                transactionHash => {
+                  return (
+                    <TransactionCard
+                      key={transactionHash}
+                      transactionHash={transactionHash}
+                      blockHeight={blockHeight}
+                    />
+                  )
+                }
               }
             </InfiniteScroll> 
-          ) : (
-            <Box align="center" pad={{vertical: "large"}}>
-              <Text color="#333" size="xlarge" weight="bold">
-                There are no transactions in Block #{blockHeight}
-              </Text>
-            </Box>
-          )
-        }
+          </Box>
+        </Collapsible>
       </Box>
-    );
+    )
   }
-}
+
+  toggleShowTransactions = () => {
+    this.setState(({showTransactions}) => {
+      return {
+        showTransactions: !showTransactions
+      }
+    }) 
+  }
+} 
 
 export default TransactionsList;
