@@ -9,7 +9,7 @@ class TransactionCard extends Component {
   render() {
     const { transaction } = this.state;
     if (!transaction) {
-      return null;
+      return <Text>No transaction data was retrieved.</Text>;
     }
 
     const { quantity, destination, source, hash } = transaction;

@@ -18,6 +18,15 @@ class Transaction extends Component {
 
   render() {
     const { transaction, blockHeight } = this.state;
+    if (!transaction) {
+      return (
+        <Details>
+          <Text>No transaction data was retrieved.</Text>
+        </Details>
+      );
+    }
+
+
     return (
       <Details>
         <Text>
