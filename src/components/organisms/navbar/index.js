@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Grid, Box, Image, Anchor, Text } from 'grommet'
 import qs from 'query-string';
 import SuggestionsInput from '../../molecules/suggestionsInput'
-import logoFile from '../../../img/ndau-icon-green.png'
+import logoFile from '../../../img/ndau_orange_logo.png'
 import { NAVBAR_COLOR } from '../../../constants'
+import { makeURLQuery } from '../../../helpers'
 
 class Navbar extends Component {
   constructor(props) {
@@ -37,8 +38,8 @@ class Navbar extends Component {
           as="header"
         > 
           <Box gridArea="center" align="center">
-            <Anchor href={`/${window.location.search}`}>
-              <Box height="50px" width="40px">
+            <Anchor href={`/${makeURLQuery()}`}>
+              <Box height="50px" width="120px">
                 <Image src={logoFile} fit="contain" />
               </Box>
             </Anchor>
@@ -85,7 +86,7 @@ class Navbar extends Component {
     if ( browserHistory ) {
       browserHistory.push({
         path: `${window.location.origin}${window.location.pathname}`,
-        search: `?node=${nodeEndpoint}`
+        search: `?node=${window.encodeURIComponent(nodeEndpoint)}`
       })
 
       this.setState({ nodeEndpoint })

@@ -43,14 +43,22 @@ export const formatBlock = (block) => {
     return;
   }
 
-  const { header, block_id } = block;
+  const { header } = block;
+
+  if (!header) {
+    return null
+  }
+
+  const {
+    height, time, num_txs, last_block_id,
+  } = header;
 
   return {
-    height: header && header.height,
-    age: header && moment(header.time).fromNow(),
-    numberOfTransactions: header && header.num_txs,
-    time: header && moment(header.time).format('YYYY-MM-DD hh:mm'),
-    hash: block_id && block_id.hash,
+    height: height,
+    age: time && moment(time).fromNow(),
+    numberOfTransactions: num_txs,
+    time: time && moment(time).format('YYYY-MM-DD hh:mm'),
+    hash: last_block_id && last_block_id.hash,
   };
 }
 
@@ -70,14 +78,15 @@ export const formatTransaction = (transaction, additionalData={}) => {
   }
   
   let transactionData = transaction;
-  console.log(transactionData);
+  // console.log(transactionData);
+  
   const { 
     TransactableID,
     Transactable: {
       bonus,
       dst: destination,
       dis: distributionScript,
-      key: newKeys,
+      // key: newKeys,
       nod: node,
       notice: noticePeriod,
       own: ownership,
@@ -95,7 +104,7 @@ export const formatTransaction = (transaction, additionalData={}) => {
       src: source,
       tgt: target,
       unlock: unlocksOn,
-      // key: validationKeys,
+      key: validationKeys,
       val: validationScript,
     } 
   } = transactionData;
@@ -107,7 +116,7 @@ export const formatTransaction = (transaction, additionalData={}) => {
     bonus,
     destination,
     distributionScript,
-    newKeys,
+    validationKeys,
     node,
     noticePeriod,
     ownership,
@@ -125,7 +134,6 @@ export const formatTransaction = (transaction, additionalData={}) => {
     source,
     target,
     unlocksOn,
-    //validationKeys,
     validationScript,
     ...additionalData
   }
@@ -158,20 +166,6 @@ export const getTransactionHashes = (blockHeight) => {
     })
 }
 
-export const getBlock = (blockHeight, success) => {
-  const blockEndpoint = `${getNodeEndpoint()}/block/height/${blockHeight}/?noempty=`
-  
-  return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
-    .then(response => {
-      const block = response.data.block;
-      return formatBlock(block);
-    })
-    .catch(error => {
-      console.log(error)
-      return;
-    })
-}
-
 export const getBlockTransactions = (blockHeight) => { 
   return getTransactionHashes(blockHeight)
     .then(hashes => {
@@ -196,8 +190,23 @@ export const getTransaction = (hash) => {
       })
 }
 
+export const getBlock = (blockHeight) => {
+  const blockEndpoint = `${getNodeEndpoint()}/block/height/${blockHeight}/?noempty=`
+  
+  return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+      const block = response.data.block;
+      return formatBlock(block);
+    })
+    .catch(error => {
+      console.log(error)
+      return;
+    })
+}
+
 export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
-  const _blockRangeStart = blockRangeStart || getBlockRangeStart(blockRangeEnd, maximum);
+  const interval = maximum > 1 ? maximum - 1 : 1;
+  const _blockRangeStart = blockRangeStart || getBlockRangeStart(blockRangeEnd, interval);
   const query = qs.parse(window.location.search);
   const NDAU_ENDPOINT = query.node;
   const blocksEndpoint = `${NDAU_ENDPOINT}/block/range/${_blockRangeStart}/${blockRangeEnd}`;
@@ -222,13 +231,8 @@ export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
         const newHeight = status.latest_block_height;
         if(newHeight > lastHeight) {
           const blockRangeEnd = newHeight;
-          let blockRangeStart = lastHeight + 1
 
-          if (blockRangeEnd - blockRangeStart > maximum) {
-            blockRangeStart = getBlockRangeStart(blockRangeEnd, maximum);
-          }
-
-          getBlocks(blockRangeStart, blockRangeEnd, maximum, true, noEmpty)
+          getBlocks(null, blockRangeEnd, maximum)
             .then(newBlocks => {
               lastHeight = status.latest_block_height
               getCurrentOrder()
@@ -267,13 +271,19 @@ export const getCurrentOrder = () => {
     .catch(error => console.log(error))
 }
 
-export const getBlockRangeStart = (blockRangeEnd, maximum=100) => {
-  let blockRangeStart = parseInt(blockRangeEnd) - maximum;
-  if (blockRangeEnd - blockRangeStart > maximum) {
-    blockRangeStart = blockRangeEnd - maximum;
-  }
-  return (blockRangeStart && blockRangeStart >= 1) ? blockRangeStart : 1;
+export const getBlockRangeStart = (blockRangeEnd, interval=100) => {
+  let blockRangeStart = parseInt(blockRangeEnd) - interval;
+  return blockRangeStart > 0 ? blockRangeStart : 1;
 }
+
+export const makeURLQuery = (additionalQuery) => {
+  const query = qs.parse(window.location.search);
+  const newQuery = {
+    node: query.node,
+    ...additionalQuery
+  }
+  return `?${qs.stringify(newQuery)}`;
+};
 
 // export const b64MsgPackToObj = b64data => {
 //   var raw = window.atob(b64data)

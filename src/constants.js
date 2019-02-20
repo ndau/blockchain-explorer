@@ -1,4 +1,4 @@
-export const DEFUALT_NDAU_ENDPOINT = 'https://node-0.main.ndau.tech';
+export const DEFUALT_NDAU_ENDPOINT = 'https://testnet-0.api.ndau.tech';
 export const BLOCK_RANGE = 100;
 export const POLL_INTERVAL = 7000;
 export const MAX_FETCH_ATTEMPT = 10;

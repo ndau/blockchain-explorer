@@ -4,7 +4,12 @@ import  BlockCard from '../../molecules/blockCard'
 import { getTransactionHashes } from '../../../helpers';
 
 class BlockDetails extends Component {
-  state = { transactionHashes: null }
+  constructor(props) {
+    super(props);
+
+    this.state = { transactionHashes: null }
+  }
+  
 
   render() {
     const { transactionHashes } = this.state;
@@ -25,13 +30,20 @@ class BlockDetails extends Component {
     );
   }
 
+  setTransactionHashes(blockHeight) {
+    getTransactionHashes(blockHeight)
+      .then(transactionHashes => {
+        this.setState({ transactionHashes })
+      })
+  }
+
   componentDidUpdate(prevProps) {
-    if(!this.state.transactionHashes && this.props.block) {
-      getTransactionHashes(this.props.block.height)
-        .then(transactionHashes => {
-          this.setState({ transactionHashes })
-        })
-    }
+    const { block } = this.props;
+    if(block && block.height) {
+      if(!prevProps.block || block.height !== prevProps.block.height) {
+        this.setTransactionHashes(block.height)
+      }
+    } 
   }
 }
 

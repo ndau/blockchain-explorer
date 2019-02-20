@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { InfiniteScroll, Box, Text, Anchor, Collapsible } from 'grommet'
+import { Box, Text, Anchor } from 'grommet'
 import TransactionCard from '../../molecules/transactionCard'
+import { makeURLQuery } from '../../../helpers';
 
 class TransactionsList extends Component{
   state = { showTransactions: true }
@@ -25,37 +26,28 @@ class TransactionsList extends Component{
     return (
       <Box>
         <Box>
-          <Anchor onClick={this.toggleShowTransactions}>
+          <Text onClick={this.toggleShowTransactions} as="span">
             <b>transactions</b>
-          </Anchor>
-          <Anchor
-            href={`/transactions/${window.location.search}`}
-            alignSelf="end"
-          >
-            <b>view all</b>
-          </Anchor>
-        </Box>
-        <Collapsible open={this.state.showTransactions}>
-          <Box height="auto">
-            <InfiniteScroll
-              size="small"
-              items={transactionHashes}
-              scrollableAncestor="window"
+
+            <Anchor
+              href={`/transactions/${makeURLQuery({block: blockHeight})}`}
+              style={{float: "right"}}
             >
-              {
-                transactionHash => {
-                  return (
-                    <TransactionCard
-                      key={transactionHash}
-                      transactionHash={transactionHash}
-                      blockHeight={blockHeight}
-                    />
-                  )
-                }
-              }
-            </InfiniteScroll> 
-          </Box>
-        </Collapsible>
+              <b>view all</b>
+            </Anchor>
+          </Text>
+        </Box>
+        <Box>
+          { 
+            transactionHashes.map(hash => (
+              <TransactionCard
+                key={hash}
+                transactionHash={hash}
+                blockHeight={blockHeight}
+              />
+            ))
+          }
+        </Box>
       </Box>
     )
   }

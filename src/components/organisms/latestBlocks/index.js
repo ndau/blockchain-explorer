@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Box, Grid, Anchor } from 'grommet'
 import BlocksList from '../../organisms/blocksList'
 import BlockDetails from '../../organisms/blockDetails'
+import { makeURLQuery } from '../../../helpers';
 
 class LatestBlocks extends Component {
   state = { activeBlock: null }
@@ -12,7 +13,7 @@ class LatestBlocks extends Component {
     return (
       <Box>
         <Box margin={{ bottom: "small", left: "small" }}>
-          <Anchor href={`/blocks${window.location.search}`} label="View all blocks" />
+          <Anchor href={`/blocks/${makeURLQuery()}`} label="View all blocks" />
         </Box>
 
         <Box background="rgba(51,51,51,0.4)" pad={{ horizontal: "small", vertical: "small" }}>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Box, Text } from "grommet"
+import { Box, Text, Anchor } from "grommet"
 import Card from '../../atoms/card';
+import { makeURLQuery } from '../../../helpers';
 
 class TransactionDetails extends Component {
   render() {
@@ -12,9 +13,10 @@ class TransactionDetails extends Component {
     const { 
       type,
       bonus,
+      blockHeight,
       destination,
       distributionScript,
-      newKeys,
+      // newKeys,
       node,
       noticePeriod,
       ownership,
@@ -32,10 +34,10 @@ class TransactionDetails extends Component {
       source,
       target,
       unlocksOn,
-      //validationKeys,
+      validationKeys,
       validationScript, 
     } = transaction;
-
+  
   
     return (
       <Card background="transparent">
@@ -71,15 +73,25 @@ class TransactionDetails extends Component {
             </Text>
           }
           {
+            blockHeight && 
+            <Text as="section">
+              <b>block height: </b> 
+              <Anchor 
+                label={blockHeight} 
+                href={`/block/${blockHeight}/${makeURLQuery()}`}
+              />
+            </Text>
+          }
+          {
             distributionScript &&
             <Text truncate as="article">
               <b>distribution script: </b> {distributionScript}
             </Text>
           }
           {
-            newKeys &&
+            validationKeys &&
             <Text truncate as="article">
-              <b>new keys: </b> {newKeys}
+              <b>new keys: </b> {validationKeys}
             </Text>
           }
           {

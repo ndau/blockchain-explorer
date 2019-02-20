@@ -7,7 +7,8 @@ import {
   getNodeStatus,
   getBlockRangeStart,
   getBlocks,
-  pollForBlocks
+  pollForBlocks,
+  makeURLQuery
 } from '../../../helpers.js'
 
 class Blocks extends Component {
@@ -128,7 +129,10 @@ class Blocks extends Component {
       search: true,
       primary: true,
       render: ({height}) => (
-        <Anchor href={`/block/${height}/${window.location.search}`} label={height} />
+        <Anchor
+          label={height}
+          href={`/block/${height}/${makeURLQuery()}`}
+        />
       ),
     },
     {
@@ -151,7 +155,7 @@ class Blocks extends Component {
           numberOfTransactions ?
           <Anchor 
             label={`${numberOfTransactions} `} 
-            href={`/transactions/${window.location.search}`} 
+            href={`/transactions/${makeURLQuery({block: height})}`} 
           />
           :
           '0'

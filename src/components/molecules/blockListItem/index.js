@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Anchor, Text, Box } from "grommet"
 import Card from '../../atoms/card'
+import { makeURLQuery } from '../../../helpers';
 
 class BlockListItem extends Component {
   render() {
@@ -10,7 +11,7 @@ class BlockListItem extends Component {
         header={(
           <header>
             <Text>
-              Block <Anchor href={`/block/${height}/${window.location.search}`} label={`#${height}`}/>
+              Block <Anchor href={`/block/${height}/${makeURLQuery()}`} label={`#${height}`}/>
             </Text>
             
             <Text size="xsmall" style={{float: 'right'}}>
@@ -27,7 +28,7 @@ class BlockListItem extends Component {
             {
               numberOfTransactions ?
               <Anchor 
-                href={`/block/${height}/transactions/${window.location.search}`} 
+                href={`/transactions/${makeURLQuery({block: height})}`} 
                 label={`${numberOfTransactions} `} 
               />
               :

@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { DataTable, Anchor, Box, Text } from 'grommet'
 import qs from 'query-string';
 import Dashboard from '../../templates/dashboard'
-import { getBlocks, getBlockTransactions, getNodeStatus } from '../../../helpers'
+import {
+  getBlockTransactions,
+  makeURLQuery, 
+} from '../../../helpers'
 
 class Transactions extends Component {
   constructor (props) {
@@ -19,10 +22,6 @@ class Transactions extends Component {
   render () {
     const { transactions, blockHeight } = this.state;
 
-    if (!transactions) {
-      return null
-    }
-
     return (
       <Dashboard
         browserHistory={this.props.history}
@@ -32,7 +31,7 @@ class Transactions extends Component {
             <h2>Transactions</h2>
 
             <DataTable
-              data={transactions}
+              data={transactions || []}
               columns={this.columns}
             />
           </Box>
@@ -79,7 +78,7 @@ class Transactions extends Component {
       search: true,
       primary: true,
       render: ({ hash }) => {
-        const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${window.location.search}`;
+        const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${makeURLQuery()}`;
         return (
           <Box width="150px">
             <Text truncate>
@@ -121,7 +120,7 @@ class Transactions extends Component {
     //   search: true,
     //   render: ({ blockHeight }) => (
     //     <Anchor 
-    //       href={`/block/${blockHeight}/${window.location.search}`} 
+    //       href={`/block/${blockHeight}/${makeURLQuery()}`} 
     //       label={blockHeight}
     //     />
     //   )   

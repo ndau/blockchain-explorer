@@ -10,7 +10,7 @@ import {
   pollForBlocks,
 } from '../../../helpers.js'
 
-const BLOCK_RANGE_INTERVAL = 4;
+const BLOCK_LIST_LENGTH = 5;
 
 class NdauDashboard extends Component {
   constructor(props) {
@@ -53,7 +53,6 @@ class NdauDashboard extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.location.key !== prevProps.location.key) {
-      // window.location.reload();
       this.getData();
     }
   }
@@ -80,7 +79,7 @@ class NdauDashboard extends Component {
         }
 
         const latestHeight = status.latest_block_height;
-        const maximum = BLOCK_RANGE_INTERVAL  + 1;
+        const maximum = BLOCK_LIST_LENGTH;
  
         getBlocks(null, latestHeight, maximum, null)
           .then((blocks=[]) => {
@@ -99,13 +98,11 @@ class NdauDashboard extends Component {
   }
 
   resetData = (newBlocks=[], newStatus, latestBlockHeight, newCurrentOrder) => {
-    const maximum = BLOCK_RANGE_INTERVAL  + 1;
   
-    this.setState(({blocks=[], currentOrder}) => {
-      const latestBlocks = [...newBlocks, ...blocks].slice(0, maximum)
+    this.setState(({currentOrder}) => {
       console.log(`FOUND ${newBlocks.length} new block(s)!`)
       return {
-        blocks: latestBlocks,
+        blocks: newBlocks,
         nodeStatus: newStatus,
         latestBlockHeight,
         currentOrder: newCurrentOrder || currentOrder

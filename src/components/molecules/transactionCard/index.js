@@ -1,19 +1,31 @@
 import React, { Component } from 'react'
-import { Text, Anchor } from "grommet"
+import { Text, Anchor, Collapsible } from "grommet"
+import { Down, Up } from 'grommet-icons'
 import Card from '../../atoms/card';
-import { getTransaction } from '../../../helpers'
+import TransactionDetails from '../../organisms/transactionDetails'
+import { getTransaction, makeURLQuery } from '../../../helpers';
 
 class TransactionCard extends Component {
-  state = { transaction: null }
+  constructor(props) {
+    super(props);
+
+    this.state = { 
+      transaction: null,
+      showDetails: false 
+    }
+
+    this.resetTransaction(props.transactionHash);
+  }
 
   render() {
-    const { transaction } = this.state;
+    const { transaction, showDetails } = this.state;
     if (!transaction) {
       return <Text>No transaction data was retrieved.</Text>;
     }
 
-    const { quantity, destination, source, hash } = transaction;
-    const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${window.location.search}`;
+    const { hash } = transaction;
+    
+    const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${makeURLQuery()}`;
   
     return (
       <Card
@@ -22,40 +34,50 @@ class TransactionCard extends Component {
             <Text truncate as="article">
               transaction 
               <Anchor href={transactionURL}>{` ${hash}`}</Anchor>
+
+              <Text style={{float: "right"}}>
+                {
+                  showDetails ? (
+                    <Up onClick={this.toggleShowDetails} />
+                  ) : (
+                    <Down onClick={this.toggleShowDetails} />
+                  )
+                }
+              </Text>
             </Text>
+
           </header>
         )}
         pad="small"
       >
-        <section>
-          {
-            quantity && 
-            <Text as="section">
-              <b>quantity: </b> {quantity / 100000000}
-            </Text>
-          }
-          {
-            source &&
-            <Text truncate as="article">
-              <b>from: </b> {source}
-            </Text>
-          }
-          {
-            destination &&
-            <Text truncate as="article">
-              <b>to: </b> {destination}
-            </Text>
-          }
-        </section> 
+        
+        <Collapsible open={showDetails}>
+          <TransactionDetails transaction={transaction} />
+        </Collapsible> 
       </Card>
     );
   }
 
-  componentDidMount() {
-    getTransaction(this.props.transactionHash)
+  componentDidUpdate(prevProps) {
+    const { transactionHash } = this.props;
+    if(transactionHash !== prevProps.transactionHash) {
+      this.resetTransaction(transactionHash)
+    }
+  }
+
+  resetTransaction(transactionHash) {
+    getTransaction(transactionHash)
       .then(transaction => {
         this.setState({ transaction })
       })
+  }
+
+  toggleShowDetails = () => {
+    this.setState(({showDetails}) => {
+      return {
+        showDetails: !showDetails
+      }
+    }) 
   }
 }
 

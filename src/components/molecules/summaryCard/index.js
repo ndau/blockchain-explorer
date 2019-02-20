@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Anchor, Text } from 'grommet'
 import Card from '../../atoms/card'
+import { makeURLQuery } from '../../../helpers'
 
 class StatusCard extends Component {
   render() {
@@ -21,13 +22,13 @@ class StatusCard extends Component {
       // latest_block_time,
     } = summary;
 
+    const blockLink = `/block/${latest_block_height}/${makeURLQuery()}`;
+
     return (
       <Card
         header={(
           <header>
-            <Text>
-              Summary:
-            </Text>
+            <Text>Summary</Text>
           </header>
         )}
         background={"#4d9678"}
@@ -35,20 +36,20 @@ class StatusCard extends Component {
       >
         <section>
           <Text as="section">
-            <b>Market Price </b> 
-            {marketPrice && marketPrice.toFixed(3)} {priceUnit}
+            <b>Market Price: </b> 
+            {marketPrice && marketPrice.toFixed(2)} {priceUnit}
           </Text>
           <Text as="section">
             <b>Target Price </b> 
-            {targetPrice && targetPrice.toFixed(3)} {priceUnit}
+            {targetPrice && targetPrice.toFixed(2)} {priceUnit}
           </Text>
           <Text as="section">
             <b>ndau Sold </b>
-            { totalIssued && totalIssued / 100000000}
+            { totalIssued && (totalIssued / 100000000).toFixed(3) }
           </Text>
           <Text as="section">
             <b>Latest block </b>
-            <Anchor href={`/block/${latest_block_height}/${window.location.search}`} label={`#${latest_block_height}`}/>
+            <Anchor href={blockLink} label={`#${latest_block_height}`}/>
           </Text>
         </section> 
       </Card>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text} from 'grommet'
+import { Text } from 'grommet'
 import TransactionList from '../../organisms/transactionsList'
 import Card from '../../atoms/card'
 

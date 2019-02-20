@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, Anchor } from 'grommet';
 import Details from '../../templates/details'
 import TransactionDetails from '../../organisms/transactionDetails'
-import { getTransaction } from '../../../helpers'
+import { getTransaction, makeURLQuery } from '../../../helpers'
 
 class Transaction extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class Transaction extends Component {
           {
             blockHeight &&
             <Text as="span" style={{float: "right"}}>
-              Block <Anchor href={`/block/${blockHeight}/${window.location.search}`}>{`#${blockHeight}`}</Anchor>
+              Block <Anchor href={`/block/${blockHeight}/${makeURLQuery()}`}>{`#${blockHeight}`}</Anchor>
             </Text>
           }
         </Text>
