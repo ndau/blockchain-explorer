@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text } from 'grommet'
+import TruncatedText from '../../atoms/truncatedText'
 import TransactionList from '../../organisms/transactionsList'
 import Card from '../../atoms/card'
 
@@ -23,21 +24,13 @@ class BlockCard extends Component{
 
             return (
               <Text truncate as="article" key={i}>
-                <b>{property}:</b> {block[property]}
+                <b>{property}:</b> <TruncatedText value={block[property]} />
               </Text>
           )})
         }
         <TransactionList transactionHashes={transactionHashes} blockHeight={height} />
       </Card>
     )
-  }
-
-  toggleShowTransactions = () => {
-    this.setState(({showTransactions}) => {
-      return {
-        showTransactions: !showTransactions
-      }
-    }) 
   }
 } 
 

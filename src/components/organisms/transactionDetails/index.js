@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Box, Text, Anchor } from "grommet"
 import Card from '../../atoms/card';
+import TruncatedText from '../../atoms/truncatedText'
 import { makeURLQuery } from '../../../helpers';
 
 class TransactionDetails extends Component {
@@ -37,8 +38,7 @@ class TransactionDetails extends Component {
       validationKeys,
       validationScript, 
     } = transaction;
-  
-  
+
     return (
       <Card background="transparent">
         <Box>
@@ -57,13 +57,19 @@ class TransactionDetails extends Component {
           {
             source &&
             <Text truncate as="article">
-              <b>from: </b> {source}
+              <b>from: </b>
+              <Anchor href={`/account/${source}/${makeURLQuery()}`}>
+                <TruncatedText value={source} />
+              </Anchor>
             </Text>
           }
           {
             destination &&
             <Text truncate as="article">
-              <b>to: </b> {destination}
+              <b>to: </b>
+              <Anchor href={`/account/${destination}/${makeURLQuery()}`}>
+                <TruncatedText value={destination} />
+              </Anchor>
             </Text>
           }
           {
@@ -96,8 +102,11 @@ class TransactionDetails extends Component {
           }
           {
             node &&
-            <Text truncate as="article">
-              <b>node: </b> {node}
+            <Text>
+              <b>node: </b>
+              <Anchor href={`/account/${node}/${makeURLQuery()}`}>
+                <TruncatedText value={node} />
+              </Anchor>
             </Text>
           }
           {
@@ -127,13 +136,13 @@ class TransactionDetails extends Component {
           {
             publicKey &&
             <Text truncate as="article">
-              <b>public key: </b> {publicKey}
+              <b>public key: </b> <TruncatedText value={publicKey} />
             </Text>
           }
           {
             RPCAddress &&
             <Text truncate as="article">
-              <b>RPC Address: </b> {RPCAddress}
+              <b>RPC Address: </b> <TruncatedText value={RPCAddress} />
             </Text>
           }
           {
@@ -169,13 +178,16 @@ class TransactionDetails extends Component {
           {
             signature &&
             <Text truncate as="article">
-              <b>signature: </b> {signature}
+              <b>signature: </b> <TruncatedText value={signature} />
             </Text>
           }
           {
             target &&
-            <Text truncate as="article">
-              <b>target: </b> {target}
+            <Text>
+              <b>target: </b>
+              <Anchor href={`/account/${target}/${makeURLQuery()}`}>
+                <TruncatedText value={target} />
+              </Anchor>
             </Text>
           }
           {

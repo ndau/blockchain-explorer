@@ -207,9 +207,7 @@ export const getBlock = (blockHeight) => {
 export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
   const interval = maximum > 1 ? maximum - 1 : 1;
   const _blockRangeStart = blockRangeStart || getBlockRangeStart(blockRangeEnd, interval);
-  const query = qs.parse(window.location.search);
-  const NDAU_ENDPOINT = query.node;
-  const blocksEndpoint = `${NDAU_ENDPOINT}/block/range/${_blockRangeStart}/${blockRangeEnd}`;
+  const blocksEndpoint = `${getNodeEndpoint()}/block/range/${_blockRangeStart}/${blockRangeEnd}`;
 
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -217,6 +215,18 @@ export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
       return formatBlocks(blocks);
     })
     .catch(error => console.log(error))
+}
+
+export const getAccountData = (address) => {
+  const accountEndpoint = `${getNodeEndpoint()}/account/account/${address}`;
+
+  return axios.get(accountEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+      return {
+        address,
+        ...response.data[address]
+      }
+    })
 }
 
 export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {

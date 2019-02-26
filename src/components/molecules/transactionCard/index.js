@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Text, Anchor, Collapsible } from "grommet"
-import { Down, Up } from 'grommet-icons'
+import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card';
 import TransactionDetails from '../../organisms/transactionDetails'
+import TruncatedText from '../../atoms/truncatedText'
 import { getTransaction, makeURLQuery } from '../../../helpers';
 
 class TransactionCard extends Component {
@@ -11,7 +12,7 @@ class TransactionCard extends Component {
 
     this.state = { 
       transaction: null,
-      showDetails: false 
+      showDetails: true, 
     }
 
     this.resetTransaction(props.transactionHash);
@@ -20,7 +21,16 @@ class TransactionCard extends Component {
   render() {
     const { transaction, showDetails } = this.state;
     if (!transaction) {
-      return <Text>No transaction data was retrieved.</Text>;
+      return (
+        <Card
+          header={(
+            <header>
+              <Text>No transaction data was retrieved.</Text>
+            </header>
+          )}
+          pad="small"
+        />
+      )
     }
 
     const { hash } = transaction;
@@ -30,19 +40,16 @@ class TransactionCard extends Component {
     return (
       <Card
         header={(
-          <header>
-            <Text truncate as="article">
+          <header onClick={this.toggleShowDetails}>
+            <Text truncate>
               transaction 
-              <Anchor href={transactionURL}>{` ${hash}`}</Anchor>
+              <Anchor href={transactionURL}>
+                {` `}
+                <TruncatedText value={hash} />
+              </Anchor>
 
               <Text style={{float: "right"}}>
-                {
-                  showDetails ? (
-                    <Up onClick={this.toggleShowDetails} />
-                  ) : (
-                    <Down onClick={this.toggleShowDetails} />
-                  )
-                }
+                { showDetails ? <Contract size="20px" /> : <Expand size="20px" /> }
               </Text>
             </Text>
 
@@ -50,7 +57,6 @@ class TransactionCard extends Component {
         )}
         pad="small"
       >
-        
         <Collapsible open={showDetails}>
           <TransactionDetails transaction={transaction} />
         </Collapsible> 

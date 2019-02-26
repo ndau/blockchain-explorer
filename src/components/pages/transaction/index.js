@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, Anchor } from 'grommet';
 import Details from '../../templates/details'
+import DetailsCard from '../../molecules/detailsCard'
 import TransactionDetails from '../../organisms/transactionDetails'
 import { getTransaction, makeURLQuery } from '../../../helpers'
 

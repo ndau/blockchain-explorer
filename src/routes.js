@@ -5,6 +5,7 @@ import Blocks from './components/pages/blocks'
 import Block from './components/pages/block'
 import Transactions from './components/pages/transactions'
 import Transaction from './components/pages/transaction'
+import Account from './components/pages/account'
 
 export default (
   <Switch>
@@ -13,6 +14,7 @@ export default (
     <Route exact path="/blocks" component={Blocks} />
     <Route exact path="/transaction/:transactionHash" component={Transaction} />
     <Route exact path="/transactions" component={Transactions} />
+    <Route exact path="/account/:address" component={Account} />
     
     {/* <Route component={NotFound} /> */}
   </Switch>
