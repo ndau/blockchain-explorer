@@ -4,21 +4,21 @@ import { Box } from "grommet";
 class Card extends Component {
   render() {
     const { 
-      pad, round, background, header, children, style={}, onClick, 
+      pad, round, background, header, children, style={}, onClick, animation, margin 
     } = this.props;
 
     return (
       <Box
-        pad={ pad || "medium" }
-        margin="xsmall"
-        background={{ color: background || "dark-1", opacity: "strong" }}
-        round={ round || "xsmall" }
+        pad={pad}
+        background={{ color: background || "transparent", opacity: "strong" }}
+        round={round || "xsmall"}
+        margin={margin}
         style={style}
-      > 
-        <div onClick={onClick}>
-          {header}
-          {children}
-        </div>
+        onClick={onClick}
+        animation={animation}
+      >
+        {header}
+        {children}
       </Box>
     );
   }

@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 // Returns the price of the next ndau given the number already sold
-const price_at_unit = (nunits_sold, debug) => {
+export const price_at_unit = (nunits_sold) => {
   const phase_blocks = 10000;
   const sale_block = Math.floor(nunits_sold / 1000);
 
@@ -37,7 +37,7 @@ const price_at_unit = (nunits_sold, debug) => {
 };
 
 // this does a binary search for the lowest multiple of 1000 units that exceeds the price
-const unit_at_price = (price) => {
+export const unit_at_price = (price) => {
   let high = 30000;
   let low = 0;
   let guess = 15000;
@@ -56,7 +56,7 @@ const unit_at_price = (price) => {
 };
 
 // returns the total price for a group of ndau given the amount to be purchased and the number already sold
-const total_price_for = (num_ndau, already_sold) => {
+export const total_price_for = (num_ndau, already_sold) => {
   const num_per_block = 1000;
   var total_price = 0;
   for (;;) {
@@ -79,7 +79,7 @@ const total_price_for = (num_ndau, already_sold) => {
   }
 };
 
-const unlocked_rates = [
+export const unlocked_rates = [
   { starting_days: 30, annual_pctg_rate: 2 },
   { starting_days: 60, annual_pctg_rate: 3 },
   { starting_days: 90, annual_pctg_rate: 4 },
@@ -91,7 +91,7 @@ const unlocked_rates = [
   { starting_days: 270, annual_pctg_rate: 10 }
 ];
 
-const lock_bonus = [
+export const lock_bonus = [
   { starting_days: 90, annual_pctg_rate: 1 },
   { starting_days: 180, annual_pctg_rate: 2 },
   { starting_days: 365, annual_pctg_rate: 3 },
@@ -99,7 +99,7 @@ const lock_bonus = [
   { starting_days: 1095, annual_pctg_rate: 5 }
 ];
 
-const lookup_value = (table, days) => {
+export const lookup_value = (table, days) => {
   let rate = 0;
   for (const row of table) {
     if (days >= row.starting_days) {
@@ -109,7 +109,7 @@ const lookup_value = (table, days) => {
   return rate;
 };
 
-const lookup_eai_rate = (num_days_for_lock, num_days_since_purchase) => {
+export const lookup_eai_rate = (num_days_for_lock, num_days_since_purchase) => {
   let base_rate = lookup_value(unlocked_rates, num_days_for_lock);
   let default_rate = lookup_value(unlocked_rates, num_days_since_purchase);
   if (base_rate > default_rate) {
@@ -123,7 +123,7 @@ const lookup_eai_rate = (num_days_for_lock, num_days_since_purchase) => {
 // than the lock time (and thus the rate chart is flat).
 // It needs to be completely rewritten but is OK for the short term since
 // this condition is true at least through genesis (all initial users are locked).
-const get_eai = (num_ndau, num_days_for_lock, num_days_since_purchase) => {
+export const get_eai = (num_ndau, num_days_for_lock, num_days_since_purchase) => {
   // rate is in percentage points
   let rate = lookup_eai_rate(num_days_for_lock, num_days_since_purchase);
   // convert it to a continuous annual interest factor
@@ -134,30 +134,30 @@ const get_eai = (num_ndau, num_days_for_lock, num_days_since_purchase) => {
   return eai;
 };
 
-const get_current_price = (ndauSold) => {
+export const get_current_price = (ndauSold) => {
   return price_at_unit(ndauSold);
 };
 
-const get_market_cap = (ndauSold) => {
+export const get_market_cap = (ndauSold) => {
   return get_current_price(ndauSold - 1) * ndauSold;
 };
 
-const get_my_current_price = (myNdau, currentPrice) => {
+export const get_my_current_price = (myNdau, currentPrice) => {
   return myNdau * currentPrice;
 };
 
-const get_market_cap_with_current_price = (ndauSold, currentPrice) => {
+export const get_market_cap_with_current_price = (ndauSold, currentPrice) => {
   return currentPrice * ndauSold;
 };
 
-const getNumberOfDaysForLock = (wallet) => {
+export const getNumberOfDaysForLock = (wallet) => {
   let start = moment(wallet.received);
   let end = moment(wallet.lockedUntil);
   let days = end.diff(start, 'days');
   return days;
 };
 
-const getNumberOfDaysSincePurchased = (wallet) => {
+export const getNumberOfDaysSincePurchased = (wallet) => {
   let start = moment(wallet.received);
   let end = moment();
   let days = end.diff(start, 'days');

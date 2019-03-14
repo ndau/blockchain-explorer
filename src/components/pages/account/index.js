@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text } from 'grommet';
 import Details from '../../templates/details'
 import DetailsCard from '../../molecules/detailsCard'
+import TruncatedText from '../../atoms/truncatedText'
 import { getAccountData } from '../../../helpers'
 
 class Account extends Component {
@@ -29,8 +30,16 @@ class Account extends Component {
 
     return (
       <Details>
-        <Text as="span" weight="bold" truncate>
-          Account {account && account.address && `#${account.address}`}
+        <Text truncate as="article" >
+          <h3> 
+            Account
+            <Text as="span" weight="bold" truncate as="em">
+              {
+                (account && account.address) && 
+                <TruncatedText value={` ${account.address}`} />
+              }
+            </Text>
+          </h3>
         </Text>
 
         {/* ACCOUNT DETAILS */}

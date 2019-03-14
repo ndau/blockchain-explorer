@@ -12,4 +12,5 @@ export const HTTP_REQUEST_HEADER = {
 }
 
 // STYLES
-export const NAVBAR_COLOR = 'rgba(51,51,51,0.8)'
+export const NAVBAR_COLOR = "#0f2748";
+export const PRIMARY_LIME = "#8cc74f";

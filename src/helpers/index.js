@@ -1,7 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import qs from 'query-string';
-import { HTTP_REQUEST_HEADER,  POLL_INTERVAL } from './constants.js';
+import { HTTP_REQUEST_HEADER,  POLL_INTERVAL } from '../constants.js';
 
 export const TRANSACTION_TYPES = {
   1: "Transfer",
@@ -39,25 +39,20 @@ export const validateEndpoint = (nodeEndpoint) => {
 }
 
 export const formatBlock = (block) => {
-  if(!block) {
+  if(!block || !block.header) {
     return;
   }
 
-  const { header } = block;
-
-  if (!header) {
-    return null
-  }
-
+  const { header={} } = block;
   const {
     height, time, num_txs, last_block_id,
   } = header;
 
   return {
     height: height,
-    age: time && moment(time).fromNow(),
+    timestamp: time,
     numberOfTransactions: num_txs,
-    time: time && moment(time).format('YYYY-MM-DD hh:mm'),
+    time: time && moment(time).format('YYYY-MM-DD HH:mm'),
     hash: last_block_id && last_block_id.hash,
   };
 }
@@ -218,14 +213,22 @@ export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
 }
 
 export const getAccountData = (address) => {
-  const accountEndpoint = `${getNodeEndpoint()}/account/account/${address}`;
+  const accountStateEndpoint = `${getNodeEndpoint()}/account/account/${address}`;
+  const accountHistoryEndpoint = `${getNodeEndpoint()}/account/history/${address}`;
 
-  return axios.get(accountEndpoint, HTTP_REQUEST_HEADER)
+  return axios.get(accountStateEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       return {
         address,
         ...response.data[address]
       }
+    })
+    .then(accountState => {
+      return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
+        .then(response => {
+          const accountHistory = response.data.Items[0]
+          return { ...accountState, ...accountHistory }
+        })
     })
 }
 
@@ -248,7 +251,7 @@ export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
               getCurrentOrder()
                 .then((order={}) => {
                   if(success) {
-                    success(newBlocks, {...status, ...order}, blockRangeEnd);
+                    success(newBlocks, blockRangeEnd);
                   } 
                 })
               
@@ -307,3 +310,40 @@ export const makeURLQuery = (additionalQuery) => {
 //   var obj = msgpack.decode(array)
 //   return obj
 // }
+
+
+// Returns a function, that, when invoked, will only be triggered at most once
+// during a given window of time. Normally, the throttled function will run
+// as much as it can, without ever going more than once per `wait` duration;
+// but if you'd like to disable the execution on the leading edge, pass
+// `{leading: false}`. To disable execution on the trailing edge, ditto.
+export const throttle = (func, wait, options={}) => {
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+  var later = function() {
+    previous = options.leading === false ? 0 : Date.now();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+  return function() {
+    var now = Date.now();
+    if (!previous && options.leading === false) previous = now;
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+};

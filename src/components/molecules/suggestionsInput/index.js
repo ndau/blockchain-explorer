@@ -9,18 +9,21 @@ class SuggestionsInput extends Component {
     const { value } = this.state;
     const { suggestions } = this.props
     return (
-        <Box align="end" pad="none">
-          <Box width="medium">
-            <TextInput
-              value={value}
-              dropHeight="small"
-              onChange={this.onChange}
-              onSelect={this.onSelect}
-              suggestions={suggestions || []}
-              placeholder="Enter a node endpoint"
-            />
-          </Box>
+      <Box align="end" pad="none">
+        <Box width="medium" align="center">
+          <TextInput
+            value={value}
+            dropHeight="small"
+            onChange={this.onChange}
+            onSelect={this.onSelect}
+            suggestions={suggestions || []}
+            placeholder="Enter a node endpoint"
+            size="small"
+            round
+            // style={{width: "100%", maxWidth: "300px", float: "right"}}
+          />
         </Box>
+      </Box>
     );
   }
 

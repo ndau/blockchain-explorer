@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import Dashboard from '../../templates/dashboard'
 import LatestBlocks from '../../organisms/latestBlocks'
-import NdauPriceCurve from '../../organisms/ndauPriceCurve'
-import SummaryCard from '../../molecules/summaryCard'
+import PriceCurve from '../../organisms/priceCurve'
 import {
   getNodeStatus,
   getCurrentOrder,
   getBlocks,
   pollForBlocks,
-} from '../../../helpers.js'
+} from '../../../helpers'
 
 const BLOCK_LIST_LENGTH = 5;
 
@@ -17,9 +16,7 @@ class NdauDashboard extends Component {
     super(props);
 
     this.state = {
-      nodeStatus: null,
-      blocks: [],
-      transactions: [],
+      blocks: null,
       latestBlockHeight: 1,
       currentOrder: null,
       hideEmpty: false,
@@ -29,23 +26,17 @@ class NdauDashboard extends Component {
   }
 
   render() {
-    const { blocks, nodeStatus={}, currentOrder={} } = this.state;
-    const summary = {...nodeStatus, ...currentOrder};
+    const { blocks, currentOrder={} } = this.state;
   
     return (
       <Dashboard
         browserHistory={this.props.history}
         selectNode
-        topLeft={
-          <SummaryCard summary={summary} />
-        }
-        topRight={
-          <NdauPriceCurve
-            ndauSold={summary.totalIssued && summary.totalIssued / 100000000}
-          />
+        top={
+          <PriceCurve currentOrder={currentOrder} />
         }
         bottom={
-          <LatestBlocks blocks={blocks} />
+          <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />        
         }
       />
     )
@@ -82,7 +73,11 @@ class NdauDashboard extends Component {
         const maximum = BLOCK_LIST_LENGTH;
  
         getBlocks(null, latestHeight, maximum, null)
-          .then((blocks=[]) => {
+          .then((blocks) => {
+            if(!blocks) {
+              return null;
+            }
+
             const latestBlocks = blocks.slice(0, maximum);
             const latestBlock = latestBlocks[0];
     
@@ -91,19 +86,15 @@ class NdauDashboard extends Component {
             }, ()=> pollForBlocks(latestHeight, maximum, this.resetData))
 
             return latestBlock
-
           })
       })
       
   }
 
-  resetData = (newBlocks=[], newStatus, latestBlockHeight, newCurrentOrder) => {
-  
+  resetData = (newBlocks=[], latestBlockHeight, newCurrentOrder) => {
     this.setState(({currentOrder}) => {
-      console.log(`FOUND ${newBlocks.length} new block(s)!`)
       return {
         blocks: newBlocks,
-        nodeStatus: newStatus,
         latestBlockHeight,
         currentOrder: newCurrentOrder || currentOrder
       }

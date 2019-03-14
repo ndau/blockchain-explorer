@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Text, DataTable, Anchor, CheckBox, Box } from 'grommet'
+import { Text, DataTable, Anchor, CheckBox, Box,  } from 'grommet'
 import Main from '../../templates/main'
-import ColumnHeader from '../../molecules/columnHeader'
+import TableHeader from '../../molecules/tableHeader'
+import TableData from '../../molecules/tableData'
+import Age from '../../atoms/age'
 import {  BLOCK_RANGE } from '../../../constants.js'
 import {
   getNodeStatus,
@@ -9,7 +11,7 @@ import {
   getBlocks,
   pollForBlocks,
   makeURLQuery
-} from '../../../helpers.js'
+} from '../../../helpers'
 
 class Blocks extends Component {
   constructor(props) {
@@ -35,15 +37,30 @@ class Blocks extends Component {
         selectNode
       >
         <Box justify="between">
-          <Text as="h2" header>Blocks</Text>
-          <Box align="end">
-            <CheckBox 
-              checked={hideEmpty}
-              label="hide empty blocks"
-              onChange={this.toggleHideEmpty}
-              reverse
-            />
-          </Box>
+          <h3 
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center"
+            }}
+          >
+            Blocks
+            <Text
+              size="xsmall"
+              color="#aaa"
+              weight="normal"
+            >
+              <CheckBox 
+                toggle
+                checked={hideEmpty}
+                label="hide empty blocks"
+                onChange={this.toggleHideEmpty}
+                reverse
+                name="small"
+                
+              />
+            </Text>
+          </h3>
         </Box>
 
         <DataTable
@@ -98,9 +115,7 @@ class Blocks extends Component {
         if (previousBlocks.length < 1) {
           return
         }
-
-        console.log(`loading #${getBlockRangeStart(blockRangeEnd)} - #${blockRangeEnd}`)
-
+      
         const earliestBlock = previousBlocks[previousBlocks.length - 1];
         this.setState(({ blocks }) => {
           return {
@@ -125,40 +140,54 @@ class Blocks extends Component {
   getColumns = (hideEmpty) => ([
     {
       property: "height",
-      header: "Height",
-      search: true,
+      header: <TableHeader>Height</TableHeader>,
+      align: "center",
+      // search: true,
       primary: true,
       render: ({height}) => (
-        <Anchor
-          label={height}
-          href={`/block/${height}/${makeURLQuery()}`}
-        />
+        <TableData>
+          <Anchor
+            label={height}
+            href={`/block/${height}/${makeURLQuery()}`}
+          />
+        </TableData>
+        
       ),
-    },
-    {
-      property: "time",
-      header: "Timestamp",
     },
     {
       property: "age",
-      header: "Age"
+      header: <TableHeader>Age</TableHeader>,
+      align: "center",
+      render: ({timestamp}) => (
+        <TableData>
+          <Age timestamp={timestamp} />
+        </TableData>
+      )
+    },
+    {
+      property: "time",
+      align: "center",
+      header:  <TableHeader>Timestamp</TableHeader>,
+      render: ({time}) => <TableData>{time}</TableData>
     },
     {
       property: "txns",
-      header: (
-        <ColumnHeader
-          header="Transactions"
-        />
-      ),
+      align: "center",
+      header: <TableHeader>Txns</TableHeader>,
       render: ({numberOfTransactions, height}) =>  {
         return (
-          numberOfTransactions ?
-          <Anchor 
-            label={`${numberOfTransactions} `} 
-            href={`/transactions/${makeURLQuery({block: height})}`} 
-          />
-          :
-          '0'
+          <TableData>
+            {
+              numberOfTransactions ?
+              <Anchor 
+                label={`${numberOfTransactions} `} 
+                href={`/block/${height}/${makeURLQuery()}`} 
+              />
+              :
+              '0'
+            }
+          </TableData>
+          
         )
       }
     }

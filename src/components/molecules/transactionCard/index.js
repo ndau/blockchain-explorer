@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Anchor, Collapsible } from "grommet"
+import { Text, Anchor, Collapsible, Box } from "grommet"
 import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card';
 import TransactionDetails from '../../organisms/transactionDetails'
@@ -11,15 +11,16 @@ class TransactionCard extends Component {
     super(props);
 
     this.state = { 
-      transaction: null,
-      showDetails: true, 
+      transaction: null, 
     }
 
-    this.resetTransaction(props.transactionHash);
+    this.getTransaction(props.transactionHash);
   }
 
   render() {
-    const { transaction, showDetails } = this.state;
+    const { transaction } = this.state;
+    const { open, setActiveTransaction, index } = this.props;
+
     if (!transaction) {
       return (
         <Card
@@ -33,33 +34,54 @@ class TransactionCard extends Component {
       )
     }
 
-    const { hash } = transaction;
+    const { hash, type } = transaction;
     
     const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${makeURLQuery()}`;
   
     return (
       <Card
         header={(
-          <header onClick={this.toggleShowDetails}>
-            <Text truncate>
-              transaction 
-              <Anchor href={transactionURL}>
-                {` `}
-                <TruncatedText value={hash} />
-              </Anchor>
-
-              <Text style={{float: "right"}}>
-                { showDetails ? <Contract size="20px" /> : <Expand size="20px" /> }
+          <header onClick={() => setActiveTransaction(index)}>
+            <Box>
+              <Text truncate as="article">
+                <Text style={{float: "right"}}>
+                  { 
+                    open ? 
+                    <Contract
+                      size="15px"
+                      color="#aaa"
+                      onClick={() => setActiveTransaction(null)}
+                    /> : 
+                    <Expand size="15px" color="#aaa" /> 
+                  }
+                </Text>
+                <Text weight="bold" header>
+                  Transaction 
+                  {
+                    hash &&
+                    <Anchor href={transactionURL} onClick={event => event.stopPropagation()}>
+                      {` `}
+                      <TruncatedText value={hash} />
+                    </Anchor>
+                  }
+                </Text>
               </Text>
-            </Text>
-
+              
+            </Box>
           </header>
         )}
-        pad="small"
-      >
-        <Collapsible open={showDetails}>
-          <TransactionDetails transaction={transaction} />
-        </Collapsible> 
+        background="#0b1f3a"
+        pad="15px"
+      > 
+        <Box>
+          {
+            (!open && type) &&
+            <Text size="xsmall">{type} Transaction</Text>
+          }
+          <Collapsible open={open}>
+            <TransactionDetails transaction={transaction} />
+          </Collapsible>
+        </Box>
       </Card>
     );
   }
@@ -67,23 +89,15 @@ class TransactionCard extends Component {
   componentDidUpdate(prevProps) {
     const { transactionHash } = this.props;
     if(transactionHash !== prevProps.transactionHash) {
-      this.resetTransaction(transactionHash)
+      this.getTransaction(transactionHash)
     }
   }
 
-  resetTransaction(transactionHash) {
+  getTransaction(transactionHash) {
     getTransaction(transactionHash)
       .then(transaction => {
         this.setState({ transaction })
       })
-  }
-
-  toggleShowDetails = () => {
-    this.setState(({showDetails}) => {
-      return {
-        showDetails: !showDetails
-      }
-    }) 
   }
 }
 

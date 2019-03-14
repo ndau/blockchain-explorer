@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Box, Text, Anchor } from 'grommet'
+import { Box, Text } from 'grommet'
 import TransactionCard from '../../molecules/transactionCard'
-import { makeURLQuery } from '../../../helpers';
+// import { makeURLQuery } from '../../../helpers';
 
 class TransactionsList extends Component{
-  state = { showTransactions: true }
+  state = { activeTransactionIndex: null }
 
   render() {
     const { transactionHashes, blockHeight } = this.props;
@@ -22,29 +22,28 @@ class TransactionsList extends Component{
         </Text>
       )
     }
+
+    const gap = "small";
     
     return (
       <Box>
         <Box>
-          <Text onClick={this.toggleShowTransactions} as="span">
+          <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
             <b>transactions</b>
-
-            <Anchor
-              href={`/transactions/${makeURLQuery({block: blockHeight})}`}
-              style={{float: "right"}}
-            >
-              <b>view all</b>
-            </Anchor>
           </Text>
         </Box>
-        <Box>
+        <Box margin={{top: gap}}>
           { 
-            transactionHashes.map(hash => (
-              <TransactionCard
-                key={hash}
-                transactionHash={hash}
-                blockHeight={blockHeight}
-              />
+            transactionHashes.map((hash, index) => (
+              <Box key={index} margin={{bottom: (index !== transactionHashes.length-1)? gap : "0"}}>
+                <TransactionCard
+                  transactionHash={hash}
+                  blockHeight={blockHeight}
+                  open={index === this.state.activeTransactionIndex}
+                  index={index}
+                  setActiveTransaction={this.setActiveTransactionIndex}
+                />
+              </Box>
             ))
           }
         </Box>
@@ -52,12 +51,12 @@ class TransactionsList extends Component{
     )
   }
 
-  toggleShowTransactions = () => {
-    this.setState(({showTransactions}) => {
-      return {
-        showTransactions: !showTransactions
-      }
-    }) 
+  setActiveTransactionIndex = (index) => {
+    if(index !== this.state.activeTransactionIndex) {
+      this.setState({
+        activeTransactionIndex: index
+      }) 
+    }
   }
 } 
 

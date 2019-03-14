@@ -1,49 +1,24 @@
 import React, { Component } from 'react'
-import { Box, Grid, Anchor } from 'grommet'
+import { Box, Anchor, Text } from 'grommet'
 import BlocksList from '../../organisms/blocksList'
-import BlockDetails from '../../organisms/blockDetails'
-import { makeURLQuery } from '../../../helpers';
+import { getBlocks, makeURLQuery } from '../../../helpers';
 
 class LatestBlocks extends Component {
-  state = { activeBlock: null }
-  
   render() {
-    const activeBlock = this.state.activeBlock || this.props.blocks[0];
+    const { blocks } = this.props;
 
     return (
       <Box>
-        <Box margin={{ bottom: "small", left: "small" }}>
-          <Anchor href={`/blocks/${makeURLQuery()}`} label="View all blocks" />
+        <Box margin={{ bottom: "small" }}>
+          <Text>
+            <Text weight="bold">Latest Blocks</Text>
+            <Anchor href={`/blocks/${makeURLQuery()}`} label="View all blocks" style={{float: "right"}} />
+          </Text>
         </Box>
 
-        <Box background="rgba(51,51,51,0.4)" pad={{ horizontal: "small", vertical: "small" }}>
-          <Grid
-            fill
-            columns={["flex", "flex"]}
-            rows={["auto"]}
-            areas={[
-              { name: "left", start: [0, 0], end: [1, 0] },
-              { name: "right", start: [1, 0], end: [1, 0] },
-            ]}
-          >
-            <Box gridArea="left">
-              <BlocksList 
-                blocks={this.props.blocks}
-                setActiveBlock={this.setActiveBlock}
-                activeBlockHeight={activeBlock && activeBlock.height}
-              />
-            </Box>
-            <Box gridArea="right">
-              <BlockDetails block={activeBlock} />
-            </Box>
-          </Grid>
-        </Box>
+        <BlocksList blocks={blocks} />
       </Box>
     );
-  }
-
-  setActiveBlock = (activeBlock) => {
-    this.setState({ activeBlock })
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import BlockDetails from '../../organisms/blockDetails'
 import Details from '../../templates/details'
-import { getBlock } from '../../../helpers.js'
+import { getBlock } from '../../../helpers'
 
 class Block extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class Block extends Component {
 
     return (
       <Details>
-        <h3>Block {block && block.height}</h3>
+        <h3>Block <em>{block && block.height}</em></h3>
         <BlockDetails block={block} />
       </Details>
     )

@@ -8,8 +8,11 @@ class BlockDetails extends Component {
     super(props);
 
     this.state = { transactionHashes: null }
+
+    if (props.block && props.block.height) {
+      this.setTransactionHashes(props.block.height);
+    }
   }
-  
 
   render() {
     const { transactionHashes } = this.state;

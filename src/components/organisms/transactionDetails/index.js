@@ -40,17 +40,17 @@ class TransactionDetails extends Component {
     } = transaction;
 
     return (
-      <Card background="transparent">
-        <Box>
+      <Card>
+        <Box overflow="scroll">
           {
             type && 
-            <Text as="section">
+            <Text as="article">
               <b>type: </b> {type}
             </Text>
           }
           {
             quantity && 
-            <Text as="section">
+            <Text as="article">
               <b>quantity: </b> {quantity / 100000000}
             </Text>
           }
@@ -97,7 +97,7 @@ class TransactionDetails extends Component {
           {
             validationKeys &&
             <Text truncate as="article">
-              <b>new keys: </b> {validationKeys}
+              <b>validation keys: </b> <TruncatedText value={validationKeys} />
             </Text>
           }
           {
@@ -118,7 +118,7 @@ class TransactionDetails extends Component {
           {
             ownership &&
             <Text truncate as="article">
-              <b>ownership: </b> {ownership}
+              <b>ownership: </b> <TruncatedText value={ownership} />
             </Text>
           }
           {
@@ -178,12 +178,13 @@ class TransactionDetails extends Component {
           {
             signature &&
             <Text truncate as="article">
-              <b>signature: </b> <TruncatedText value={signature} />
+              <b>signatures: </b>
+              <TruncatedText value={signature} />
             </Text>
           }
           {
             target &&
-            <Text>
+            <Text truncate as="article">
               <b>target: </b>
               <Anchor href={`/account/${target}/${makeURLQuery()}`}>
                 <TruncatedText value={target} />
@@ -196,16 +197,11 @@ class TransactionDetails extends Component {
               <b>unlocks on: </b> {unlocksOn}
             </Text>
           }
-          {/* {
-            validationKeys &&
-            <Text truncate as="article">
-              <b>validation keys: </b> {validationKeys}
-            </Text>
-          } */}
           {
             validationScript &&
             <Text truncate as="article">
-              <b>validation script: </b> {validationScript}
+              <b>validation script: </b> 
+              <TruncatedText value={validationScript} />
             </Text>
           }
         </Box> 

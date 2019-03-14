@@ -1,17 +1,18 @@
-import React from 'react'
+import React from 'react';
+import { Box } from 'grommet';
 
 function Container(props) {
-  const customStyle = {
-    paddingLeft: props.paddingLeft || "5%",
-    paddingRight: props.paddingRight || "5%",
-    paddingTop: props.paddingTop || 0,
-    paddingBottom: props.paddingBottom || 0,
-  };
-
   return(
-    <div style={customStyle}>
+    <Box 
+      style={{
+        width: "90%",
+        maxWidth: "1000px", 
+        margin: "0 auto",
+        paddingTop: props.topPad || "65px"
+      }}
+    >
       {props.children}
-    </div>
+    </Box>
   )
 }
 

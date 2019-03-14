@@ -1,33 +1,24 @@
 import React, { Component } from 'react'
 import { Box } from 'grommet'
+import Container from '../../atoms/container'
 import Navbar from '../../organisms/navbar'
-
-import style from './style.css'
 
 class Details extends Component {
   render() {
-    return(
-      // <main >
-      <Box className={style.dashboard}
-        // columns={["flex"]}
-        // rows={["auto", "flex"]}
-        // areas={[
-        //   { name: "header", start: [0, 0], end: [0, 0] },
-        //   { name: "details", start: [1, 0], end: [1, 0] },
-        // ]}
-        // fill
-      >
-        <Box gridArea="header">
+    return (
+      <Box>
+        <Box>
           <Navbar selectNode={this.props.selectNode} />
         </Box>
-      
-        {/* TODO: Back button */}
-
-        <Box gridArea="details" pad={{ horizontal: "medium", vertical: "large" }}>
-          {this.props.children}
-        </Box>
+    
+        <Container>
+          <Box pad={{ vertical: "large" }}>
+            <Box background="#0f2748" pad="large" round="xsmall" animation="fadeIn" style={{paddingTop: 0}}>
+              {this.props.children}
+            </Box>
+          </Box>
+        </Container>
       </Box>
-      // </main>
     );
   }
 }

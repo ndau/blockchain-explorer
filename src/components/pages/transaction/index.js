@@ -30,9 +30,15 @@ class Transaction extends Component {
     return (
       <Details>
         <Text>
-          <Text as="span" weight="bold" truncate>
-            Transaction {transaction && `#${transaction.hash}`}
+          <Text truncate as="article" >
+            <h3> 
+              Transaction
+              <Text as="em" weight="bold" truncate>
+                {(transaction && transaction.hash) && `  ${transaction.hash}`}
+              </Text>
+            </h3>
           </Text>
+          
           {
             blockHeight &&
             <Text as="span" style={{float: "right"}}>

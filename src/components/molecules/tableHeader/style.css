@@ -1,0 +1,16 @@
+.tableHeader {
+  /* font-size: 14px !important; */
+  font-weight: 700;
+}
+
+@media screen and (max-width: 700px) {
+  .tableHeader {
+    font-size: 14px !important;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .tableHeader {
+    font-size: 12px !important;
+  }
+}
