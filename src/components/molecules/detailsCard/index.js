@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Box, Text } from "grommet"
 import TruncatedText from "../../atoms/truncatedText"
 import Card from '../../atoms/card';
+import Keyword from '../../molecules/keyword'
 
 const Value = ({value}) => {
   if (!value) {
@@ -39,7 +40,7 @@ const SubDetails = ({value, isArray}) => {
         Object.keys(value).map((item, index) => {
           return (
             <Text key={index}>
-              {item}: <Value value={value[item]} />
+              <Keyword label={item} />: <Value value={value[item]} />
             </Text>
           )
         })
@@ -50,7 +51,7 @@ const SubDetails = ({value, isArray}) => {
 
 class DetailsCard extends Component {
   render() {
-    const { data } = this.props;
+    const { data, keywordMap } = this.props;
 
     if (!data) {
       return null;
@@ -62,19 +63,11 @@ class DetailsCard extends Component {
           {
             Object.keys(data).map((item, index) => {
               const value = data[item]
-              if(value === 0 || value) {
-                return (
-                  <Text as="section" key={index}>
-                    <b>
-                      {
-                        item
-                          .replace(/([^A-Z]*)([A-Z]*)([A-Z])([^A-Z]*)/g, '$1 $2 $3$4')
-                          .replace(/ +/g, ' ')
-                      }:
-                    </b> <Value value={value} />
-                  </Text>
-                )
-              }
+              return (value === 0 || value) && (
+                <Text as="section" key={index}>
+                  <Keyword label={item} keyword={keywordMap[item]} /> {': '} <Value value={value} />
+                </Text>
+              )
             })
           }
         </Box> 

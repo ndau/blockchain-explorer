@@ -4,8 +4,7 @@ import { Text } from 'grommet'
 function TruncatedText({value}) {
  
   const truncate = (value) => { 
-    
-    if (!value || !isNaN(Date.parse(value)) || typeof value === 'object' && !Array.isArray(value)) {
+    if (!value || (typeof value === 'object' && !Array.isArray(value)) || typeof value !== 'string' || !isNaN(Date.parse(value))) {
       return value
     }
 

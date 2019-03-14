@@ -91,7 +91,7 @@ class TransactionDetails extends Component {
           {
             distributionScript &&
             <Text truncate as="article">
-              <b>distribution script: </b> {distributionScript}
+              <b>distribution script: </b>  <TruncatedText value={distributionScript} />
             </Text>
           }
           {
@@ -142,7 +142,7 @@ class TransactionDetails extends Component {
           {
             RPCAddress &&
             <Text truncate as="article">
-              <b>RPC Address: </b> <TruncatedText value={RPCAddress} />
+              <b>RPC Address: </b> {RPCAddress}
             </Text>
           }
           {

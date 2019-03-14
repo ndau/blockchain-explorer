@@ -44,7 +44,7 @@ class StatusCard extends Component {
             {targetPrice && targetPrice.toFixed(2)} {priceUnit}
           </Text>
           <Text as="section">
-            <b>ndau Sold </b>
+            <b>ndau Issued </b>
             { totalIssued && (totalIssued / 100000000).toFixed(3) }
           </Text>
           <Text as="section">

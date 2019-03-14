@@ -21,10 +21,16 @@ class BlockCard extends Component{
         {
           Object.keys(block).map((property, i) => {
             if(notDisplayed.includes(property)) { return null }
-
+            const value = block[property];
             return (
-              <Text truncate as="article" key={i}>
-                <b>{property}:</b> <TruncatedText value={block[property]} />
+              <Text key={i}  as="div">
+                <b>{property}: </b>
+                {
+                  value && (typeof value === "string" || Array.isArray(value)) ?
+                  <TruncatedText value={block[property]} />
+                  :
+                  value
+                }
               </Text>
           )})
         }

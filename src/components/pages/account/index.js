@@ -17,6 +17,7 @@ class Account extends Component {
 
   render() {
     const { account } = this.state;
+    console.log(account)
 
     if (!account) {
       return (
@@ -33,7 +34,7 @@ class Account extends Component {
         </Text>
 
         {/* ACCOUNT DETAILS */}
-        <DetailsCard data={account} />
+        <DetailsCard data={account} keywordMap={this.keywordMap} />
       </Details>
     )
   }
@@ -44,6 +45,25 @@ class Account extends Component {
       .then(account => {
         this.setState({ account })
       })
+  }
+
+  keywordMap = {
+    address: "address",
+    balance: "balance",
+    currencySeatDate: "currencySeat",
+    delegationNode: "delegationNode",
+    incomingRewardsFrom: "rewards",
+    lastEAIUpdate: "EAI",
+    lastWAAUpdate: "WAA",
+    lock: "lock",// {noticePeriod: "1m", unlocksOn: null, bonus: 0}
+    rewardsTarget: "reward",
+    sequence: "sequence",
+    settlementSettings: "settlement", // {period: "2d", changesAt: null, next: null}
+    settlements: "settlement",
+    stake: "stake", // {Point: "2019-02-26T00:28:44Z", Address: "ndahnsxr8zh7r6u685ka865wz77wb78xcn45rgskpeyiwuza"}
+    validationKeys: "validationKey", 
+    validationScript: "validationScript",
+    weightedAverageAge: "weightedAverageAge",
   }
 }
 
