@@ -19,9 +19,9 @@ class NavbarMenu extends Component {
         <Box
           ref={this.targetRef}
           onClick={this.toggleOpen}
-          pad={{vertical: "15px"}}
+          pad={{vertical: "20px"}}
         >
-          <Menu size="35px" color="#fff"></Menu>
+          <Menu size="30px" color="#fff" pad="0"></Menu>
         </Box>
 
         {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'grommet'
 
-function TruncatedText({value}) {
+function TruncatedText({value, className}) {
  
   const truncate = (value) => { 
     if (!value || (typeof value === 'object' && !Array.isArray(value)) || !isNaN(Date.parse(value))) {
@@ -20,7 +20,7 @@ function TruncatedText({value}) {
   }
 
   return (
-    <Text>{truncate(value)}</Text>
+    <Text className={className}>{truncate(value)}</Text>
   );
 }
 
