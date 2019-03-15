@@ -41,6 +41,16 @@ class BlockListItem extends Component {
                 <i><Age timestamp={timestamp} /></i>
               </Text>
             </Text>
+
+            {
+              !active &&
+              <Box>
+                <Text size="small">
+                  { numberOfTransactions ? `${numberOfTransactions} ` : 'No '}
+                  transaction{numberOfTransactions !== 1 && 's'}
+                </Text>
+              </Box>
+            }
           </header>
         )}
         onClick={this.setAsActiveBlock}
@@ -50,16 +60,6 @@ class BlockListItem extends Component {
         animation={["slideDown", "fadeIn"]}
       >
         <Box>
-          {
-            !active &&
-            <Box>
-              <Text size="small">
-                { numberOfTransactions ? `${numberOfTransactions} ` : 'No '}
-                transaction{numberOfTransactions !== 1 && 's'}
-              </Text>
-            </Box>
-          }
-
           <Collapsible open={active}>
             <BlockDetails block={block} />
           </Collapsible> 

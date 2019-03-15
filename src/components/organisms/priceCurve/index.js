@@ -62,7 +62,7 @@ class nPriceCurve extends Component {
             }
             {
               <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">market price: </Text>
+                <Text color="#ffe7c6" size="small" weight="normal">price: </Text>
                 {(activeYValue || activeYValue === 0) ? activeYValue.toFixed(2) : currentPrice.toFixed(2)} USD
               </Text>
             }
