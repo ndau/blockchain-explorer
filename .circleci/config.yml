@@ -1,0 +1,50 @@
+version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.0
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:9.11.1
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/app
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies- # fallback to latest
+      - run:
+          - name: install dependencies
+            command: |
+              yarn install
+
+      - run:
+          - name: build
+            command: |
+              yarn build
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          - name: run tests
+            command: |
+              # I think this fails with just the default tests
+              # uncomment this line to run the tests
+              # yarn test
+      - aws-s3/sync:
+          from: bucket
+          to: 's3://blockchain-explorer.services.ndau.tech/prod'
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400"
+          overwrite: true
