@@ -33,7 +33,7 @@ class Account extends Component {
         <Text truncate as="article" >
           <h3> 
             Account
-            <Text as="span" weight="bold" truncate as="em">
+            <Text weight="bold" truncate as="em">
               {
                 (account && account.address) && 
                 <TruncatedText value={` ${account.address}`} />

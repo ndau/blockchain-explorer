@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Box, Anchor, Text } from 'grommet'
 import BlocksList from '../../organisms/blocksList'
-import { getBlocks, makeURLQuery } from '../../../helpers';
+import { makeURLQuery } from '../../../helpers';
 
 class LatestBlocks extends Component {
   render() {

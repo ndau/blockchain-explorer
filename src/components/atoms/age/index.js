@@ -5,18 +5,18 @@ moment.locale('en', {
   relativeTime: {
     future: 'in %s',
     past: '%s ago',
-    s:  '<1m',
-    ss: '%ss',
-    m:  '1m',
-    mm: '%dm',
-    h:  '1h',
-    hh: '%dh',
-    d:  '1d',
-    dd: '%dd',
-    M:  '1month',
-    MM: '%dmonths',
-    y:  '1yr',
-    yy: '%dyrs'
+    s:  'secs',
+    ss: '%s secs',
+    m:  '1 min',
+    mm: '%d mins',
+    h:  '1 hr',
+    hh: '%d hrs',
+    d:  '1 day',
+    dd: '%d days',
+    M:  '1 month',
+    MM: '%d months',
+    y:  '1 yr',
+    yy: '%d yrs'
   }
 });
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Box, Chart, Stack, Text } from "grommet";
 import { price_at_unit, get_market_cap } from '../../../helpers/ndauMath.js';
-import { getCurrentOrder, throttle } from '../../../helpers'
+import { getCurrentOrder } from '../../../helpers'
 import { PRIMARY_LIME } from '../../../constants'
 
 const X_AXIS_HEIGHT = "20px";
