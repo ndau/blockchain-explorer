@@ -5,7 +5,6 @@ import Card from '../../atoms/card';
 import TransactionDetails from '../../organisms/transactionDetails'
 import TruncatedText from '../../atoms/truncatedText'
 import { getTransaction, makeURLQuery } from '../../../helpers';
-import './style.css'
 
 class TransactionCard extends Component {
   constructor(props) {
@@ -51,46 +50,34 @@ class TransactionCard extends Component {
                     <Contract
                       size="15px"
                       color="#aaa"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setActiveTransaction(null)
-                      }}
+                      onClick={() => setActiveTransaction(null)}
                     /> : 
-                    <Expand
-                      size="15px"
-                      color="#aaa" 
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setActiveTransaction(index)
-                      }}
-                    /> 
+                    <Expand size="15px" color="#aaa" /> 
                   }
                 </Text>
                 <Text weight="bold" header>
                   Transaction 
-                  <Text>
-                    {
-                      hash &&
-                      <Anchor href={transactionURL} onClick={event => event.stopPropagation()}>
-                        {` `}
-                        <TruncatedText value={hash} className="txHash" />
-                      </Anchor>
-                    }
-                  </Text>
+                  {
+                    hash &&
+                    <Anchor href={transactionURL} onClick={event => event.stopPropagation()}>
+                      {` `}
+                      <TruncatedText value={hash} />
+                    </Anchor>
+                  }
                 </Text>
               </Text>
-              {
-                (!open && type) &&
-                <Text size="xsmall">{type} Transaction</Text>
-              }
-            </Box>
               
+            </Box>
           </header>
         )}
         background="#0b1f3a"
         pad="15px"
       > 
         <Box>
+          {
+            (!open && type) &&
+            <Text size="xsmall">{type} Transaction</Text>
+          }
           <Collapsible open={open}>
             <TransactionDetails transaction={transaction} />
           </Collapsible>

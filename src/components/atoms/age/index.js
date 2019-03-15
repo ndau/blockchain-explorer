@@ -1,25 +1,6 @@
 import React, { Component } from 'react'
 import moment from 'moment';
 
-moment.locale('en', {
-  relativeTime: {
-    future: 'in %s',
-    past: '%s ago',
-    s:  '<1m',
-    ss: '%ss',
-    m:  '1m',
-    mm: '%dm',
-    h:  '1h',
-    hh: '%dh',
-    d:  '1d',
-    dd: '%dd',
-    M:  '1month',
-    MM: '%dmonths',
-    y:  '1yr',
-    yy: '%dyrs'
-  }
-});
-
 class Age extends Component {
   constructor(props) {
     super(props)
@@ -54,6 +35,10 @@ class Age extends Component {
 
   getAge = () => {
     let age = moment(this.props.timestamp).fromNow();
+    if(age === "a few seconds ago") {
+      age = "seconds ago"
+    }
+
     return age;
   }
 }

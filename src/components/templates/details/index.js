@@ -13,7 +13,7 @@ class Details extends Component {
     
         <Container>
           <Box pad={{ vertical: "large" }}>
-            <Box background="#0f2748" pad="medium" round="xsmall" animation="fadeIn" style={{paddingTop: 0}}>
+            <Box background="#0f2748" pad="large" round="xsmall" animation="fadeIn" style={{paddingTop: 0}}>
               {this.props.children}
             </Box>
           </Box>

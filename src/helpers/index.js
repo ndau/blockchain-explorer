@@ -1,7 +1,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import qs from 'query-string';
-import { HTTP_REQUEST_HEADER,  POLL_INTERVAL, DEFUALT_NODE_ENDPOINT } from '../constants.js';
+import { HTTP_REQUEST_HEADER,  POLL_INTERVAL } from '../constants.js';
 
 export const TRANSACTION_TYPES = {
   1: "Transfer",
@@ -28,15 +28,7 @@ export const TRANSACTION_TYPES = {
 
 export const getNodeEndpoint = () => {
   const query = qs.parse(window.location.search);
-  const nodeEndpoint = query.node;
-  if (nodeEndpoint) {
-    return nodeEndpoint
-  }
-  // set node endpoint to default node if not present
-  else {
-    query.node = DEFUALT_NODE_ENDPOINT;
-    window.location.search = `?${qs.stringify(query)}`
-  }
+  return query.node
 }
 
 export const validateEndpoint = (nodeEndpoint) => {

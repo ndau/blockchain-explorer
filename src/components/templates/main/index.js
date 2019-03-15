@@ -17,7 +17,7 @@ class Main extends Component {
         </Box>
         <Container>
           <Box pad={{ vertical: "large" }}>
-            <Box background="#0f2748" pad="medium" round="xsmall" animation="fadeIn" style={{paddingTop: 0}}>
+            <Box background="#0f2748" pad="large" round="xsmall" animation="fadeIn" style={{paddingTop: 0}}>
               {children}
             </Box>
           </Box>

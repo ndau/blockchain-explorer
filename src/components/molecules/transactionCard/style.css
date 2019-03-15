@@ -1,9 +1,0 @@
-.txHash {
-  font-size: 17px !important;
-}
-
-@media screen and (max-width: 500px) {
-  .txHash {
-    font-size: 13px !important;
-  }
-}
