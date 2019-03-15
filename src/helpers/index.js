@@ -185,12 +185,13 @@ export const getTransactions = (transactionHashes=[]) => {
 }
 
 export const getTransaction = (hash) => {
-    const transactionEndpoint = `${getNodeEndpoint()}/transaction/${window.encodeURIComponent(hash)}`;
+  const transactionHash = window.decodeURIComponent(hash);
+  const transactionEndpoint = `${getNodeEndpoint()}/transaction/${window.encodeURIComponent(transactionHash)}`;
 
-    return axios.get(transactionEndpoint, HTTP_REQUEST_HEADER)
-      .then(response => {
-        return response.data && formatTransaction(response.data.Tx, { hash });
-      })
+  return axios.get(transactionEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+      return response.data && formatTransaction(response.data.Tx, { hash: transactionHash });
+    })
 }
 
 export const getBlock = (blockHeight) => {
