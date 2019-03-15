@@ -55,7 +55,7 @@ class NdauDashboard extends Component {
           return null
         }
 
-        this.setState({ nodeStatus: status })
+        // this.setState({ nodeStatus: status })
         return status;
       })
       .then((status) => {

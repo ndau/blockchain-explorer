@@ -18,7 +18,7 @@ class nPriceCurve extends Component {
       activeXValue: null,
       activeYValue: null
     }
-  
+
     this.getData();
   } 
 
@@ -40,8 +40,13 @@ class nPriceCurve extends Component {
     };
 
     if(!priceData) {
-      return null
+      return (
+        <Box pad="xlarge" animation="pulse">
+          <Text alignSelf="center" size="xsmall">Loading price data...</Text>
+        </Box>
+      )
     }
+
     return (
       <Box className="ndauPriceCurve">
         <Box align="end" margin={{bottom: "20px"}}>
@@ -87,11 +92,11 @@ class nPriceCurve extends Component {
             </Text>
           </Box>
 
-          <Box flex justify="between" margin={{bottom: X_AXIS_HEIGHT, right: "10px"}} overflow="show">
+          <Box flex justify="between" margin={{bottom: X_AXIS_HEIGHT, right: "10px"}}>
             {
               yAxis && yAxis.map((y, index) => {
                 return (
-                  <Box key={index} direction="row" align="end" overflow="show">
+                  <Box key={index} direction="row" align="start" >
                     <Box fill>
                       <Text size="xsmall">{y}</Text>
                     </Box>
@@ -108,7 +113,7 @@ class nPriceCurve extends Component {
                 interactiveChild="last"
                 margin={{left: "18px"}}
                 style={{cursor: "crosshair"}}
-              >
+              > 
                 <Chart
                   {...chartProps}
                   type="line"
@@ -128,9 +133,28 @@ class nPriceCurve extends Component {
                   type="area"
                   round
                   color={{ color: PRIMARY_LIME, opacity: "weak" }}
-                  style={{opacity: 0.5}}
+                  style={{opacity: 0.7}}
                   thickness="xxsmall"
                 />
+
+                {/* Tracker */}
+                {
+                  activeXValue &&
+                  <Box fill direction="row">
+                    <Box flex={false} margin={{left: `${((activeXValue/ndauIssued)*100)}%`}} >
+                      <Box
+                        fill
+                        pad="0"
+                        border={{
+                          color: "rgba(255, 255, 255, 0.5)",
+                          side: "left", 
+                          size: "1px"
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                }
+
                 <Chart
                   {...chartProps}
                   type="bar"
@@ -167,7 +191,7 @@ class nPriceCurve extends Component {
             color="#ffe7c6"
             style={{ letterSpacing: "0.5px" }}
           >
-            units of ndau issued
+            ndau issued
           </Text>
         </Box>
       </Box>
@@ -176,15 +200,28 @@ class nPriceCurve extends Component {
 
   getData = () => {
     const { currentOrder } = this.props;
-    if (this.props.currentOrder) {
-      this.resetState(currentOrder)
+    this.resetState(currentOrder)
+    // if (this.props.currentOrder) {
+    //   debugger
+    //   this.resetState(currentOrder)
+    // }
+    // else {
+    //   getCurrentOrder()
+    //     .then(currentOrder => {
+    //       this.resetState(currentOrder)
+    //     })
+    //     .catch()
+    // }
+  }
+
+  componentDidUpdate = (prevProps) => {
+    const currentOrder = this.props.currentOrder;
+    if(!currentOrder) {
+      return;
     }
-    else {
-      getCurrentOrder()
-      .then(currentOrder => {
-        this.resetState(currentOrder)
-      })
-      .catch()
+
+    if (JSON.stringify(currentOrder) !== JSON.stringify(prevProps.currentOrder)) {
+      this.resetState(this.props.currentOrder);
     }
   }
 
