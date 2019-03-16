@@ -1,10 +1,26 @@
+# constants
+build_cache_key: &build_cache_key "{{ .Revision }}"
+
 version: 2.1
+
+workflows:
+
+  prod:
+    jobs:
+      - build
+      - test
+      - deploy:
+          requires:
+            - build
+            - test
+
 orbs:
-  aws-s3: circleci/aws-s3@1.0.0
+  aws-s3: circleci/aws-s3@1.0.4
+
 jobs:
-  build:
+  test:
     docker:
-      # specify the version you desire here
+
       - image: circleci/node:9.11.1
 
       # Specify service dependencies here if necessary
@@ -25,11 +41,6 @@ jobs:
           command: |
             yarn install
 
-      - run:
-          name: build
-          command: |
-            yarn build
-
       - save_cache:
           paths:
             - node_modules
@@ -41,10 +52,93 @@ jobs:
             # I think this fails with just the default tests
             # uncomment this line to run the tests
             # yarn test
+
+  build:
+    docker:
+
+      - image: circleci/node:9.11.1
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/app
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies- # fallback to latest
+      - run:
+          name: install dependencies
+          command: |
+            yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: build
+          command: |
+            yarn build
+
+      - cache_copy:
+          src_dir: ~/app/build
+
+
+  deploy:
+    docker:
+
+      - image: circleci/python:3.6
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/app
+
+    steps:
+      # bring back the build cache
+      - restore_cache:
+          key: *build_cache_key
+
+      - run:
+          name: restore build
+          command: |
+            yarn install
+
       - aws-s3/sync:
-          from: bucket
+          from: /opt/cache/build
           to: 's3://blockchain-explorer.services.ndau.tech/prod'
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
           overwrite: true
+
+commands:
+  cache_copy:
+    description: "Copies to the cache"
+    parameters:
+      src_dir:
+        type: string
+    steps:
+      # bring back a cache if one already exists
+      - restore_cache:
+          key: *build_cache_key
+      - run:
+          name: save directory to cache
+          command: |
+            # ensure cache directory
+            [ -d /opt/cache ] || mkdir -p /opt/cache
+            #
+            cp -r << parameters.src_dir >> /opt/cache/
+      # saves this path with this cache key
+      - save_cache:
+          key: *build_cache_key
+          paths:
+            - /opt/cache
