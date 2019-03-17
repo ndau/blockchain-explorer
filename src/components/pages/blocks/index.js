@@ -4,7 +4,7 @@ import Main from '../../templates/main'
 import TableHeader from '../../molecules/tableHeader'
 import TableData from '../../molecules/tableData'
 import Age from '../../atoms/age'
-import {  BLOCK_RANGE } from '../../../constants.js'
+import { BLOCK_RANGE } from '../../../constants.js'
 import {
   getNodeStatus,
   getBlockRangeStart,
@@ -28,7 +28,7 @@ class Blocks extends Component {
   }
 
   render() {
-    const { blocks, filteredBlocks, hideEmpty } = this.state;
+    const { blocks, filteredBlocks, hideEmpty, loading } = this.state;
     const columns = this.getColumns(hideEmpty);
 
     return (
@@ -109,6 +109,8 @@ class Blocks extends Component {
     if (blockRangeEnd <= 1) {
       return
     }
+
+    this.setState({ loading: true })
     
     getBlocks(null, blockRangeEnd, BLOCK_RANGE, true, null)
       .then(previousBlocks => {
@@ -121,6 +123,7 @@ class Blocks extends Component {
           return {
             blocks: [...blocks, ...previousBlocks],
             earliestBlockHeight:  earliestBlock && earliestBlock.height,
+            loading: false
           }
         })
       })
