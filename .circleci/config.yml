@@ -116,7 +116,7 @@ jobs:
       - restore_steps
       - aws-s3/sync:
           from: ~/build-cache
-          to: 's3://explorer.services.ndau.tech/prod'
+          to: 's3://explorer.service.ndau.tech/prod'
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
@@ -133,7 +133,7 @@ jobs:
       - restore_steps
       - aws-s3/sync:
           from: ~/build-cache
-          to: 's3://explorer.services.ndau.tech/staging'
+          to: 's3://explorer.service.ndau.tech/staging'
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
