@@ -134,6 +134,7 @@ commands:
           name: save directory to cache
           command: |
             # ensure cache directory
+            chown -R $USER:$USER /opt
             [ -d /opt/build-cache ] || mkdir -p /opt/build-cache
             #
             cp -r << parameters.src_dir >> /opt/build-cache/
