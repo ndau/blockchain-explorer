@@ -134,8 +134,7 @@ commands:
           name: save directory to cache
           command: |
             # ensure cache directory
-            chown -R $USER:$USER /opt
-            [ -d /opt/build-cache ] || mkdir -p /opt/build-cache
+            [ -d /opt/build-cache ] || sudo mkdir -p /opt/build-cache
             #
             cp -r << parameters.src_dir >> /opt/build-cache/
       # saves this path with this cache key
