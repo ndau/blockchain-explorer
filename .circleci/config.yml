@@ -75,7 +75,7 @@ jobs:
     steps:
       - restore_steps
       - aws-s3/sync:
-          from: ~/build-cache/build
+          from: ~/build-cache
           to: 's3://blockchain-explorer.services.ndau.tech/prod'
           arguments: |
             --acl public-read \
