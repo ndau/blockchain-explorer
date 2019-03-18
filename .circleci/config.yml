@@ -127,19 +127,22 @@ commands:
       src_dir:
         type: string
     steps:
+      - run:
+          name: ensure cache directory
+          command: |
+            # ensure cache directory
+            if [ ! -d /build-cache ]; then
+              sudo mkdir /build-cache
+            fi
+            u=$USER
+            sudo chmod 777 /build-cache
+            sudo chown $u:$u /build-cache
       # bring back a cache if one already exists
       - restore_cache:
           key: *build_cache_key
       - run:
           name: save directory to cache
           command: |
-            # ensure cache directory
-            if [ ! -d /build-cache ]; then
-              u=$USER
-              sudo mkdir /build-cache
-              sudo chmod 777 /build-cache
-              sudo chown $u:$u /build-cache
-              fi
             #
             cp -r << parameters.src_dir >> /build-cache/
       # saves this path with this cache key
