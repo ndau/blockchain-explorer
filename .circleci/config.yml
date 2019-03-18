@@ -135,7 +135,7 @@ commands:
           command: |
             # ensure cache directory
             chown -R $USER:$USER /opt
-            chmod 777 /opt
+            sudo chmod 777 /opt
             [ -d /opt/build-cache ] || sudo mkdir -p /opt/build-cache
             #
             cp -r << parameters.src_dir >> /opt/build-cache/
