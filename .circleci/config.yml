@@ -2,14 +2,50 @@
 build_cache_key: &build_cache_key "{{ .Revision }}"
 version: 2.1
 workflows:
+  master:
+    jobs:
+    - build:
+        filters:
+          branches:
+            only: /^master$/
+    - test:
+        filters:
+          branches:
+            only: /^master$/
+    - deploy_prod:
+        requires:
+          - build
+          - test
+        filters:
+          branches:
+            only: /^master$/
+  branch:
+    jobs:
+      - build:
+          filters:
+            tags:
+              ignore: /.*/
+            branches:
+              ignore: /^master$/
+      - test:
+          filters:
+            tags:
+              ignore: /.*/
+            branches:
+              ignore: /^master$/
+  staging:
+    jobs:
+      - deploy_staging:
+          filters:
+            tags:
+              only: /.*-staging$/
   prod:
     jobs:
-      - build
-      - test
-      - deploy:
-          requires:
-            - build
-            - test
+      - deploy_prod:
+          filters:
+            tags:
+              only: /.*-prod$/
+
 orbs:
   aws-s3: circleci/aws-s3@1.0.4
 jobs:
@@ -68,7 +104,7 @@ jobs:
           src_dir: ~/app/build
 
 
-  deploy:
+  deploy_prod:
     docker:
       - image: circleci/python:3.6
     working_directory: ~/app
@@ -76,7 +112,24 @@ jobs:
       - restore_steps
       - aws-s3/sync:
           from: ~/build-cache
-          to: 's3://blockchain-explorer.services.ndau.tech/prod'
+          to: 's3://explorer.services.ndau.tech/prod'
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400"
+          overwrite: true
+      - notify:
+          msg: Blockchain explorer deploy complete.
+
+
+  deploy_staging:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/app
+    steps:
+      - restore_steps
+      - aws-s3/sync:
+          from: ~/build-cache
+          to: 's3://explorer.services.ndau.tech/staging'
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
@@ -98,6 +151,7 @@ commands:
           key: *build_cache_key
           paths:
             - ~/build-cache
+
   restore_steps:
     description: "This should ensure that the cache directory is restored with the correct permissions."
     steps:
@@ -114,3 +168,32 @@ commands:
     # bring back a cache if one already exists
     - restore_cache:
         key: *build_cache_key
+
+  mark_honeycomb:
+    description: "Places a marker in the specified honeycomb dataset"
+    parameters:
+      msg:
+        type: string
+      dataset:
+        type: string
+    steps:
+      - run:
+          name: create marker
+          command: |
+            echo "{\"message\":\"<< parameters.msg >>\", \"type\":\"bce-deploy\"}" >parms.txt
+            cat parms.txt   #just to be sure
+            curl -X POST -H "X-Honeycomb-Team: $HONEYCOMB_KEY" -d @parms.txt https://api.honeycomb.io/1/markers/<< parameters.dataset >>
+
+  notify:
+    description: "Notifies the team with a message"
+    parameters:
+      msg:
+        type: string
+    steps:
+      - run:
+          name: send message
+          command: |
+              # this is necessary to get the environment variables to interpolate properly
+              echo "{\"text\":\"<< parameters.msg >>\"}" >parms.txt
+              curl -X POST -H 'Content-type: application/json' --data @parms.txt https://hooks.slack.com/services/$SLACK_KEY
+
