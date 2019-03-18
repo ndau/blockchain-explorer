@@ -8,7 +8,7 @@ const X_AXIS_HEIGHT = "20px";
 class nPriceCurve extends Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
       priceData: null,
       xAxis: [],
@@ -19,17 +19,17 @@ class nPriceCurve extends Component {
     }
 
     this.getData();
-  } 
+  }
 
   render() {
-    const { 
-      priceData, 
-      yAxis, xAxis, 
+    const {
+      priceData,
+      yAxis, xAxis,
       trackerAreaPoints,
-      activeXValue, 
-      activeYValue, 
-      ndauIssued, 
-      currentPrice 
+      activeXValue,
+      activeYValue,
+      ndauIssued,
+      currentPrice
     } = this.state;
 
     const chartProps = {
@@ -73,7 +73,7 @@ class nPriceCurve extends Component {
           </Text>
         </Box>
 
-        
+
 
         <Box direction="row" fill>
           {/* y-axis label */}
@@ -82,7 +82,7 @@ class nPriceCurve extends Component {
               size="xsmall"
               color="#ffe7c6"
               style={{
-                transform: "rotate(-90deg) translateX(-65px)", 
+                transform: "rotate(-90deg) translateX(-65px)",
                 width: "100px",
                 letterSpacing: "1px"
               }}
@@ -107,12 +107,12 @@ class nPriceCurve extends Component {
 
           <Box>
             <Box>
-              <Stack 
+              <Stack
                 guidingChild="first"
                 interactiveChild="last"
                 margin={{left: "18px"}}
                 style={{cursor: "crosshair"}}
-              > 
+              >
                 <Chart
                   {...chartProps}
                   type="line"
@@ -146,7 +146,7 @@ class nPriceCurve extends Component {
                         pad="0"
                         border={{
                           color: "rgba(255, 255, 255, 0.5)",
-                          side: "left", 
+                          side: "left",
                           size: "1px"
                         }}
                       />
@@ -172,7 +172,7 @@ class nPriceCurve extends Component {
                     direction="row"
                     justify="between"
                     align="center"
-                  > 
+                  >
                     {
                       xAxis.map(x => <Text key={x} size="xsmall">{x}</Text>)
                     }
@@ -186,7 +186,7 @@ class nPriceCurve extends Component {
         {/* x-axis label */}
         <Box align="center">
           <Text
-            size="xsmall" 
+            size="xsmall"
             color="#ffe7c6"
             style={{ letterSpacing: "0.5px" }}
           >
@@ -240,7 +240,7 @@ class nPriceCurve extends Component {
     for (var n = start_ndau; n <= end_ndau; n += Math.floor((end_ndau - start_ndau) / 1000)) {
       points.push([n, price_at_unit(n)]);
     }
-    
+
     return points;
   }
 
@@ -250,12 +250,12 @@ class nPriceCurve extends Component {
       return datum && {
         value: [datum[0], highestYAxisValue],
         onHover: (showMarker) => this.showMarker(showMarker && datum)
-      }  
+      }
     });
   }
 
   showMarker = (datum=[]) => {
-    this.setState({ 
+    this.setState({
       activeXValue: datum[0],
       activeYValue: datum[1],
     })

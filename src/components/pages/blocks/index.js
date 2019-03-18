@@ -28,7 +28,7 @@ class Blocks extends Component {
   }
 
   render() {
-    const { blocks, filteredBlocks, hideEmpty, loading } = this.state;
+    const { blocks, filteredBlocks, hideEmpty } = this.state;
     const columns = this.getColumns(hideEmpty);
 
     return (
@@ -37,7 +37,7 @@ class Blocks extends Component {
         selectNode
       >
         <Box justify="between">
-          <h3 
+          <h3
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -50,14 +50,14 @@ class Blocks extends Component {
               color="#aaa"
               weight="normal"
             >
-              <CheckBox 
+              <CheckBox
                 toggle
                 checked={hideEmpty}
                 label="hide empty blocks"
                 onChange={this.toggleHideEmpty}
                 reverse
                 name="small"
-                
+
               />
             </Text>
           </h3>
@@ -65,8 +65,8 @@ class Blocks extends Component {
 
         <DataTable
           data={hideEmpty ? filteredBlocks : blocks}
-          columns={columns} 
-          onMore={this.loadMoreBlocks} 
+          columns={columns}
+          onMore={this.loadMoreBlocks}
         />
       </Main>
     )
@@ -111,13 +111,13 @@ class Blocks extends Component {
     }
 
     this.setState({ loading: true })
-    
+
     getBlocks(null, blockRangeEnd, BLOCK_RANGE, true, null)
       .then(previousBlocks => {
         if (previousBlocks.length < 1) {
           return
         }
-      
+
         const earliestBlock = previousBlocks[previousBlocks.length - 1];
         this.setState(({ blocks }) => {
           return {
@@ -128,8 +128,8 @@ class Blocks extends Component {
         })
       })
   }
-  
-  resetData = (newBlocks=[], newStatus, latestBlockHeight) => {  
+
+  resetData = (newBlocks=[], newStatus, latestBlockHeight) => {
     this.setState(({blocks=[]}) => {
       console.log(`FOUND ${newBlocks.length} new block(s)!`)
       return {
@@ -154,7 +154,7 @@ class Blocks extends Component {
             href={`/block/${height}/${makeURLQuery()}`}
           />
         </TableData>
-        
+
       ),
     },
     {
@@ -182,19 +182,19 @@ class Blocks extends Component {
           <TableData>
             {
               numberOfTransactions ?
-              <Anchor 
-                label={`${numberOfTransactions} `} 
-                href={`/block/${height}/${makeURLQuery()}`} 
+              <Anchor
+                label={`${numberOfTransactions} `}
+                href={`/block/${height}/${makeURLQuery()}`}
               />
               :
               '0'
             }
           </TableData>
-          
+
         )
       }
     }
-  ]); 
+  ]);
 
   toggleHideEmpty = () => {
     this.setState(({hideEmpty, blocks}) => {
@@ -204,8 +204,8 @@ class Blocks extends Component {
       if (newHideEmpty) {
         filteredBlocks = blocks.filter(block => block.numberOfTransactions)
       }
-      
-      return { 
+
+      return {
         hideEmpty: newHideEmpty,
         filteredBlocks
       }
