@@ -87,7 +87,7 @@ jobs:
           command: |
             yarn install
       - aws-s3/sync:
-          from: /build-cache/build
+          from: ~/build-cache/build
           to: 's3://blockchain-explorer.services.ndau.tech/prod'
           arguments: |
             --acl public-read \
@@ -104,12 +104,12 @@ commands:
       - run:
           name: save directory to cache
           command: |
-            cp -r << parameters.src_dir >> /build-cache/
+            cp -r << parameters.src_dir >> ~/build-cache/
       # saves this path with this cache key
       - save_cache:
           key: *build_cache_key
           paths:
-            - /build-cache
+            - ~/build-cache
   restore_steps:
     description: "This should ensure that the cache directory is restored with the correct permissions."
     steps:
@@ -117,12 +117,12 @@ commands:
         name: ensure cache directory
         command: |
           # ensure cache directory
-          if [ ! -d /build-cache ]; then
-            sudo mkdir /build-cache
+          if [ ! -d ~/build-cache ]; then
+            sudo mkdir ~/build-cache
           fi
           u=$USER
-          sudo chmod 777 /build-cache
-          sudo chown $u:$u /build-cache
+          sudo chmod 777 ~/build-cache
+          sudo chown $u:$u ~/build-cache
     # bring back a cache if one already exists
     - restore_cache:
         key: *build_cache_key
