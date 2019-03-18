@@ -74,10 +74,6 @@ jobs:
     working_directory: ~/app
     steps:
       - restore_steps
-      - run:
-          name: restore build
-          command: |
-            yarn install
       - aws-s3/sync:
           from: ~/build-cache/build
           to: 's3://blockchain-explorer.services.ndau.tech/prod'
@@ -113,7 +109,7 @@ commands:
             sudo mkdir ~/build-cache
           fi
           u=$USER
-          sudo chmod 777 ~/build-cache
+          sudo chmod 755 ~/build-cache
           sudo chown circleci:circleci ~/build-cache
     # bring back a cache if one already exists
     - restore_cache:
