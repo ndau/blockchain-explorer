@@ -138,7 +138,7 @@ class nPriceCurve extends Component {
 
                 {/* Tracker */}
                 {
-                  activeXValue &&
+                  (activeXValue === 0 || activeXValue) &&
                   <Box fill direction="row">
                     <Box flex={false} margin={{left: `${((activeXValue/ndauIssued)*100)}%`}} >
                       <Box
@@ -200,17 +200,6 @@ class nPriceCurve extends Component {
   getData = () => {
     const { currentOrder } = this.props;
     this.resetState(currentOrder)
-    // if (this.props.currentOrder) {
-    //   debugger
-    //   this.resetState(currentOrder)
-    // }
-    // else {
-    //   getCurrentOrder()
-    //     .then(currentOrder => {
-    //       this.resetState(currentOrder)
-    //     })
-    //     .catch()
-    // }
   }
 
   componentDidUpdate = (prevProps) => {
