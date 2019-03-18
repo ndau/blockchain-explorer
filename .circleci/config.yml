@@ -37,12 +37,16 @@ workflows:
     jobs:
       - deploy_staging:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*-staging$/
   prod:
     jobs:
       - deploy_prod:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /.*-prod$/
 
