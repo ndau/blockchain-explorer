@@ -113,7 +113,7 @@ jobs:
             yarn install
 
       - aws-s3/sync:
-          from: /opt/cache/build
+          from: /opt/build-cache/build
           to: 's3://blockchain-explorer.services.ndau.tech/prod'
           arguments: |
             --acl public-read \
@@ -134,11 +134,11 @@ commands:
           name: save directory to cache
           command: |
             # ensure cache directory
-            [ -d /opt/cache ] || mkdir -p /opt/cache
+            [ -d /opt/build-cache ] || mkdir -p /opt/build-cache
             #
-            cp -r << parameters.src_dir >> /opt/cache/
+            cp -r << parameters.src_dir >> /opt/build-cache/
       # saves this path with this cache key
       - save_cache:
           key: *build_cache_key
           paths:
-            - /opt/cache
+            - /opt/build-cache
