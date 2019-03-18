@@ -117,9 +117,7 @@ jobs:
       - aws-s3/sync:
           from: ~/build-cache
           to: 's3://explorer.service.ndau.tech/prod'
-          arguments: |
-            --acl public-read \
-            --cache-control "max-age=86400"
+          arguments: --acl public-read --cache-control "max-age=86400"
           overwrite: true
       - notify:
           msg: Blockchain explorer deploy complete.
@@ -134,9 +132,7 @@ jobs:
       - aws-s3/sync:
           from: ~/build-cache
           to: 's3://explorer.service.ndau.tech/staging'
-          arguments: |
-            --acl public-read \
-            --cache-control "max-age=86400"
+          arguments: --acl public-read --cache-control "max-age=86400"
           overwrite: true
 
 commands:
