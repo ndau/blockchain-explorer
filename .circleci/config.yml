@@ -45,10 +45,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:9.11.1
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
     working_directory: ~/app
     steps:
       - checkout
@@ -75,10 +71,6 @@ jobs:
   deploy:
     docker:
       - image: circleci/python:3.6
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
     working_directory: ~/app
     steps:
       - restore_steps
@@ -122,7 +114,7 @@ commands:
           fi
           u=$USER
           sudo chmod 777 ~/build-cache
-          sudo chown $u:$u ~/build-cache
+          sudo chown circleci:circleci ~/build-cache
     # bring back a cache if one already exists
     - restore_cache:
         key: *build_cache_key
