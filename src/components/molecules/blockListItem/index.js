@@ -59,11 +59,9 @@ class BlockListItem extends Component {
         margin="xsmall"
         animation={["slideDown", "fadeIn"]}
       >
-        <Box>
-          <Collapsible open={active}>
-            <BlockDetails block={block} />
-          </Collapsible> 
-        </Box> 
+        <Collapsible open={active}>
+          <BlockDetails block={block} />
+        </Collapsible>
       </Card>
     );
   }
