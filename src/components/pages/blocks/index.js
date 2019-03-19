@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { 
-  Anchor, Box, DataTable, ResponsiveContext
+  Anchor, Box, DataTable, ResponsiveContext, Text, CheckBox
 } from 'grommet'
 import Main from '../../templates/main'
 import ColumnHeader from '../../molecules/columnHeader'
@@ -47,7 +47,7 @@ class Blocks extends Component {
           >
             Blocks
             {/* hide empty toggle is not fully functional */}
-            {/* <Text
+            <Text
               size="xsmall"
               color="#aaa"
               weight="normal"
@@ -61,7 +61,7 @@ class Blocks extends Component {
                 name="small"
 
               />
-            </Text> */}
+            </Text>
           </h3>
         </Box>
         <ResponsiveContext.Consumer>

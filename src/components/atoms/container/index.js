@@ -8,7 +8,7 @@ function Container(props) {
         width: "90%",
         maxWidth: "1000px", 
         margin: "0 auto",
-        paddingTop: props.topPad || "65px"
+        paddingTop: props.topPad || "60px"
       }}
     >
       {props.children}

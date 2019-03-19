@@ -41,7 +41,7 @@ class TransactionDetails extends Component {
 
     return (
       <Card>
-        <Box overflow="scroll">
+        <Box>
           {
             type && 
             <Text as="article">

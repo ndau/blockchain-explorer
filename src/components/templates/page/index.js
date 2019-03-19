@@ -23,16 +23,13 @@ class Page extends Component {
           pad={{vertical: "large"}}
           style={{minHeight: "100vh"}
         }>
-          <Box>
-            <Container>
-              <Box>
-                {children}
-              </Box>
-            </Container>
-          </Box>
-          <Box>
-            <Footer />
-          </Box>
+          <Container>
+            <Box>
+              {children}
+            </Box>
+          </Container>
+
+          <Footer />
         </Box>
       </Box>
     );

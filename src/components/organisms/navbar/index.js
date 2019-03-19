@@ -19,9 +19,9 @@ class NavbarMenu extends Component {
         <Box
           ref={this.targetRef}
           onClick={this.toggleOpen}
-          pad={{vertical: "20px"}}
+          pad={{vertical: "15px"}}
         >
-          <Menu size="30px" color="#fff" pad="0"></Menu>
+          <Menu size="30px" color="#fff" pad="0" justify="center"></Menu>
         </Box>
 
         {
@@ -32,12 +32,11 @@ class NavbarMenu extends Component {
             animation="slideDown"
             stretch
             onEsc={this.toggleOpen}
-            // onClickOutside={this.toggleOpen}
             className="menuDrop"
             elevation="medium"
           >
             <Box
-              pad="medium"
+              pad="small"
               width="100vw"
               background="#293e63"
               align="center"
@@ -94,7 +93,7 @@ class Navbar extends Component {
             > 
               <Box gridArea="center" align="center" pad={{ vertical: VERTICAL_PAD}}>
                 <Anchor href={`/${makeURLQuery()}`}>
-                  <Box height="45px" width="90px" pad={{vertical: "0"}}>
+                  <Box height="40px" width="80px" pad={{vertical: "0"}}>
                     <Image src={logoFile} fit="contain" height="100%"/>
                   </Box>
                 </Anchor>

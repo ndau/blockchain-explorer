@@ -9,10 +9,10 @@ function Footer() {
         <Box pad={{top: "large"}}>
           <Text
             alignSelf="center" 
-            color="rgba(255,255,255, 0.1)"
+            color="rgba(255,255,255, 0.2)"
             size="small"
           >
-            ndau Block Explorer - &copy; 2019 Oneiro, Inc.
+            ndau Explorer - &copy; 2019 Oneiro, Inc.
           </Text>
         </Box>
       </Container>

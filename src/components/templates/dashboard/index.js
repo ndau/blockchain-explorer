@@ -9,7 +9,7 @@ class Dashboard extends Component {
     return(
       <Page browserHistory={browserHistory} selectNode={selectNode}>
         <Box>
-          <Box margin={{bottom: "xlarge"}} className="chartArea">
+          <Box margin={{bottom: "large"}} className="chartArea">
             {top}
           </Box>
           <Box>
