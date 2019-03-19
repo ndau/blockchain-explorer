@@ -12,7 +12,7 @@ function Footer() {
             color="rgba(255,255,255, 0.2)"
             size="small"
           >
-            ndau Block Explorer - &copy; 2019 Oneiro, Inc.
+            ndau Explorer - &copy; 2019 Oneiro, Inc.
           </Text>
         </Box>
       </Container>
