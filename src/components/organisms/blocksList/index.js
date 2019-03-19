@@ -6,7 +6,7 @@ class BlockList extends Component {
   state = { activeBlock: null }
 
   render() {
-    const { blocks } = this.props;
+    const { blocks, loadMoreBlocks } = this.props;
     const activeBlock = this.state.activeBlock;
     const activeBlockHeight = activeBlock && activeBlock.height;
 
@@ -18,19 +18,17 @@ class BlockList extends Component {
       )
     }
 
-    // if() {
-    //   return <p>No blocks were found.</p>
-    // }
     return (
       <Box
         background="#293e63"
         pad={{ horizontal: "small", vertical: "small" }}
         round="xsmall"
+        elevation="small"
       >
         <InfiniteScroll
           size="large"
           items={blocks}
-          // onMore={this.props.onMore}
+          onMore={loadMoreBlocks && loadMoreBlocks}
         >
           { block => (
             <BlockListItem
@@ -49,33 +47,6 @@ class BlockList extends Component {
   setActiveBlock = (activeBlock) => {
     this.setState({ activeBlock })
   }
-
-  // loadMoreBlocks = () => {
-  //   const { earliestBlockHeight } = this.state
-  //   if (!earliestBlockHeight || earliestBlockHeight < 1) {
-  //     return
-  //   }
-
-  //   const blockRangeEnd = earliestBlockHeight - 1 || 1;
-  //   if (blockRangeEnd <= 1) {
-  //     return
-  //   }
-    
-  //   getBlocks(null, blockRangeEnd, this.props.range, true, null)
-  //     .then(previousBlocks => {
-  //       if (previousBlocks.length < 1) {
-  //         return
-  //       }
-      
-  //       const earliestBlock = previousBlocks[previousBlocks.length - 1];
-  //       this.setState(({ blocks }) => {
-  //         return {
-  //           blocks: [...blocks, ...previousBlocks],
-  //           earliestBlockHeight:  earliestBlock && earliestBlock.height,
-  //         }
-  //       })
-  //     })
-  // }
 }
 
 export default BlockList;

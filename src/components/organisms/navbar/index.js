@@ -29,16 +29,16 @@ class NavbarMenu extends Component {
           <Drop
             align={{ top: "bottom", left: "left" }}
             target={this.targetRef.current}
-            elevation="none"
             animation="slideDown"
             stretch
             onEsc={this.toggleOpen}
             // onClickOutside={this.toggleOpen}
             className="menuDrop"
+            elevation="medium"
           >
             <Box
               pad="medium"
-              width="xxlarge"
+              width="100vw"
               background="#293e63"
               align="center"
             >
@@ -80,7 +80,7 @@ class Navbar extends Component {
   
     return (
       <div className="Navbar">
-        <Box fill background={this.background}>
+        <Box fill background={this.background} elevation="medium">
           <Container topPad="0">
             <Grid
               columns={["flex", "auto", "flex"]}
@@ -107,57 +107,35 @@ class Navbar extends Component {
                 </Box>
               }
               
-              <Box gridArea="right" className="mobileNavbarActions">
-                <Box align="end" className="navbarAction">
-                  <NavbarMenu verticalPad={VERTICAL_PAD}>
-                    {
-                      selectNode ? (
-                        <SuggestionsInput
-                          onValueChange={this.onNodeEndpointChange}
-                          value={nodeEndpoint}
-                          suggestions={[
-                            'https://node-0.main.ndau.tech',
-                            'https://testnet-0.api.ndau.tech',
-                            'https://devnet-0.api.ndau.tech',
-                            'https://devnet-1.api.ndau.tech',
-                          ]}
-                        />
-                      ) : (
-                        <Box align="end" pad={{vertical: "small"}}>
-                          <Text size="small" alignSelf="end" color="#aaa">
-                            node: {nodeEndpoint}
-                          </Text>
-                        </Box>
-                      )
-                    }
-                  </NavbarMenu>
+              <Box gridArea="right">
+                <Box className="mobileNavbarActions">
+                  <Box align="end" className="navbarAction">
+                    <NavbarMenu verticalPad={VERTICAL_PAD}>
+                      {
+                        selectNode ? (
+                          <SuggestionsInput
+                            onValueChange={this.onNodeEndpointChange}
+                            value={nodeEndpoint}
+                            suggestions={[
+                              'https://node-0.main.ndau.tech',
+                              'https://testnet-0.api.ndau.tech',
+                              'https://devnet-0.api.ndau.tech',
+                              'https://devnet-1.api.ndau.tech',
+                            ]}
+                          />
+                        ) : (
+                          <Box align="end" pad={{vertical: "small"}}>
+                            <Text size="small" alignSelf="end" color="#aaa">
+                              node endpoint: {nodeEndpoint}
+                            </Text>
+                          </Box>
+                        )
+                      }
+                    </NavbarMenu>
+                  </Box>
                 </Box>
               </Box>
           
-              <Box gridArea="right" className="navbarActions">
-                <Box className="navbarAction" pad={{ vertical: VERTICAL_PAD}} align="end">
-                  {
-                    selectNode ? (
-                      <SuggestionsInput
-                        onValueChange={this.onNodeEndpointChange}
-                        value={nodeEndpoint}
-                        suggestions={[
-                          'https://node-0.main.ndau.tech',
-                          'https://testnet-0.api.ndau.tech',
-                          'https://devnet-0.api.ndau.tech',
-                          'https://devnet-1.api.ndau.tech',
-                        ]}
-                      />
-                    ) : (
-                      <Box align="end" pad={{vertical: "small"}}>
-                        <Text size="small" alignSelf="end" color="#aaa">
-                          node: {nodeEndpoint}
-                        </Text>
-                      </Box>
-                    )
-                  }
-                </Box>
-              </Box>
             </Grid>
           </Container>
         </Box>

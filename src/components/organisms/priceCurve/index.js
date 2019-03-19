@@ -5,7 +5,7 @@ import { PRIMARY_LIME } from '../../../constants'
 
 const X_AXIS_HEIGHT = "20px";
 
-class nPriceCurve extends Component {
+class PriceCurve extends Component {
   constructor(props) {
     super(props)
 
@@ -262,4 +262,4 @@ class nPriceCurve extends Component {
   }
 }
 
-export default nPriceCurve
+export default PriceCurve

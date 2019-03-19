@@ -30,7 +30,7 @@ class TransactionCard extends Component {
               <Text>No transaction data was retrieved.</Text>
             </header>
           )}
-          pad="small"
+          pad="15px"
         />
       )
     }
@@ -90,11 +90,9 @@ class TransactionCard extends Component {
         background="#0b1f3a"
         pad="15px"
       > 
-        <Box>
-          <Collapsible open={open}>
-            <TransactionDetails transaction={transaction} />
-          </Collapsible>
-        </Box>
+        <Collapsible open={open}>
+          <TransactionDetails transaction={transaction} />
+        </Collapsible>
       </Card>
     );
   }
