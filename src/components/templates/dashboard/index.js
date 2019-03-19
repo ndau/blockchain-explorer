@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Box } from 'grommet'
 import Page from '../page'
-import Container from '../../atoms/container'
-import Navbar from '../../organisms/navbar' 
 import './style.css'
 
 class Dashboard extends Component {

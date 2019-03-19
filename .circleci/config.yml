@@ -80,7 +80,7 @@ jobs:
           command: |
             # I think this fails with just the default tests
             # uncomment this line to run the tests
-            # yarn test
+            yarn test
 
   build:
     docker:
