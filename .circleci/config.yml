@@ -114,6 +114,8 @@ jobs:
     working_directory: ~/app
     steps:
       - restore_steps
+      - ensure_not_empty:
+          dir: ~/build-cache
       - aws-s3/sync:
           from: ~/build-cache
           to: 's3://explorer.service.ndau.tech/prod'
@@ -129,6 +131,8 @@ jobs:
     working_directory: ~/app
     steps:
       - restore_steps
+      - ensure_not_empty:
+          dir: ~/build-cache
       - aws-s3/sync:
           from: ~/build-cache
           to: 's3://explorer.service.ndau.tech/staging'
@@ -136,6 +140,26 @@ jobs:
           overwrite: true
 
 commands:
+
+  ensure_not_empty:
+    description: "Ensure directory is not empty"
+    parameters:
+      dir:
+        type: string
+    steps:
+      - run:
+          name: Fail if directory empty
+          command: |
+            (
+              cd << parameters.dir >>
+              num_files=$(ls -1 | wc -l)
+              if [ "$num_files" -lt "1" ]; then
+                echo "Directory << parameters.dir >> is empty. Failing build."
+                exit 1
+              else
+                echo "<< parameters.dir >> is not empty. Continuing."
+              fi
+            )
   cache_copy:
     description: "Copies to the cache"
     parameters:
