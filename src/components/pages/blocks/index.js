@@ -45,6 +45,7 @@ class Blocks extends Component {
             }}
           >
             Blocks
+            {/* hide empty toggle is not fully functional */}
             {/* <Text
               size="xsmall"
               color="#aaa"
@@ -212,62 +213,6 @@ class Blocks extends Component {
       }
     }
   };
-
-  // columns = [
-  //   {
-  //     property: "height",
-  //     header: <ColumnHeader>Height</ColumnHeader>,
-  //     align: "center",
-  //     // search: true,
-  //     primary: true,
-  //     render: ({height}) => (
-  //       <TableData>
-  //         <Anchor
-  //           label={height}
-  //           href={`/block/${height}/${makeURLQuery()}`}
-  //         />
-  //       </TableData>
-
-  //     ),
-  //   },
-  //   {
-  //     property: "age",
-  //     header: <ColumnHeader>Age</ColumnHeader>,
-  //     align: "center",
-  //     render: ({timestamp}) => (
-  //       <TableData>
-  //         <Age timestamp={timestamp} />
-  //       </TableData>
-  //     )
-  //   },
-  //   {
-  //     property: "time",
-  //     align: "center",
-  //     header:  <ColumnHeader>Timestamp</ColumnHeader>,
-  //     render: ({time}) => <TableData>{time}</TableData>
-  //   },
-  //   {
-  //     property: "txns",
-  //     align: "center",
-  //     header: <ColumnHeader>Txns</ColumnHeader>,
-  //     render: ({numberOfTransactions, height}) =>  {
-  //       return (
-  //         <TableData>
-  //           {
-  //             numberOfTransactions ?
-  //             <Anchor
-  //               label={`${numberOfTransactions} `}
-  //               href={`/block/${height}/${makeURLQuery()}`}
-  //             />
-  //             :
-  //             '0'
-  //           }
-  //         </TableData>
-
-  //       )
-  //     }
-  //   }
-  // ];
 
   toggleHideEmpty = () => {
     this.setState(({hideEmpty, blocks}) => {
