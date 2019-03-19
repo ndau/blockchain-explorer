@@ -7,11 +7,11 @@ import routes from './routes'
 const ndauStyleGuide = {
   global: {
     colors: {
-      background: "#0a1724",  // "#0f2748", 
+      background: "#0a1724", 
     },
     drop: {
       background: "#132844",
-      shadowSize: 'xxsmall',
+      shadowSize: 'medium',
     },
     font: {
       family: "Titillium Web",
@@ -19,6 +19,16 @@ const ndauStyleGuide = {
     input: {
       weight: 500,
     },
+    elevation: {
+      dark: {
+        none: 'none',
+        xsmall: '0px 1px 2px rgba(0, 0, 0, 0.20)',
+        small: '0px 2px 4px rgba(0, 0, 0, 0.20)',
+        medium: '0px 4px 8px rgba(0, 0, 0, 0.20)',
+        large: '0px 8px 16px rgba(0, 0, 0, 0.20)',
+        xlarge: '0px 12px 24px rgba(0, 0, 0, 0.20)',
+      },
+},
   },
   anchor: {
     color: "#f99d1c",

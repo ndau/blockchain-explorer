@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Text, DataTable, Anchor, CheckBox, Box,  } from 'grommet'
+import { 
+  Text, Anchor, CheckBox, Box, DataTable, ResponsiveContext  } from 'grommet'
 import Main from '../../templates/main'
-import TableHeader from '../../molecules/tableHeader'
+import ColumnHeader from '../../molecules/columnHeader'
 import TableData from '../../molecules/tableData'
 import Age from '../../atoms/age'
 import { BLOCK_RANGE } from '../../../constants.js'
@@ -29,7 +30,6 @@ class Blocks extends Component {
 
   render() {
     const { blocks, filteredBlocks, hideEmpty } = this.state;
-    const columns = this.getColumns(hideEmpty);
 
     return (
       <Main
@@ -45,7 +45,7 @@ class Blocks extends Component {
             }}
           >
             Blocks
-            <Text
+            {/* <Text
               size="xsmall"
               color="#aaa"
               weight="normal"
@@ -59,15 +59,23 @@ class Blocks extends Component {
                 name="small"
 
               />
-            </Text>
+            </Text> */}
           </h3>
         </Box>
-
-        <DataTable
-          data={hideEmpty ? filteredBlocks : blocks}
-          columns={columns}
-          onMore={this.loadMoreBlocks}
-        />
+        <ResponsiveContext.Consumer>
+          {
+            screenSize => {
+              return (
+                <DataTable
+                  data={hideEmpty ? filteredBlocks : blocks}
+                  columns={this.screenColumns(screenSize)}
+                  onMore={this.loadMoreBlocks}
+                  size="medium"
+                />
+              )
+            }
+          }
+        </ResponsiveContext.Consumer>
       </Main>
     )
   }
@@ -139,11 +147,20 @@ class Blocks extends Component {
       }
     })
   }
+  
+  screenColumns = (screenSize) => {
+    const { height, age, time, txns } = this.columns
+    if (screenSize === "small") {
+      return [height, age, txns];
+    }
 
-  getColumns = (hideEmpty) => ([
-    {
+    return [ height, age, time, txns ];
+  }
+
+  columns = {
+    "height": {
       property: "height",
-      header: <TableHeader>Height</TableHeader>,
+      header: <ColumnHeader>Height</ColumnHeader>,
       align: "center",
       // search: true,
       primary: true,
@@ -157,9 +174,9 @@ class Blocks extends Component {
 
       ),
     },
-    {
+    "age": {
       property: "age",
-      header: <TableHeader>Age</TableHeader>,
+      header: <ColumnHeader>Age</ColumnHeader>,
       align: "center",
       render: ({timestamp}) => (
         <TableData>
@@ -167,16 +184,16 @@ class Blocks extends Component {
         </TableData>
       )
     },
-    {
+    "time": {
       property: "time",
       align: "center",
-      header:  <TableHeader>Timestamp</TableHeader>,
+      header:  <ColumnHeader>Timestamp</ColumnHeader>,
       render: ({time}) => <TableData>{time}</TableData>
     },
-    {
+    "txns": {
       property: "txns",
       align: "center",
-      header: <TableHeader>Txns</TableHeader>,
+      header: <ColumnHeader>Txns</ColumnHeader>,
       render: ({numberOfTransactions, height}) =>  {
         return (
           <TableData>
@@ -194,7 +211,63 @@ class Blocks extends Component {
         )
       }
     }
-  ]);
+  };
+
+  // columns = [
+  //   {
+  //     property: "height",
+  //     header: <ColumnHeader>Height</ColumnHeader>,
+  //     align: "center",
+  //     // search: true,
+  //     primary: true,
+  //     render: ({height}) => (
+  //       <TableData>
+  //         <Anchor
+  //           label={height}
+  //           href={`/block/${height}/${makeURLQuery()}`}
+  //         />
+  //       </TableData>
+
+  //     ),
+  //   },
+  //   {
+  //     property: "age",
+  //     header: <ColumnHeader>Age</ColumnHeader>,
+  //     align: "center",
+  //     render: ({timestamp}) => (
+  //       <TableData>
+  //         <Age timestamp={timestamp} />
+  //       </TableData>
+  //     )
+  //   },
+  //   {
+  //     property: "time",
+  //     align: "center",
+  //     header:  <ColumnHeader>Timestamp</ColumnHeader>,
+  //     render: ({time}) => <TableData>{time}</TableData>
+  //   },
+  //   {
+  //     property: "txns",
+  //     align: "center",
+  //     header: <ColumnHeader>Txns</ColumnHeader>,
+  //     render: ({numberOfTransactions, height}) =>  {
+  //       return (
+  //         <TableData>
+  //           {
+  //             numberOfTransactions ?
+  //             <Anchor
+  //               label={`${numberOfTransactions} `}
+  //               href={`/block/${height}/${makeURLQuery()}`}
+  //             />
+  //             :
+  //             '0'
+  //           }
+  //         </TableData>
+
+  //       )
+  //     }
+  //   }
+  // ];
 
   toggleHideEmpty = () => {
     this.setState(({hideEmpty, blocks}) => {

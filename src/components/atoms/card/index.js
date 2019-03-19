@@ -4,7 +4,16 @@ import { Box } from "grommet";
 class Card extends Component {
   render() {
     const { 
-      pad, round, background, header, children, style={}, onClick, animation, margin 
+      pad, 
+      round, 
+      background, 
+      header, 
+      children, 
+      style={}, 
+      onClick, 
+      animation, 
+      margin, 
+      elevation 
     } = this.props;
 
     return (
@@ -15,6 +24,7 @@ class Card extends Component {
         margin={margin}
         style={style}
         onClick={onClick}
+        elevation={elevation}
         animation={animation}
       >
         {header}

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, Anchor } from 'grommet';
 import Details from '../../templates/details'
 import TransactionDetails from '../../organisms/transactionDetails'
+import TruncatedText from '../../atoms/truncatedText'
 import { getTransaction, makeURLQuery } from '../../../helpers'
 
 class Transaction extends Component {
@@ -32,9 +33,12 @@ class Transaction extends Component {
         <Text>
           <Text truncate as="article" >
             <h3> 
-              Transaction
-              <Text as="em" weight="bold" truncate>
-                {(transaction && transaction.hash) && `  ${transaction.hash}`}
+              Transaction{' '}
+              <Text as="em" weight="bold">
+                {
+                  (transaction && transaction.hash) && 
+                  <TruncatedText value={transaction.hash} />
+                }
               </Text>
             </h3>
           </Text>

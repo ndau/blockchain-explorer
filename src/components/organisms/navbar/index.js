@@ -29,12 +29,12 @@ class NavbarMenu extends Component {
           <Drop
             align={{ top: "bottom", left: "left" }}
             target={this.targetRef.current}
-            elevation="none"
             animation="slideDown"
             stretch
             onEsc={this.toggleOpen}
             // onClickOutside={this.toggleOpen}
             className="menuDrop"
+            elevation="medium"
           >
             <Box
               pad="medium"
@@ -80,7 +80,7 @@ class Navbar extends Component {
   
     return (
       <div className="Navbar">
-        <Box fill background={this.background}>
+        <Box fill background={this.background} elevation="medium">
           <Container topPad="0">
             <Grid
               columns={["flex", "auto", "flex"]}

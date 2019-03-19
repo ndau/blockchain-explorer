@@ -1,11 +1,10 @@
-@media screen and (max-width: 700px) {
-  .tableData {
-    font-size: 14px !important;
-  }
+.tableData {
+  font-size: 16px !important;
+  line-height: 30px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 800px) {
   .tableData {
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
 }
