@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, Anchor, Collapsible, Box } from "grommet"
+import { Text, Collapsible, Box } from "grommet"
+import Anchor from '../../atoms/anchor'
 import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card';
 import TransactionDetails from '../../organisms/transactionDetails'

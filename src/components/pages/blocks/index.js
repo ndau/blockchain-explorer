@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { 
-  Anchor, Box, DataTable, ResponsiveContext, Text, CheckBox
+  Box, DataTable, ResponsiveContext, Text, CheckBox
 } from 'grommet'
+import Anchor from '../../atoms/anchor'
 import Main from '../../templates/main'
 import ColumnHeader from '../../molecules/columnHeader'
 import TableData from '../../molecules/tableData'

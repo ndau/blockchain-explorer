@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, Anchor } from 'grommet';
+import { Text } from 'grommet';
+import Anchor from '../../atoms/anchor'
 import Details from '../../templates/details'
 import TransactionDetails from '../../organisms/transactionDetails'
 import TruncatedText from '../../atoms/truncatedText'

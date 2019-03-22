@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react'
-import { Grid, Box, Image, Anchor, Text, Drop } from 'grommet'
+import Anchor from '../../atoms/anchor'
+import { Grid, Box, Image, Text, Drop } from 'grommet'
 import { Menu } from 'grommet-icons';
 import qs from 'query-string';
 import SuggestionsInput from '../../molecules/suggestionsInput'
@@ -92,6 +93,7 @@ class Navbar extends Component {
               as="header"
             > 
               <Box gridArea="center" align="center" pad={{ vertical: VERTICAL_PAD}}>
+                
                 <Anchor href={`/${makeURLQuery()}`}>
                   <Box height="40px" width="80px" pad={{vertical: "0"}}>
                     <Image src={logoFile} fit="contain" height="100%"/>

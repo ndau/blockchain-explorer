@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { DataTable, Anchor, Box, Text } from 'grommet'
+import { DataTable, Box, Text } from 'grommet'
+import Anchor from '../../atoms/anchor'
 import qs from 'query-string';
 import Dashboard from '../../templates/dashboard'
 import {

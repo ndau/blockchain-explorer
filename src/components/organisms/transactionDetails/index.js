@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Box, Text, Anchor } from "grommet"
+import { Box, Text } from "grommet"
+import Anchor from '../../atoms/anchor'
 import Card from '../../atoms/card';
 import TruncatedText from '../../atoms/truncatedText'
 import { makeURLQuery } from '../../../helpers';

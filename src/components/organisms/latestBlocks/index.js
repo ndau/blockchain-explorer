@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Box, Anchor, Text } from 'grommet'
+import { Box, Text } from 'grommet'
+import Anchor from '../../atoms/anchor'
 import BlocksList from '../../organisms/blocksList'
 import { makeURLQuery } from '../../../helpers';
 
@@ -12,7 +13,12 @@ class LatestBlocks extends Component {
         <Box margin={{ bottom: "small" }}>
           <Text>
             <Text weight="bold">Latest Blocks</Text>
-            <Anchor href={`/blocks/${makeURLQuery()}`} label="View all blocks" style={{float: "right"}} />
+            <Text style={{float: "right"}}>
+              <Anchor 
+                href={`/blocks/${makeURLQuery()}`} 
+                label="View all blocks"  
+              />
+            </Text>
           </Text>
         </Box>
 
