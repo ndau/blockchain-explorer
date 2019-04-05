@@ -8,7 +8,7 @@ class Main extends Component {
   
     return(
       <Page browserHistory={browserHistory} selectNode={selectNode}>
-        <Box pad="medium">
+        <Box pad={{horizontal: "medium"}} margin={{bottom: "small"}}>
           {nav}
         </Box>
 
