@@ -7,12 +7,9 @@ function Anchor(props) {
     <Link 
       to={props.href} 
       onClick={props.onClick}
-      style={{
-        display: "inline",
-        textDecoration: "none"
-      }}
+      style={{ textDecoration: "none" }}
     >
-      <StyledAnchor label={props.label}>
+      <StyledAnchor label={props.label} as="span">
         {props.children}
       </StyledAnchor>
     </Link>

@@ -23,9 +23,9 @@ class BlockListItem extends Component {
               <Text style={{float: 'right'}} >
                 { 
                   active ? 
-                  <Contract size="15px" color="#aaa" onClick={this.unsetAsActiveBlock}/> 
+                  <Contract size="12px" color="#777" onClick={this.unsetAsActiveBlock}/> 
                   : 
-                  <Expand size="15px" color="#aaa" onClick={this.setAsActiveBlock}/>
+                  <Expand size="12px" color="#777" onClick={this.setAsActiveBlock}/>
                 }
               </Text>
 

@@ -4,10 +4,14 @@ import Page from '../page'
 
 class Main extends Component {
   render() {
-    const { children, browserHistory, selectNode } = this.props;
+    const { children, nav, browserHistory, selectNode } = this.props;
   
     return(
       <Page browserHistory={browserHistory} selectNode={selectNode}>
+        <Box pad="medium">
+          {nav}
+        </Box>
+
         <Box
           elevation="medium"
           background="#0f2748" 
