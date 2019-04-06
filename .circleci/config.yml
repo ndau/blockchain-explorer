@@ -12,13 +12,6 @@ workflows:
         filters:
           branches:
             only: /^master$/
-    - deploy_prod:
-        requires:
-          - build
-          - test
-        filters:
-          branches:
-            only: /^master$/
   branch:
     jobs:
       - build:
