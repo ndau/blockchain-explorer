@@ -6,7 +6,7 @@ function Container(props) {
     <Box 
       style={{
         width: "90%",
-        maxWidth: "1000px", 
+        maxWidth: "900px", 
         margin: "0 auto",
         paddingTop: props.topPad || "60px"
       }}

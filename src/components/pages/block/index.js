@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Box, Text } from 'grommet'
+import { Box, Text, Keyboard } from 'grommet'
 import { LinkNext, LinkPrevious } from 'grommet-icons'
 import Anchor from '../../atoms/anchor'
 import BlockDetails from '../../organisms/blockDetails'
@@ -49,12 +49,13 @@ class Block extends Component {
           </Box>
         }
       >
-        
-
-        <Box>
-          <h3>Block <em>{blockHeight}</em></h3>
-          <BlockDetails block={block} />
-        </Box>
+        {/* TODO: fix Keyboard control */}
+        <Keyboard onLeft={this.goToPreviousBlock}> 
+          <Box>
+            <h3>Block <em>{blockHeight}</em></h3>
+            <BlockDetails block={block} />
+          </Box>
+        </Keyboard>
       </Details>
     )
   }
@@ -75,6 +76,10 @@ class Block extends Component {
       this.getData();
     }
   }
+
+  // goToPreviousBlock = () => {
+  //   debugger
+  // }
 }
 
 export default Block;

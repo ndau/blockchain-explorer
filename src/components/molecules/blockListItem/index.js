@@ -29,7 +29,7 @@ class BlockListItem extends Component {
                 }
               </Text>
 
-              <Text size="large">
+              <Text size="medium">
                 <b>Block </b>  
                 <Anchor
                   href={`/block/${height}/${makeURLQuery()}`}
@@ -55,7 +55,7 @@ class BlockListItem extends Component {
           </header>
         )}
         onClick={this.setAsActiveBlock}
-        pad="medium"
+        pad="15px"
         background={active ? "#0b1f3a" : "#0f2748"}
         margin="xsmall"
         animation={["slideDown", "fadeIn"]}

@@ -13,7 +13,7 @@ class TransactionCard extends Component {
     super(props);
 
     this.state = { 
-      transaction: null, 
+      transaction: {}, 
     }
 
     this.getTransaction(props.transactionHash);
@@ -50,21 +50,23 @@ class TransactionCard extends Component {
                   { 
                     open ? 
                     <Contract
-                      size="15px"
-                      color="#aaa"
+                      size="12px"
+                      color="#777"
                       onClick={(event) => {
                         event.stopPropagation();
                         setActiveTransaction(null)
                       }}
                     /> : 
                     <Expand
-                      size="15px"
-                      color="#aaa" 
+                      size="12px"
+                      color="#777" 
                       onClick={(event) => {
                         event.stopPropagation();
                         setActiveTransaction(index)
                       }}
                     /> 
+
+
                   }
                 </Text>
                 <Text weight="bold" header>

@@ -33,7 +33,7 @@ class PriceCurve extends Component {
     } = this.state;
 
     const chartProps = {
-      size: { width: "xxlarge", height: "small" },
+      size: { width: "xlarge", height: "small" },
       values: priceData,
       overflow: true
     };
