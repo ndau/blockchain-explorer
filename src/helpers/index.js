@@ -222,7 +222,7 @@ export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
 
 export const getAccountData = (address) => {
   const accountStateEndpoint = `${getNodeEndpoint()}/account/account/${address}`;
-  const accountHistoryEndpoint = `${getNodeEndpoint()}/account/history/${address}`;
+  // const accountHistoryEndpoint = `${getNodeEndpoint()}/account/history/${address}`;
 
   return axios.get(accountStateEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
