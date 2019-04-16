@@ -17,7 +17,6 @@ class Account extends Component {
 
   render() {
     const { account } = this.state;
-    console.log(account)
 
     if (!account) {
       return (
@@ -54,7 +53,7 @@ class Account extends Component {
     address: "address",
     balance: "balance",
     currencySeatDate: "currencySeat",
-    delegationNode: "delegationNode",
+    delegationNode: "node",
     incomingRewardsFrom: "rewards",
     lastEAIUpdate: "EAI",
     lastWAAUpdate: "WAA",
@@ -66,7 +65,7 @@ class Account extends Component {
     stake: "stake", // {Point: "2019-02-26T00:28:44Z", Address: "ndahnsxr8zh7r6u685ka865wz77wb78xcn45rgskpeyiwuza"}
     validationKeys: "validationKey", 
     validationScript: "validationScript",
-    weightedAverageAge: "weightedAverageAge",
+    weightedAverageAge: "WAA",
   }
 }
 

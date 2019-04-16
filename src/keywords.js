@@ -1,8 +1,87 @@
 export const KNOWLEDGE_BASE_ENDPOINT =
   'https://ndaucollective.org/knowledge-base'
 export const KEYWORDS = {
-  EAI: `Ecosystem Alignment Incentive (EAI) is ndau you can earn by locking
-        one of your existing ndau accounts for a specific period of
-        time. You can’t withdraw your ndau while an account is locked,
-        and longer lock periods will let you earn more EAI.`
+  // : {
+  //   endpoint: '',
+  //   explanation: ``,
+  // },
+
+  // Term: Address
+  // https://ndaucollective.org/knowledge-base/addresses/
+  address: {
+    endpoint: 'https://ndaucollective.org/knowledge-base/addresses/',
+    explanation: `An ndau address is a string of 48 letters and numbers, and is 
+    generated according to a specified algorithm from a securely-generated 
+    public/private keypair known as its ownership key.`,
+  },
+
+  // Term: Node
+  // https://ndaucollective.org/knowledge-base/node/
+  node: {
+    endpoint: 'https://ndaucollective.org/knowledge-base/node/',
+    explanation: `A computing device participating in the ndau network, running 
+    the ndau blockchain software.  Also referred to as a “Network Node.”`,
+  },
+
+  // Term: Lock
+  // https://ndaucollective.org/knowledge-base/locking/
+  lock: {
+    endpoint: 'https://ndaucollective.org/knowledge-base/locking/',
+    explanation: `To encourage long-term stability, ndau accounts may also accrue an 
+    Ecosystem Alignment Incentive (EAI) incentive if they are locked by the holder 
+    to prohibit withdrawals for a specified countdown period. A locked account earns 
+    a lock incentive based on the countdown period specified.`
+  },
+
+  // Term: Last EAI Update:
+  // https://ndaucollective.org/knowledge-base/ecosystem-alignment-incentive-eai/
+  EAI: {
+    endpoint: 'https://ndaucollective.org/knowledge-base/ecosystem-alignment-incentive-eai/',
+    explanation: `Ecosystem Alignment Incentive (EAI) is ndau you can earn by locking
+    one of your existing ndau accounts for a specific period of
+    time. You can’t withdraw your ndau while an account is locked,
+    and longer lock periods will let you earn more EAI.`
+  },
+
+  // Term: Last WAA Update
+  // https://ndaucollective.org/knowledge-base/weighted-average-age-waa/
+  WAA: {
+    endpoint: 'https://ndaucollective.org/knowledge-base/weighted-average-age-waa/',
+    explanation: `Weighted Average Age (WAA) is the average age of all the ndau in a 
+    specific account. WAA is displayed in years/months/days, with 1 month always equal 
+    to 30 days`,
+  },
+
+  // Term: Settlement Settings (should be renamed "Recourse Period Settings")
+  // https://ndaucollective.org/knowledge-base/recourse-period/
+  recourse: {
+    endpoint: ' https://ndaucollective.org/knowledge-base/recourse-period/',
+    explanation: `The period of time (default 2 days) that it takes for a transfer of 
+    ndau to become available to the recipient to send to a different account. The ndau 
+    is pending during the recourse period, and then is cleared once the recourse period 
+    is over. This is similar to how it takes time for a bank check to clear when being 
+    deposited. The recourse period exists to help make ndau more resistant to fraud.`
+  }
 }
+
+
+// Term: Address
+// https://ndaucollective.org/knowledge-base/addresses/
+
+// Term: Node
+// https://ndaucollective.org/knowledge-base/node/
+
+// Term: Lock
+// https://ndaucollective.org/knowledge-base/locking/
+
+// Term: Last EAI Update:
+// https://ndaucollective.org/knowledge-base/ecosystem-alignment-incentive-eai/
+
+// Term: Last WAA Update
+// https://ndaucollective.org/knowledge-base/weighted-average-age-waa/
+
+// Term: Weighted Average Age:
+// https://ndaucollective.org/knowledge-base/weighted-average-age-waa/
+
+// Term: Settlement Settings (should be renamed "Recourse Period Settings")
+// https://ndaucollective.org/knowledge-base/recourse-period/

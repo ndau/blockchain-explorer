@@ -52,21 +52,13 @@ class TransactionCard extends Component {
                     <Contract
                       size="12px"
                       color="#777"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setActiveTransaction(null)
-                      }}
+                      onClick={this.toggleActiveState}
                     /> : 
                     <Expand
                       size="12px"
                       color="#777" 
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setActiveTransaction(index)
-                      }}
+                      onClick={this.toggleActiveState}
                     /> 
-
-
                   }
                 </Text>
                 <Text weight="bold" header>
@@ -84,17 +76,23 @@ class TransactionCard extends Component {
               </Text>
               {
                 (!open && type) &&
-                <Text size="xsmall">{type} Transaction</Text>
+                <Box animation="fadeIn">
+                  <Text size="xsmall">{type} Transaction</Text>
+                </Box>
               }
             </Box>
               
           </header>
         )}
         background="#0b1f3a"
+        opacity="0.3"
         pad="15px"
+        onClick={this.toggleActiveState}
       > 
         <Collapsible open={open}>
-          <TransactionDetails transaction={transaction} />
+          <Box animation={open ? "fadeIn" : "fadeOut"}>
+            <TransactionDetails transaction={transaction} />
+          </Box>
         </Collapsible>
       </Card>
     );
@@ -112,6 +110,13 @@ class TransactionCard extends Component {
       .then(transaction => {
         this.setState({ transaction })
       })
+  }
+
+  toggleActiveState = (event) => {
+    event.stopPropagation();
+    const { open, index, setActiveTransaction } = this.props;
+
+    return open ? setActiveTransaction(null) : setActiveTransaction(index);
   }
 }
 

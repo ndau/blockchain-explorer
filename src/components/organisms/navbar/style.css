@@ -3,32 +3,3 @@
   width: 100%;
   z-index: 5;
 }
-
-.mobileNavbarActions {
-  opacity: 0.45;
-}
-
-.mobileNavbarActions:hover {
-  opacity: 0.9;
-}
-
-/* @media screen and (min-width: 1000px) {
-  .navbarActions {
-    display: flex;
-  }
-  .mobileNavbarActions {
-    display: none;
-  }
-  .menuDrop {
-    display: none;
-  } 
-}
-
-@media screen and (max-width: 1000px) {
-  .navbarActions {
-    display: none;
-  }
-  .mobileNavbarActions {
-    display: flex;
-  } 
-} */

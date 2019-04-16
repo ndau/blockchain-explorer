@@ -1,0 +1,7 @@
+.mobileNavbarActions {
+  opacity: 0.4;
+}
+
+.mobileNavbarActions:hover {
+  opacity: 0.9;
+}

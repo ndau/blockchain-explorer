@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Drop, Text, Box } from 'grommet';
+import { Drop, Text, Box, Anchor, ResponsiveContext, } from 'grommet';
+import { Share } from 'grommet-icons'
 import { KEYWORDS } from '../../../keywords'
 
 class Keyword extends Component {
@@ -11,50 +12,66 @@ class Keyword extends Component {
 
     this.label = formattedLabel[0].toUpperCase() + formattedLabel.slice(1);
 
-
-    this.ref = React.createRef();
-    this.explanation = KEYWORDS[props.keyword]
+    this.keywordDetails = KEYWORDS[props.keyword]
 
     this.state = {
       showExplanation: false,
     }
+
+    this.ref = React.createRef();
   }
 
   render() {
     const { showExplanation } = this.state;
     const labelText = <Text weight="bold" >{this.label}</Text>
      
-    if (!this.explanation) {
+    if (!this.keywordDetails) {
       return labelText
     }
+
+    const { endpoint, explanation } = this.keywordDetails;
 
     return (
       <Box style={{display: "inline-flex"}}>
         <Box
           ref={this.ref}
-          onMouseOver={() => this.setState({ showExplanation: true })}
-          onMouseOut={() => this.setState({ showExplanation: false })}
+          onClick={() => this.setState({ showExplanation: true })}
           style={{borderBottom: "2px #f99d1c dashed"}}
         >
           {labelText}
         </Box>
-        {
-          this.ref.current && showExplanation && (
-          <Drop
-            align={{ top: "bottom" }}
-            target={this.ref.current}
-            plain
-          >
-            <Box
-              pad="small"
-              background="rgba(255,255,255, 0.95)"
-              width="400px"
-            >
-              <Text color="#000">{this.explanation}</Text>
-            </Box>
-          </Drop>
-        )}
-        
+
+
+
+        <ResponsiveContext.Consumer>
+          {
+            viewPort => (
+              
+            this.ref.current && showExplanation && (
+              <Drop
+                align={{ top: "bottom" }}
+                target={this.ref.current}
+                plain
+                onClickOutside={() => this.setState({ showExplanation: false })}
+              >
+                <Box
+                  pad="15px"
+                  background="rgba(255,255,255, 0.95)"
+                  width={viewPort === 'small' ? "100vw" : "500px"}
+                >
+                  <Text color="#000">{explanation}</Text>
+    
+                  <Box pad={{top: "10px"}} align="center">     
+                    <Anchor href={endpoint} target="_blank">
+                      <Share size="20px" color="#f99d1c"/>
+                    </Anchor>
+                  </Box>
+                </Box>
+              </Drop>
+            )
+            )
+          }
+        </ResponsiveContext.Consumer>
       </Box>
     );
   }

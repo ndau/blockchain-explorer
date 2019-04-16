@@ -23,9 +23,9 @@ class BlockListItem extends Component {
               <Text style={{float: 'right'}} >
                 { 
                   active ? 
-                  <Contract size="12px" color="#777" onClick={this.unsetAsActiveBlock}/> 
+                  <Contract size="12px" color="#777"/> 
                   : 
-                  <Expand size="12px" color="#777" onClick={this.setAsActiveBlock}/>
+                  <Expand size="12px" color="#777"/>
                 }
               </Text>
 
@@ -45,7 +45,7 @@ class BlockListItem extends Component {
 
             {
               !active &&
-              <Box>
+              <Box animation="fadeIn">
                 <Text size="small">
                   { numberOfTransactions ? `${numberOfTransactions} ` : 'No '}
                   transaction{numberOfTransactions !== 1 && 's'}
@@ -54,30 +54,25 @@ class BlockListItem extends Component {
             }
           </header>
         )}
-        onClick={this.setAsActiveBlock}
+        onClick={this.toggleActiveState}
         pad="15px"
         background={active ? "#0b1f3a" : "#0f2748"}
         margin="xsmall"
         animation={["slideDown", "fadeIn"]}
       >
         <Collapsible open={active}>
-          <BlockDetails block={block} />
+          <Box animation={active ? "fadeIn" : "fadeOut"}>
+            <BlockDetails block={block} />
+          </Box>
         </Collapsible>
       </Card>
     );
   }
 
-
-  setAsActiveBlock = (event) => {
+  toggleActiveState = (event) => {
     event.stopPropagation();
-    const { setAsActiveBlock } = this.props
-    setAsActiveBlock && setAsActiveBlock()
-  }
-
-  unsetAsActiveBlock = (event) => {
-    event.stopPropagation();
-    const { unsetAsActiveBlock } = this.props
-    unsetAsActiveBlock && unsetAsActiveBlock()
+    const { active, setAsActiveBlock, unsetAsActiveBlock } = this.props
+    return active ? unsetAsActiveBlock() : setAsActiveBlock()
   }
 }
 

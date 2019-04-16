@@ -81,7 +81,6 @@ export const formatTransaction = (transaction, additionalData={}) => {
   }
   
   let transactionData = transaction;
-  // console.log(transactionData);
   
   const { 
     TransactableID,
@@ -232,13 +231,13 @@ export const getAccountData = (address) => {
         ...response.data[address]
       }
     })
-    .then(accountState => {
-      return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
-        .then(response => {
-          const accountHistory = response.data.Items[0]
-          return { ...accountState, ...accountHistory }
-        })
-    })
+    // .then(accountState => {
+    //   return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
+    //     .then(response => {
+    //       const accountHistory = response.data.Items[0]
+    //       return { ...accountState, ...accountHistory }
+    //     })
+    // })
 }
 
 export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
