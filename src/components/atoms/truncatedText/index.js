@@ -16,6 +16,8 @@ class TruncatedText extends Component {
 
   render() {
     const  { value, className } = this.props
+    const { showFullWord } = this.state
+
     return (
       <ResponsiveContext.Consumer>
           {
@@ -29,12 +31,12 @@ class TruncatedText extends Component {
                 ref={this.ref}
                 style={{display: "inline-flex"}}
               >
-                <Text className={className} style={{display: "inline"}}>
+                <Text className={className} style={{display: "inline"}} color={showFullWord ? "#ffe7c6" : "#fff"}>
                   {this.truncate(value)}
                 </Text>
 
                 {
-                  this.ref.current && this.state.showFullWord && (
+                  this.ref.current && showFullWord && (
                   <Drop
                     align={{ top: "bottom" }}
                     target={this.ref.current}

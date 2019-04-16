@@ -64,7 +64,7 @@ class DetailsCard extends Component {
             Object.keys(data).map((item, index) => {
               const value = data[item]
               return (value === 0 || value) && (
-                <Text as="section" key={index}>
+                <Text as="section" key={index} margin={{top: "5px"}}>
                   <Keyword label={item} keyword={keywordMap[item]} /> {': '} <Value value={value} />
                 </Text>
               )

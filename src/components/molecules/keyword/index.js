@@ -36,9 +36,11 @@ class Keyword extends Component {
         <Box
           ref={this.ref}
           onClick={() => this.setState({ showExplanation: true })}
-          style={{borderBottom: "2px #f99d1c dashed"}}
+          style={{borderBottom: "1px #f99d1c dashed"}}
         >
-          {labelText}
+          <Text color={showExplanation ? "#ffe7c6" : "#fff"}>
+            {labelText}
+          </Text>
         </Box>
 
 
@@ -63,7 +65,7 @@ class Keyword extends Component {
     
                   <Box pad={{top: "10px"}} align="center">     
                     <Anchor href={endpoint} target="_blank">
-                      <Share size="20px" color="#f99d1c"/>
+                      <Share size="18px" color="#f99d1c"/>
                     </Anchor>
                   </Box>
                 </Box>
