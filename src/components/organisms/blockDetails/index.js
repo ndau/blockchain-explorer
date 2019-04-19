@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Box } from 'grommet'
 import  BlockCard from '../../molecules/blockCard'
-import { getTransactionHashes } from '../../../helpers';
+import { getTransactionHashes } from '../../../helpers/fetch';
 
 class BlockDetails extends Component {
   constructor(props) {

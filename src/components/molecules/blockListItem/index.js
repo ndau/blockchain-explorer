@@ -5,7 +5,6 @@ import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card'
 import Age from '../../atoms/age'
 import BlockDetails from '../../organisms/blockDetails'
-import { makeURLQuery } from '../../../helpers';
 
 class BlockListItem extends Component {
   render() {
@@ -32,7 +31,7 @@ class BlockListItem extends Component {
               <Text size="medium">
                 <b>Block </b>  
                 <Anchor
-                  href={`/block/${height}/${makeURLQuery()}`}
+                  href={`/block/${height}`}
                   label={`#${height}`}
                   onClick={event => event.stopPropagation()}
                 />
@@ -61,7 +60,7 @@ class BlockListItem extends Component {
         animation={["slideDown", "fadeIn"]}
       >
         <Collapsible open={active}>
-          <Box animation={active ? "fadeIn" : "fadeOut"}>
+          <Box animation={active ? "fadeIn" : "fadeOut"}  margin={{top: "10px"}}>
             <BlockDetails block={block} />
           </Box>
         </Collapsible>

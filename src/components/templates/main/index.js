@@ -18,7 +18,6 @@ class Main extends Component {
           pad="medium" 
           round="xsmall" 
           animation="fadeIn" 
-          style={{ paddingTop: 0 }}
         >
           {children}
         </Box>

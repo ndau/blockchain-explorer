@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import Details from '../../templates/details'
 import DetailsCard from '../../molecules/detailsCard'
-import { getAccountData } from '../../../helpers'
+import { getAccount } from '../../../helpers/fetch'
 
 class Account extends Component {
   constructor(props) {
@@ -28,12 +28,14 @@ class Account extends Component {
 
     return (
       <Details>
-        <Text as="h3">
-          Account{' '}
-          <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
-            {account && account.address}
+        <Box margin={{bottom: "20px"}}>
+          <Text size="large">
+            Account{' '}
+            <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
+              {account && account.address}
+            </Text>
           </Text>
-        </Text>
+        </Box>
 
         {/* ACCOUNT DETAILS */}
         <DetailsCard data={account} keywordMap={this.keywordMap} />
@@ -43,7 +45,7 @@ class Account extends Component {
 
   getData = () => {
     const { address } = this.props.match.params;
-    getAccountData(address)
+    getAccount(address)
       .then(account => {
         this.setState({ account })
       })

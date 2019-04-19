@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import Anchor from '../../atoms/anchor'
 import Details from '../../templates/details'
 import TransactionDetails from '../../organisms/transactionDetails'
-import { getTransaction, makeURLQuery } from '../../../helpers'
+import { getTransaction } from '../../../helpers/fetch'
 
 class Transaction extends Component {
   constructor(props) {
@@ -29,21 +29,23 @@ class Transaction extends Component {
 
     return (
       <Details>
-        <Text>
-          <Text as="h3">
-            Transaction{' '}
-            <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
-              {transaction && transaction.hash}
+        <Box margin={{bottom: "20px"}}>
+          <Text>
+            <Text size="large">
+              Transaction{' '}
+              <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
+                {transaction && transaction.hash}
+              </Text>
             </Text>
+            
+            {
+              blockHeight &&
+              <Text as="span" style={{float: "right"}}>
+                Block <Anchor href={`/block/${blockHeight}`}>{`#${blockHeight}`}</Anchor>
+              </Text>
+            }
           </Text>
-          
-          {
-            blockHeight &&
-            <Text as="span" style={{float: "right"}}>
-              Block <Anchor href={`/block/${blockHeight}/${makeURLQuery()}`}>{`#${blockHeight}`}</Anchor>
-            </Text>
-          }
-        </Text>
+        </Box>
         
         <TransactionDetails transaction={transaction} />
       </Details>

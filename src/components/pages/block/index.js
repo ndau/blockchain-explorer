@@ -4,7 +4,7 @@ import { LinkNext, LinkPrevious } from 'grommet-icons'
 import Anchor from '../../atoms/anchor'
 import BlockDetails from '../../organisms/blockDetails'
 import Details from '../../templates/details'
-import { getBlock, makeURLQuery, getNodeStatus } from '../../../helpers'
+import { getBlock, getNodeStatus } from '../../../helpers/fetch'
 
 class Block extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class Block extends Component {
               {
                 (blockHeight && blockHeight) > 1 &&
                 <Text>
-                  <Anchor  href={`/block/${blockHeight - 1}/${makeURLQuery()}`}>
+                  <Anchor  href={`/block/${blockHeight - 1}`}>
                     <LinkPrevious size="22px" color="#f99d1c"/>
                   </Anchor>
                 </Text>
@@ -40,7 +40,7 @@ class Block extends Component {
               {
                 (latestBlockHeight &&  blockHeight !== latestBlockHeight) &&
                 <Text style={{float: "right"}}>
-                  <Anchor  href={`/block/${blockHeight + 1}/${makeURLQuery()}`}>
+                  <Anchor  href={`/block/${blockHeight + 1}`}>
                     <LinkNext size="22px" color="#f99d1c"/>
                   </Anchor>
                 </Text>
@@ -50,9 +50,17 @@ class Block extends Component {
         }
       >
         {/* TODO: fix Keyboard control */}
-        <Keyboard onLeft={this.goToPreviousBlock}> 
+        <Keyboard> 
           <Box>
-            <h3>Block <em>{blockHeight}</em></h3>
+            <Box margin={{bottom: "20px"}}>
+              <Text size="large">
+                Block{' '}
+                <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
+                  {blockHeight}
+                </Text>
+              </Text>
+            </Box>
+          
             <BlockDetails block={block} />
           </Box>
         </Keyboard>
@@ -78,7 +86,7 @@ class Block extends Component {
   }
 
   // goToPreviousBlock = () => {
-  //   debugger
+    // debugger
   // }
 }
 

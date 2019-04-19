@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Text, Collapsible, Box } from "grommet"
+import { Text, Collapsible, Box } from 'grommet'
 import Anchor from '../../atoms/anchor'
 import { Expand, Contract } from 'grommet-icons'
-import Card from '../../atoms/card';
+import Card from '../../atoms/card'
 import TransactionDetails from '../../organisms/transactionDetails'
 import TruncatedText from '../../atoms/truncatedText'
-import { getTransaction, makeURLQuery } from '../../../helpers';
+import { getTransaction } from '../../../helpers/fetch'
 import './style.css'
 
 class TransactionCard extends Component {
@@ -37,8 +37,6 @@ class TransactionCard extends Component {
     }
 
     const { hash, type } = transaction;
-    
-    const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${makeURLQuery()}`;
   
     return (
       <Card
@@ -66,7 +64,9 @@ class TransactionCard extends Component {
                   <Text>
                     {
                       hash &&
-                      <Anchor href={transactionURL} onClick={event => event.stopPropagation()}>
+                      <Anchor 
+                        href={`/transaction/${window.encodeURIComponent(hash)}`} 
+                        onClick={event => event.stopPropagation()}>
                         {` `}
                         <TruncatedText value={hash} className="txHash" />
                       </Anchor>
@@ -90,7 +90,7 @@ class TransactionCard extends Component {
         onClick={this.toggleActiveState}
       > 
         <Collapsible open={open}>
-          <Box animation={open ? "fadeIn" : "fadeOut"}>
+          <Box animation={open ? "fadeIn" : "fadeOut"} margin={{top: "10px"}}>
             <TransactionDetails transaction={transaction} />
           </Box>
         </Collapsible>

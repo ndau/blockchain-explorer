@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Drop, Box, Text, ResponsiveContext, TextArea, Button } from 'grommet'
 import { Copy } from 'grommet-icons'
+import { truncate } from '../../../helpers'
 
 class TruncatedText extends Component {
   constructor(props) {
@@ -31,8 +32,12 @@ class TruncatedText extends Component {
                 ref={this.ref}
                 style={{display: "inline-flex"}}
               >
-                <Text className={className} style={{display: "inline"}} color={showFullWord ? "#ffe7c6" : "#fff"}>
-                  {this.truncate(value)}
+                <Text 
+                  className={className} 
+                  style={{display: "inline"}} 
+                  color={showFullWord ? "#ffe7c6" : ""}
+                >
+                  {truncate(value)}
                 </Text>
 
                 {
@@ -48,7 +53,6 @@ class TruncatedText extends Component {
                       background="rgba(255,255,255, 0.95)"
                       width="100vw"
                     >
-                      {/* <Text color="#000" style={{wordWrap: "break-word", width: "100%"}} alignSelf="center"> */}
                       <Box align="center" onClick={this.copyToClipboard} >
                         <TextArea 
                           value={value}
@@ -58,16 +62,16 @@ class TruncatedText extends Component {
                           ref={this.fullWord}
                           resize="vertical"
                           onChange={()=>{}}
+                          spellCheck={false}
                           style={{
                             padding: 0,
                             lineHeight: '14px',
                             fontSize: "16px",
                             fontWeight: "normal",
                             resize: "none",
-                            textAlign: "center"
+                            textAlign: "center",
                           }}
-                        />
-                          
+                        />  
                       </Box>
                       <Box 
                         pad={{vertical: "3px", horizontal: "5px"}} 
@@ -114,22 +118,6 @@ class TruncatedText extends Component {
 
   setFullWordState = (bool) => {
     this.setState({ showFullWord: bool })
-  }
- 
-  truncate = (value) => { 
-    if (!value || (typeof value === 'object' && !Array.isArray(value)) || !isNaN(Date.parse(value))) {
-      return value
-    }
-
-    const text = Array.isArray(value) ? 
-      value.find(item => typeof item === 'string') : value;
-
-    if (!text || text.length < 17 || !isNaN(Date.parse(value))) {
-      return text
-    }
-
-    const length = text.length;
-    return `${text.slice(0, 8)}...${text.slice(length - 8, length)}`
   }
 }
 

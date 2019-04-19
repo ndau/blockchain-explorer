@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Box, Chart, Stack, Text } from "grommet";
-import { price_at_unit, get_market_cap } from '../../../helpers/ndauMath.js';
+import { humanizeNumber } from '../../../helpers/format'
+import { price_at_unit, get_market_cap } from '../../../helpers/ndauMath';
 import { PRIMARY_LIME } from '../../../constants'
 
 const X_AXIS_HEIGHT = "20px";
@@ -46,6 +47,16 @@ class PriceCurve extends Component {
       )
     }
 
+    const marketCap = (activeXValue || activeXValue === 0) ?
+      ( get_market_cap(activeXValue).toFixed(2) ) :
+      ( get_market_cap(ndauIssued).toFixed(2) )
+
+    const totalNdauIssued = (activeXValue || activeXValue === 0) ?
+      activeXValue: ndauIssued
+
+    const price = (activeXValue || activeXValue === 0) ?
+      activeYValue.toFixed(2) : currentPrice.toFixed(2)
+
     return (
       <Box className="ndauPriceCurve">
         <Box align="end" margin={{bottom: "20px"}}>
@@ -53,7 +64,7 @@ class PriceCurve extends Component {
             {
               <Text size="small" margin={{left: "small"}} weight="bold">
                 <Text color="#ffe7c6" size="small" weight="normal">market cap: </Text>
-                {(activeXValue || activeXValue === 0) ? get_market_cap(activeXValue).toFixed(2) : get_market_cap(ndauIssued).toFixed(2)} USD
+                {humanizeNumber(marketCap, 2)} USD
               </Text>
             }
           </Text>
@@ -61,13 +72,13 @@ class PriceCurve extends Component {
             {
               <Text size="small" margin={{left: "small"}} weight="bold">
                 <Text color="#ffe7c6" size="small" weight="normal">ndau issued: </Text>
-                {(activeXValue || activeXValue === 0) ? activeXValue: ndauIssued.toFixed(0)}
+                {humanizeNumber(totalNdauIssued, 0)}
               </Text>
             }
             {
               <Text size="small" margin={{left: "small"}} weight="bold">
                 <Text color="#ffe7c6" size="small" weight="normal">price: </Text>
-                {(activeYValue || activeYValue === 0) ? activeYValue.toFixed(2) : currentPrice.toFixed(2)} USD
+                {humanizeNumber(price, 2)} USD
               </Text>
             }
           </Text>
@@ -222,11 +233,11 @@ class PriceCurve extends Component {
     const priceData = this.generatePriceData(0, ndauIssued);
     const currentPrice = price_at_unit(ndauIssued);
     const trackerAreaPoints = this.generateTrackerAreaPoints(priceData, currentPrice);
-
+   
     this.setState({
       priceData,
-      xAxis: [0, Math.floor(ndauIssued)],
-      yAxis: [`${currentPrice.toFixed(2)}`, `1.00`],
+      xAxis: [0, humanizeNumber(ndauIssued, 0)],
+      yAxis: [humanizeNumber(currentPrice, 2), `1.00`],
       trackerAreaPoints,
       ndauIssued,
       currentPrice
@@ -246,7 +257,6 @@ class PriceCurve extends Component {
 
   generateTrackerAreaPoints = (priceData=[], highestYAxisValue) => {
     return priceData.map(datum => {
-      // const throttleShowMarker = throttle(this.showMarker, 200)
       return datum && {
         value: [datum[0], highestYAxisValue],
         onHover: (showMarker) => this.showMarker(showMarker && datum)

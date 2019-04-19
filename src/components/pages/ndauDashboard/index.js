@@ -7,7 +7,7 @@ import {
   getCurrentOrder,
   getBlocks,
   pollForBlocks,
-} from '../../../helpers'
+} from '../../../helpers/fetch'
 
 const BLOCK_LIST_LENGTH = 5;
 

@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import Anchor from '../../atoms/anchor'
 import { Grid, Box, Image, Text } from 'grommet'
 import qs from 'query-string';
+import Anchor from '../../atoms/anchor'
 import SuggestionsInput from '../../molecules/suggestionsInput'
 import Container from '../../atoms/container'
 import NavbarMenu from '../../molecules/navbarMenu'
-import { NAVBAR_COLOR } from '../../../constants'
-import { makeURLQuery } from '../../../helpers'
+import { 
+  NAVBAR_COLOR, 
+  MAIN_NODE_ENDPOINT, 
+  TESTNET_NODE_ENDPOINT, 
+  DEVNET_NODE_ENDPOINT 
+} from '../../../constants'
 import logoFile from '../../../img/ndau_orange_logo.png'
 import './style.css'
 
@@ -42,8 +46,7 @@ class Navbar extends Component {
               as="header"
             > 
               <Box gridArea="center" align="center" pad={{ vertical: VERTICAL_PAD}}>
-                
-                <Anchor href={`/${makeURLQuery()}`}>
+                <Anchor href="/">
                   <Box height="40px" width="80px" pad={{vertical: "0"}}>
                     <Image src={logoFile} fit="contain" height="100%"/>
                   </Box>
@@ -67,10 +70,9 @@ class Navbar extends Component {
                             onValueChange={this.onNodeEndpointChange}
                             value={nodeEndpoint}
                             suggestions={[
-                              'https://node-0.main.ndau.tech',
-                              'https://testnet-0.api.ndau.tech',
-                              'https://devnet-0.api.ndau.tech',
-                              'https://devnet-1.api.ndau.tech',
+                              MAIN_NODE_ENDPOINT, 
+                              TESTNET_NODE_ENDPOINT, 
+                              DEVNET_NODE_ENDPOINT 
                             ]}
                           />
                         ) : (
@@ -85,7 +87,6 @@ class Navbar extends Component {
                   </Box>
                 </Box>
               </Box>
-          
             </Grid>
           </Container>
         </Box>
