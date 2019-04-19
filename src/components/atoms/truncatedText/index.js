@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Drop, Box, Text, ResponsiveContext, TextArea, Button } from 'grommet'
+import { Drop, Box, Text, ResponsiveContext, TextArea } from 'grommet'
 import { Copy } from 'grommet-icons'
 import { truncate } from '../../../helpers'
 
