@@ -15,6 +15,7 @@ import {
   getBlocks,
   pollForBlocks,
 } from '../../../helpers/fetch'
+import './style.css'
 
 class Blocks extends Component {
   constructor(props) {
@@ -69,6 +70,7 @@ class Blocks extends Component {
                   columns={this.screenColumns(screenSize)}
                   onMore={this.loadMoreBlocks}
                   size="medium"
+                  className="dataTable"
                 />
               )
             }

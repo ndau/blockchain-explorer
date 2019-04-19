@@ -60,6 +60,7 @@ class Keyword extends Component {
                   pad="15px"
                   background="rgba(255,255,255, 0.95)"
                   width={viewPort === 'small' ? "100vw" : "500px"}
+                  round="xsmall"
                 >
                   <Text color="#000">{explanation}</Text>
     

@@ -213,7 +213,7 @@ export const formatAccount = (account, additionalData={}) => {
 export const convertNapuToNdau = (napuAmount, humanize=true) => {
   if(napuAmount) {
     const ndauAmount = napuAmount / 100000000
-    return humanize ? humanizeNumber(ndauAmount) : ndauAmount
+    return humanize ? humanizeNumber(ndauAmount, 3) : ndauAmount
   }
 }
 
@@ -237,12 +237,12 @@ export const humanizeNumber = (number, decimals=0) => {
 
 export const formatTime = (time) => {
   if (time) {
-    return time && moment(time).format('MMM DD YYYY HH:mm')
+    return time && moment(time).format('DD MMM YYYY . HH:mm')
   }
 } 
 
 export const formatPeriod = (period) => {
-  // const momentPeriod =  strftime(period)
-  // debugger
+  // TODO: format period string.
 
+  return period;
 }

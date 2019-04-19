@@ -52,6 +52,7 @@ class TruncatedText extends Component {
                       pad="15px"
                       background="rgba(255,255,255, 0.95)"
                       width="100vw"
+                      round="xsmall"
                     >
                       <Box align="center" onClick={this.copyToClipboard} >
                         <TextArea 
@@ -74,15 +75,12 @@ class TruncatedText extends Component {
                         />  
                       </Box>
                       <Box 
-                        pad={{vertical: "3px", horizontal: "5px"}} 
                         align="center" 
-                        onClick={this.copyToClipboard} 
-                        round
+                        onClick={this.copyToClipboard}
                       >
-                        <Button
-                          icon={<Copy size="18px" color="#f99d1c"/>}
-                          style={{ padding: 0 }}
-                        />
+                        <Box style={{ cursor: "pointer" }}>
+                          <Copy size="18px" color="#f99d1c"/>
+                        </Box>
                       </Box>
                     </Box>
                   </Drop>
