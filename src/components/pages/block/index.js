@@ -74,7 +74,7 @@ class Block extends Component {
       .then(block => this.setState({ block }))
     getNodeStatus()
       .then(status => {
-        const latestBlockHeight = status["latest_block_height"];
+        const latestBlockHeight = status && status["latest_block_height"];
         this.setState({ latestBlockHeight })
       })
   }

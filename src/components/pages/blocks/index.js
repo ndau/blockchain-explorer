@@ -8,7 +8,6 @@ import ColumnHeader from '../../molecules/columnHeader'
 import TableData from '../../molecules/tableData'
 import Age from '../../atoms/age'
 import { BLOCK_RANGE } from '../../../constants.js'
-import { makeURLQuery } from '../../../helpers'
 import {
   getNodeStatus,
   getBlockRangeStart,
@@ -201,7 +200,7 @@ class Blocks extends Component {
               numberOfTransactions ?
               <Anchor
                 label={`${numberOfTransactions} `}
-                href={`/block/${height}/${makeURLQuery()}`}
+                href={`/block/${height}`}
               />
               :
               '0'
