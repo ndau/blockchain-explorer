@@ -237,7 +237,7 @@ export const humanizeNumber = (number, decimals=0) => {
 
 export const formatTime = (time) => {
   if (time) {
-    return time && moment(time).format('DD MMM YYYY . HH:mm')
+    return time && moment(time).format('DD MMM YYYY. HH:mm')
   }
 } 
 

@@ -122,7 +122,7 @@ class PriceCurve extends Component {
                 guidingChild="first"
                 interactiveChild="last"
                 margin={{left: "18px"}}
-                style={{cursor: "crosshair"}}
+                style={{cursor: "pointer"}}
               >
                 <Chart
                   {...chartProps}
