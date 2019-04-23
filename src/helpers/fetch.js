@@ -30,7 +30,9 @@ export const getBlock = (blockHeight) => {
 export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
   const interval = maximum > 1 ? maximum - 1 : 1;
   const _blockRangeStart = blockRangeStart || getBlockRangeStart(blockRangeEnd, interval);
-  const blocksEndpoint = `${getNodeEndpoint()}/block/range/${_blockRangeStart}/${blockRangeEnd}`;
+  const blocksEndpoint = `${getNodeEndpoint()}/block/range/${_blockRangeStart}/${blockRangeEnd}?`;
+  // const blocksEndpoint = `${getNodeEndpoint()}/block/before/${_blockRangeStart}/${blockRangeEnd}?`;
+
 
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -53,7 +55,7 @@ export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
         if(newHeight > lastHeight) {
           const blockRangeEnd = newHeight;
 
-          getBlocks(null, blockRangeEnd, maximum)
+          getBlocks(null, blockRangeEnd, maximum, noEmpty)
             .then(newBlocks => {
               lastHeight = status.latest_block_height
               getCurrentOrder()

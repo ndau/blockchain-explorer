@@ -80,25 +80,25 @@ export const formatTransaction = (transaction, additionalData={}) => {
   return {
     type: type && type.replace(/([a-z])([A-Z])/g, '$1 $2'),
     bonus,
-    destination,
+    destination: Array.isArray(destination) ? destination[0] : destination,
     distributionScript,
     validationKeys: validationKeys && [ validationKeys[0] && validationKeys[0][1] ],
-    node: node && node[0],
+    node: Array.isArray(node) ? node[0] : node,
     noticePeriod,
     ownershipKey: ownershipKey && ownershipKey[1],
     period,
     power,
     publicKey,
     quantity: convertNapuToNdau(quantity),
-    RPCAddress,
+    RPCAddress: Array.isArray(RPCAddress) ? RPCAddress[0] : RPCAddress,
     random,
     sequence,
     sidechainID,
     sidechainSignableBytes,
     sidechainSignatures,
     signatures: signatures,
-    source,
-    target: target && target[0],
+    source: Array.isArray(source) ? source[0] : source,
+    target: Array.isArray(target) ? target[0] : target,
     unlocksOn,
     validationScript,
     ...additionalData
@@ -129,33 +129,6 @@ export const formatAccount = (account, additionalData={}) => {
   }
   
   let accountData = Object.assign({}, account);
-
-  // {
-  //   address: "ndafp8wg4cnf9nnsr7im8gdscqzdvdcuhku6xy8p6qc7h7a4", 
-  //   balance: 111472379963,
-  //   currencySeatDate: "2018-04-05T00:00:00Z",
-  //   delegationNode: "ndam75fnjn7cdues7ivi7ccfq8f534quieaccqibrvuzhqxa",
-  //   incomingRewardsFrom: null,
-  //   lastEAIUpdate: "2019-04-18T22:13:07Z",
-  //   lastWAAUpdate: "2018-04-05T00:00:00Z",
-  //   lock: {
-  //     noticePeriod: "1y2m22d", 
-  //     unlocksOn: "2019-06-26T00:00:00Z", 
-  //     bonus: 30000000000,
-  //   },
-  //   rewardsTarget: null,
-  //   sequence: 1,
-  //   settlementSettings: {
-  //     period: "1dt23h59m", 
-  //     changesAt: null, 
-  //     next: null,
-  //   },
-  //   settlements: null,
-  //   stake: null,
-  //   validationKeys: ["npuba4jaftckeeb674ytepd4pac4m3mgyyd3998h7ubtpykb6s…uxvc5pqz5cf6fyftz58irc237d8xyhj9gamxxkcrwycaq8mrz"],
-  //   validationScript: null,
-  //   weightedAverageAge: "1y14dt1h49m10s852313us",
-  // }
   
   const {
     address, 
@@ -175,7 +148,6 @@ export const formatAccount = (account, additionalData={}) => {
     validationScript,
     weightedAverageAge,
   } = accountData;
-
   
   return  {
     address, 
@@ -185,7 +157,7 @@ export const formatAccount = (account, additionalData={}) => {
     incomingRewardsFrom,
     lastEAIUpdate: formatTime(lastEAIUpdate),
     lastWAAUpdate: formatTime(lastWAAUpdate),
-    lock: {
+    lock: lock && {
       ...lock,
       bonus: convertNapuToNdau(lock.bonus),
       unlocksOn: formatTime(lock.unlocksOn),
@@ -193,15 +165,18 @@ export const formatAccount = (account, additionalData={}) => {
     },
     rewardsTarget,
     sequence,
-    settlementSettings: {
+    settlementSettings: settlementSettings && {
       ...settlementSettings,
-      // period
+      period: formatPeriod(settlementSettings.period),
     },
     settlements,
-    stake,
+    stake: stake && {
+      ...stake,
+      Point: formatTime(stake.Point)
+    },
     validationKeys,
     validationScript,
-    weightedAverageAge,
+    weightedAverageAge: formatPeriod(weightedAverageAge),
   }
 }
 
@@ -242,7 +217,10 @@ export const formatTime = (time) => {
 } 
 
 export const formatPeriod = (period) => {
-  // TODO: format period string.
+  if(period) {
+    const decoratedPeriod = `P${period.toUpperCase()}`
+    const momentPeriod = moment.duration(decoratedPeriod);
 
-  return period;
+    return momentPeriod.invalid ? period : momentPeriod.humanize();
+  }
 }

@@ -3,10 +3,10 @@
 // NODE
 /////////////////////////////////////////
 
-export const MAIN_NODE_ENDPOINT = 'https://node-0.main.ndau.tech'
-export const TESTNET_NODE_ENDPOINT = 'https://testnet-0.api.ndau.tech'
-export const DEVNET_NODE_ENDPOINT = 'https://devnet-0.api.ndau.tech'
-export const DEFUALT_NODE_ENDPOINT = MAIN_NODE_ENDPOINT
+// export const MAIN_NODE_ENDPOINT = 'https://node-0.main.ndau.tech'
+export const TESTNET_NODE_ENDPOINT = 'https://api.ndau.tech:31300'
+export const DEVNET_NODE_ENDPOINT = 'https://api.ndau.tech:30300'
+export const DEFUALT_NODE_ENDPOINT = TESTNET_NODE_ENDPOINT
 export const BLOCK_RANGE = 100
 export const POLL_INTERVAL = 7000
 export const MAX_FETCH_ATTEMPT = 10
