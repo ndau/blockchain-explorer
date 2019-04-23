@@ -188,7 +188,7 @@ class TransactionDetails extends Component {
           {
             signatures &&
             <Text className="detailField" padding="5px 0">
-              <b>signatures: </b> <Value value={signatures} />
+              <b>signature(s): </b> <Value value={signatures} />
             </Text>
           }
           {
