@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Text, Box } from 'grommet'
-import TruncatedText from '../../atoms/truncatedText'
 import TransactionList from '../../organisms/transactionsList'
+import Value from '../../molecules/value'
 import Card from '../../atoms/card'
+import '../detailsCard/style.css'
 
 class BlockCard extends Component {
   render() {
@@ -22,17 +23,17 @@ class BlockCard extends Component {
               if(notDisplayed.includes(property)) { return null }
               const value = block[property];
               return (
-                <Text key={index}>
-                  <b>{property}: </b>
-                  {
-                    value && (typeof value === "string" || Array.isArray(value)) ?
-                    <TruncatedText value={block[property]} />
-                    :
-                    value
-                  }
-                </Text>
+                <Box key={index} className="detailField" round="xsmall">
+                  <Text key={index}>
+                    <b>{property}: </b>
+                    {
+                      <Value value={value} />
+                    }
+                  </Text>
+                </Box>
             )})
           }
+
           <TransactionList
             transactionHashes={transactionHashes}
             blockHeight={height}

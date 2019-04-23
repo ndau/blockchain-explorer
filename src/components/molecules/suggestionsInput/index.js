@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Box, TextInput } from 'grommet'
-import { validateEndpoint } from '../../../helpers'
+import { getNodeStatus } from '../../../helpers/fetch'
 
 class SuggestionsInput extends Component {
   state = { value: "", valid: null };
@@ -44,12 +44,19 @@ class SuggestionsInput extends Component {
       return this.setState({ valid: false });
     }
   
-    validateEndpoint(nodeEndpoint)
+    this.validateEndpoint(nodeEndpoint)
       .then(valid => {
         this.setState({ valid });
         if (valid) {
           this.props.onValueChange(nodeEndpoint)
         }
+      })
+  }
+
+  validateEndpoint = (nodeEndpoint) => {
+    return getNodeStatus(nodeEndpoint)
+      .then(status => {
+        return !!status;
       })
   }
 }

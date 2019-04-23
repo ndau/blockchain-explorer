@@ -1,64 +1,18 @@
-import React, { Component, createRef } from 'react'
-import { Grid, Box, Image, Anchor, Text, Drop } from 'grommet'
-import { Menu } from 'grommet-icons';
+import React, { Component } from 'react'
+import { Grid, Box, Image, Text } from 'grommet'
 import qs from 'query-string';
+import Anchor from '../../atoms/anchor'
 import SuggestionsInput from '../../molecules/suggestionsInput'
 import Container from '../../atoms/container'
+import NavbarMenu from '../../molecules/navbarMenu'
+import { 
+  NAVBAR_COLOR, 
+  // MAIN_NODE_ENDPOINT, 
+  TESTNET_NODE_ENDPOINT, 
+  DEVNET_NODE_ENDPOINT 
+} from '../../../constants'
 import logoFile from '../../../img/ndau_orange_logo.png'
-import { NAVBAR_COLOR } from '../../../constants'
-import { makeURLQuery } from '../../../helpers'
 import './style.css'
-
-class NavbarMenu extends Component {
-  state = { open: false }
-  targetRef = createRef();
-  
-  render() {
-    return (
-      <Box fill align="end">
-        <Box
-          ref={this.targetRef}
-          onClick={this.toggleOpen}
-          pad={{vertical: "15px"}}
-        >
-          <Menu size="30px" color="#fff" pad="0" justify="center"></Menu>
-        </Box>
-
-        {
-          this.state.open && this.targetRef.current && (
-          <Drop
-            align={{ top: "bottom", left: "left" }}
-            target={this.targetRef.current}
-            animation="slideDown"
-            stretch
-            onEsc={this.toggleOpen}
-            className="menuDrop"
-            elevation="medium"
-          >
-            <Box
-              pad="small"
-              width="100vw"
-              background="#293e63"
-              align="center"
-            >
-              {this.props.children}
-            </Box>
-          </Drop>
-        )}
-      </Box>
-    )
-  }
-
-  toggleOpen = () => {
-    this.setState(({open}) => {
-      return { open: !open }
-    })
-  }
-
-  componentDidMount() {
-    this.forceUpdate();
-  }
-}
 
 const VERTICAL_PAD = "10px"
 
@@ -92,7 +46,7 @@ class Navbar extends Component {
               as="header"
             > 
               <Box gridArea="center" align="center" pad={{ vertical: VERTICAL_PAD}}>
-                <Anchor href={`/${makeURLQuery()}`}>
+                <Anchor href="/">
                   <Box height="40px" width="80px" pad={{vertical: "0"}}>
                     <Image src={logoFile} fit="contain" height="100%"/>
                   </Box>
@@ -116,10 +70,9 @@ class Navbar extends Component {
                             onValueChange={this.onNodeEndpointChange}
                             value={nodeEndpoint}
                             suggestions={[
-                              'https://node-0.main.ndau.tech',
-                              'https://testnet-0.api.ndau.tech',
-                              'https://devnet-0.api.ndau.tech',
-                              'https://devnet-1.api.ndau.tech',
+                              // MAIN_NODE_ENDPOINT, 
+                              TESTNET_NODE_ENDPOINT, 
+                              DEVNET_NODE_ENDPOINT 
                             ]}
                           />
                         ) : (
@@ -134,7 +87,6 @@ class Navbar extends Component {
                   </Box>
                 </Box>
               </Box>
-          
             </Grid>
           </Container>
         </Box>

@@ -29,10 +29,17 @@ class TransactionsList extends Component{
       <Box>
         <Box>
           <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
-            <b>transactions</b>
+            <b>transactions:</b>
           </Text>
         </Box>
-        <Box margin={{top: gap}}>
+        {/* <Box margin={{top: gap}}> */}
+        <Box 
+          style={{
+            margin: "10px 0px 0px 15px",
+            paddingLeft: "11px",
+            borderLeft: "1px solid rgba(255,255, 255, 0.3)"
+          }}
+        >
           { 
             transactionHashes.map((hash, index) => (
               <Box key={index} margin={{bottom: (index !== transactionHashes.length-1)? gap : "0"}}>

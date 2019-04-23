@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Box, Text, Anchor } from "grommet"
-import Card from '../../atoms/card';
+import { Box, Text } from "grommet"
+import Anchor from '../../atoms/anchor'
+import Card from '../../atoms/card'
+import Value from '../../molecules/value'
 import TruncatedText from '../../atoms/truncatedText'
-import { makeURLQuery } from '../../../helpers';
 
 class TransactionDetails extends Component {
   render() {
@@ -20,7 +21,7 @@ class TransactionDetails extends Component {
       // newKeys,
       node,
       noticePeriod,
-      ownership,
+      ownershipKey,
       period,
       power,
       publicKey,
@@ -31,7 +32,7 @@ class TransactionDetails extends Component {
       sidechainID,
       sidechainSignableBytes,
       sidechainSignatures,
-      signature, // signatures,
+      signatures,
       source,
       target,
       unlocksOn,
@@ -44,164 +45,162 @@ class TransactionDetails extends Component {
         <Box>
           {
             type && 
-            <Text as="article">
-              <b>type: </b> {type}
+            <Text className="detailField" padding="5px 0">
+              <b>type: </b> <Value value={type} />
             </Text>
           }
           {
             quantity && 
-            <Text as="article">
-              <b>quantity: </b> {quantity / 100000000}
+            <Text className="detailField" padding="5px 0">
+              <b>quantity: </b> <Value value={quantity} />
             </Text>
           }
           {
             source &&
-            <Text truncate as="article">
+            <Text className="detailField" padding="5px 0">
               <b>from: </b>
-              <Anchor href={`/account/${source}/${makeURLQuery()}`}>
+              <Anchor href={`/account/${source}`}>
                 <TruncatedText value={source} />
               </Anchor>
             </Text>
           }
           {
             destination &&
-            <Text truncate as="article">
+            <Text className="detailField" padding="5px 0">
               <b>to: </b>
-              <Anchor href={`/account/${destination}/${makeURLQuery()}`}>
+              <Anchor href={`/account/${destination}`}>
                 <TruncatedText value={destination} />
               </Anchor>
             </Text>
           }
           {
+            target &&
+            <Text className="detailField" padding="5px 0">
+              <b>target: </b>
+              <Anchor href={`/account/${target}`}>
+                <TruncatedText value={target} />
+              </Anchor>
+            </Text>
+          }
+          {
             bonus &&
-            <Text truncate as="article">
-              <b>bonus: </b> {bonus}
+            <Text className="detailField" padding="5px 0">
+              <b>bonus: </b> <Value value={bonus} />
             </Text>
           }
           {
             blockHeight && 
-            <Text as="section">
+            <Text className="detailField" padding="5px 0">
               <b>block height: </b> 
               <Anchor 
                 label={blockHeight} 
-                href={`/block/${blockHeight}/${makeURLQuery()}`}
+                href={`/block/${blockHeight}`}
               />
             </Text>
           }
           {
             distributionScript &&
-            <Text truncate as="article">
-              <b>distribution script: </b>  <TruncatedText value={distributionScript} />
+            <Text className="detailField" padding="5px 0">
+              <b>distribution script: </b>  <Value value={distributionScript} />
             </Text>
           }
           {
             validationKeys &&
-            <Text truncate as="article">
-              <b>validation keys: </b> <TruncatedText value={validationKeys} />
+            <Text className="detailField" padding="5px 0">
+              <b>validation keys: </b> <Value value={validationKeys} />
             </Text>
           }
           {
             node &&
-            <Text>
+            <Text className="detailField" padding="5px 0">
               <b>node: </b>
-              <Anchor href={`/account/${node}/${makeURLQuery()}`}>
+              <Anchor href={`/account/${node}`}>
                 <TruncatedText value={node} />
               </Anchor>
             </Text>
           }
           {
             noticePeriod &&
-            <Text truncate as="article">
-              <b>notice period: </b> {noticePeriod}
+            <Text className="detailField" padding="5px 0">
+              <b>notice period: </b> <Value value={noticePeriod} />
             </Text>
           }
           {
-            ownership &&
-            <Text truncate as="article">
-              <b>ownership: </b> <TruncatedText value={ownership} />
+            ownershipKey &&
+            <Text className="detailField" padding="5px 0">
+              <b>ownership key: </b> <Value value={ownershipKey} />
             </Text>
           }
           {
             period &&
-            <Text truncate as="article">
-              <b>period: </b> {period}
+            <Text className="detailField" padding="5px 0">
+              <b>period: </b> <Value value={period} />
             </Text>
           }
           {
             power &&
-            <Text truncate as="article">
-              <b>power: </b> {power}
+            <Text className="detailField" padding="5px 0">
+              <b>power: </b> <Value value={power} />
             </Text>
           }
           {
             publicKey &&
-            <Text truncate as="article">
-              <b>public key: </b> <TruncatedText value={publicKey} />
+            <Text className="detailField" padding="5px 0">
+              <b>public key: </b> <Value value={publicKey} />
             </Text>
           }
           {
             RPCAddress &&
-            <Text truncate as="article">
-              <b>RPC Address: </b> {RPCAddress}
+            <Text className="detailField" padding="5px 0">
+              <b>RPC Address: </b> <Value value={RPCAddress} />
             </Text>
           }
           {
             random &&
-            <Text truncate as="article">
-              <b>random: </b> {random}
+            <Text className="detailField" padding="5px 0">
+              <b>random: </b> <Value value={random} />
             </Text>
           }
           {
             sequence &&
-            <Text truncate as="article">
-              <b>sequence: </b> {sequence}
+            <Text className="detailField" padding="5px 0">
+              <b>sequence: </b> <Value value={sequence} />
             </Text>
           }
           {
             sidechainID &&
-            <Text truncate as="article">
-              <b>sidechain ID: </b> {sidechainID}
+            <Text className="detailField" padding="5px 0">
+              <b>sidechain ID: </b> <Value value={sidechainID} />
             </Text>
           }
           {
             sidechainSignableBytes &&
-            <Text truncate as="article">
-              <b>sidechain signable bytes: </b> {sidechainSignableBytes}
+            <Text className="detailField" padding="5px 0">
+              <b>sidechain signable bytes: </b> <Value value={sidechainSignableBytes} />
             </Text>
           }
           {
             sidechainSignatures &&
-            <Text truncate as="article">
-              <b>sidechain signatures: </b> {sidechainSignatures}
+            <Text className="detailField" padding="5px 0">
+              <b>sidechain signatures: </b> <Value value={sidechainSignatures} />
             </Text>
           }
           {
-            signature &&
-            <Text truncate as="article">
-              <b>signatures: </b>
-              <TruncatedText value={signature} />
-            </Text>
-          }
-          {
-            target &&
-            <Text truncate as="article">
-              <b>target: </b>
-              <Anchor href={`/account/${target}/${makeURLQuery()}`}>
-                <TruncatedText value={target} />
-              </Anchor>
+            signatures &&
+            <Text className="detailField" padding="5px 0">
+              <b>signature(s): </b> <Value value={signatures} />
             </Text>
           }
           {
             unlocksOn &&
-            <Text truncate as="article">
-              <b>unlocks on: </b> {unlocksOn}
+            <Text className="detailField" padding="5px 0">
+              <b>unlocks on: </b> <Value value={unlocksOn} />
             </Text>
           }
           {
             validationScript &&
-            <Text truncate as="article">
-              <b>validation script: </b> 
-              <TruncatedText value={validationScript} />
+            <Text className="detailField" padding="5px 0">
+              <b>validation script: </b> <Value value={validationScript} />
             </Text>
           }
         </Box> 

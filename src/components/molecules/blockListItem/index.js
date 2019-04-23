@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Anchor, Text, Box, Collapsible } from "grommet"
+import { Text, Box, Collapsible } from "grommet"
+import Anchor from '../../atoms/anchor'
 import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card'
 import Age from '../../atoms/age'
 import BlockDetails from '../../organisms/blockDetails'
-import { makeURLQuery } from '../../../helpers';
 
 class BlockListItem extends Component {
   render() {
@@ -22,16 +22,16 @@ class BlockListItem extends Component {
               <Text style={{float: 'right'}} >
                 { 
                   active ? 
-                  <Contract size="15px" color="#aaa" onClick={this.unsetAsActiveBlock}/> 
+                  <Contract size="12px" color="#777"/> 
                   : 
-                  <Expand size="15px" color="#aaa" onClick={this.setAsActiveBlock}/>
+                  <Expand size="12px" color="#777"/>
                 }
               </Text>
 
-              <Text size="large">
+              <Text size="medium">
                 <b>Block </b>  
                 <Anchor
-                  href={`/block/${height}/${makeURLQuery()}`}
+                  href={`/block/${height}`}
                   label={`#${height}`}
                   onClick={event => event.stopPropagation()}
                 />
@@ -44,7 +44,7 @@ class BlockListItem extends Component {
 
             {
               !active &&
-              <Box>
+              <Box animation="fadeIn">
                 <Text size="small">
                   { numberOfTransactions ? `${numberOfTransactions} ` : 'No '}
                   transaction{numberOfTransactions !== 1 && 's'}
@@ -53,30 +53,25 @@ class BlockListItem extends Component {
             }
           </header>
         )}
-        onClick={this.setAsActiveBlock}
-        pad="medium"
+        onClick={this.toggleActiveState}
+        pad="15px"
         background={active ? "#0b1f3a" : "#0f2748"}
         margin="xsmall"
         animation={["slideDown", "fadeIn"]}
       >
         <Collapsible open={active}>
-          <BlockDetails block={block} />
+          <Box animation={active ? "fadeIn" : "fadeOut"}  margin={{top: "10px"}}>
+            <BlockDetails block={block} />
+          </Box>
         </Collapsible>
       </Card>
     );
   }
 
-
-  setAsActiveBlock = (event) => {
+  toggleActiveState = (event) => {
     event.stopPropagation();
-    const { setAsActiveBlock } = this.props
-    setAsActiveBlock && setAsActiveBlock()
-  }
-
-  unsetAsActiveBlock = (event) => {
-    event.stopPropagation();
-    const { unsetAsActiveBlock } = this.props
-    unsetAsActiveBlock && unsetAsActiveBlock()
+    const { active, setAsActiveBlock, unsetAsActiveBlock } = this.props
+    return active ? unsetAsActiveBlock() : setAsActiveBlock()
   }
 }
 

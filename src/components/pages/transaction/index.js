@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Text, Anchor } from 'grommet';
+import { Box, Text } from 'grommet';
+import Anchor from '../../atoms/anchor'
 import Details from '../../templates/details'
 import TransactionDetails from '../../organisms/transactionDetails'
-import TruncatedText from '../../atoms/truncatedText'
-import { getTransaction, makeURLQuery } from '../../../helpers'
+import { getTransaction } from '../../../helpers/fetch'
 
 class Transaction extends Component {
   constructor(props) {
@@ -27,29 +27,25 @@ class Transaction extends Component {
       );
     }
 
-
     return (
       <Details>
-        <Text>
-          <Text truncate as="article" >
-            <h3> 
+        <Box margin={{bottom: "20px"}}>
+          <Text>
+            <Text size="large">
               Transaction{' '}
-              <Text as="em" weight="bold">
-                {
-                  (transaction && transaction.hash) && 
-                  <TruncatedText value={transaction.hash} />
-                }
+              <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
+                {transaction && transaction.hash}
               </Text>
-            </h3>
-          </Text>
-          
-          {
-            blockHeight &&
-            <Text as="span" style={{float: "right"}}>
-              Block <Anchor href={`/block/${blockHeight}/${makeURLQuery()}`}>{`#${blockHeight}`}</Anchor>
             </Text>
-          }
-        </Text>
+            
+            {
+              blockHeight &&
+              <Text as="span" style={{float: "right"}}>
+                Block <Anchor href={`/block/${blockHeight}`}>{`#${blockHeight}`}</Anchor>
+              </Text>
+            }
+          </Text>
+        </Box>
         
         <TransactionDetails transaction={transaction} />
       </Details>

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import Details from '../../templates/details'
 import DetailsCard from '../../molecules/detailsCard'
-import TruncatedText from '../../atoms/truncatedText'
-import { getAccountData } from '../../../helpers'
+import { getAccount } from '../../../helpers/fetch'
 
 class Account extends Component {
   constructor(props) {
@@ -18,7 +17,6 @@ class Account extends Component {
 
   render() {
     const { account } = this.state;
-    console.log(account)
 
     if (!account) {
       return (
@@ -30,17 +28,14 @@ class Account extends Component {
 
     return (
       <Details>
-        <Text truncate as="article" >
-          <h3> 
-            Account
-            <Text weight="bold" truncate as="em">
-              {
-                (account && account.address) && 
-                <TruncatedText value={` ${account.address}`} />
-              }
+        <Box margin={{bottom: "20px"}}>
+          <Text size="large">
+            Account{' '}
+            <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
+              {account && account.address}
             </Text>
-          </h3>
-        </Text>
+          </Text>
+        </Box>
 
         {/* ACCOUNT DETAILS */}
         <DetailsCard data={account} keywordMap={this.keywordMap} />
@@ -50,7 +45,7 @@ class Account extends Component {
 
   getData = () => {
     const { address } = this.props.match.params;
-    getAccountData(address)
+    getAccount(address)
       .then(account => {
         this.setState({ account })
       })
@@ -60,7 +55,7 @@ class Account extends Component {
     address: "address",
     balance: "balance",
     currencySeatDate: "currencySeat",
-    delegationNode: "delegationNode",
+    delegationNode: "node",
     incomingRewardsFrom: "rewards",
     lastEAIUpdate: "EAI",
     lastWAAUpdate: "WAA",
@@ -72,7 +67,7 @@ class Account extends Component {
     stake: "stake", // {Point: "2019-02-26T00:28:44Z", Address: "ndahnsxr8zh7r6u685ka865wz77wb78xcn45rgskpeyiwuza"}
     validationKeys: "validationKey", 
     validationScript: "validationScript",
-    weightedAverageAge: "weightedAverageAge",
+    weightedAverageAge: "WAA",
   }
 }
 

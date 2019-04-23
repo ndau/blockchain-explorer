@@ -21,12 +21,11 @@ class BlockList extends Component {
     return (
       <Box
         background="#293e63"
-        pad={{ horizontal: "small", vertical: "small" }}
+        pad="7px"
         round="xsmall"
         elevation="small"
       >
         <InfiniteScroll
-          size="large"
           items={blocks}
           onMore={loadMoreBlocks && loadMoreBlocks}
         >

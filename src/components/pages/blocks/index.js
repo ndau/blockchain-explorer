@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { 
-  Anchor, Box, DataTable, ResponsiveContext, Text, CheckBox
+  Box, DataTable, ResponsiveContext, Text, CheckBox
 } from 'grommet'
+import Anchor from '../../atoms/anchor'
 import Main from '../../templates/main'
 import ColumnHeader from '../../molecules/columnHeader'
 import TableData from '../../molecules/tableData'
@@ -12,8 +13,8 @@ import {
   getBlockRangeStart,
   getBlocks,
   pollForBlocks,
-  makeURLQuery
-} from '../../../helpers'
+} from '../../../helpers/fetch'
+import './style.css'
 
 class Blocks extends Component {
   constructor(props) {
@@ -37,20 +38,15 @@ class Blocks extends Component {
         browserHistory={this.props.history}
         selectNode
       >
-        <Box justify="between">
-          <h3
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center"
-            }}
-          >
-            Blocks
+        <Box margin={{bottom: "20px"}}>
+          <Text size="large" weight="bold">
+            Blocks{' '}
             {/* hide empty toggle is not fully functional */}
             <Text
               size="xsmall"
               color="#aaa"
               weight="normal"
+              style={{float: "right"}}
             >
               <CheckBox
                 toggle
@@ -62,7 +58,7 @@ class Blocks extends Component {
 
               />
             </Text>
-          </h3>
+          </Text>
         </Box>
         <ResponsiveContext.Consumer>
           {
@@ -73,6 +69,7 @@ class Blocks extends Component {
                   columns={this.screenColumns(screenSize)}
                   onMore={this.loadMoreBlocks}
                   size="medium"
+                  className="dataTable"
                 />
               )
             }
@@ -170,7 +167,7 @@ class Blocks extends Component {
         <TableData>
           <Anchor
             label={height}
-            href={`/block/${height}/${makeURLQuery()}`}
+            href={`/block/${height}`}
           />
         </TableData>
 
@@ -203,7 +200,7 @@ class Blocks extends Component {
               numberOfTransactions ?
               <Anchor
                 label={`${numberOfTransactions} `}
-                href={`/block/${height}/${makeURLQuery()}`}
+                href={`/block/${height}`}
               />
               :
               '0'

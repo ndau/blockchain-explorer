@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Text, Anchor, Collapsible, Box } from "grommet"
+import { Text, Collapsible, Box } from 'grommet'
+import Anchor from '../../atoms/anchor'
 import { Expand, Contract } from 'grommet-icons'
-import Card from '../../atoms/card';
+import Card from '../../atoms/card'
 import TransactionDetails from '../../organisms/transactionDetails'
 import TruncatedText from '../../atoms/truncatedText'
-import { getTransaction, makeURLQuery } from '../../../helpers';
+import { getTransaction } from '../../../helpers/fetch'
 import './style.css'
 
 class TransactionCard extends Component {
@@ -12,7 +13,7 @@ class TransactionCard extends Component {
     super(props);
 
     this.state = { 
-      transaction: null, 
+      transaction: {}, 
     }
 
     this.getTransaction(props.transactionHash);
@@ -36,8 +37,6 @@ class TransactionCard extends Component {
     }
 
     const { hash, type } = transaction;
-    
-    const transactionURL = `/transaction/${window.encodeURIComponent(hash)}/${makeURLQuery()}`;
   
     return (
       <Card
@@ -49,20 +48,14 @@ class TransactionCard extends Component {
                   { 
                     open ? 
                     <Contract
-                      size="15px"
-                      color="#aaa"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setActiveTransaction(null)
-                      }}
+                      size="12px"
+                      color="#777"
+                      onClick={this.toggleActiveState}
                     /> : 
                     <Expand
-                      size="15px"
-                      color="#aaa" 
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setActiveTransaction(index)
-                      }}
+                      size="12px"
+                      color="#777" 
+                      onClick={this.toggleActiveState}
                     /> 
                   }
                 </Text>
@@ -71,7 +64,9 @@ class TransactionCard extends Component {
                   <Text>
                     {
                       hash &&
-                      <Anchor href={transactionURL} onClick={event => event.stopPropagation()}>
+                      <Anchor 
+                        href={`/transaction/${window.encodeURIComponent(hash)}`} 
+                        onClick={event => event.stopPropagation()}>
                         {` `}
                         <TruncatedText value={hash} className="txHash" />
                       </Anchor>
@@ -81,17 +76,23 @@ class TransactionCard extends Component {
               </Text>
               {
                 (!open && type) &&
-                <Text size="xsmall">{type} Transaction</Text>
+                <Box animation="fadeIn">
+                  <Text size="xsmall">{type} Transaction</Text>
+                </Box>
               }
             </Box>
               
           </header>
         )}
         background="#0b1f3a"
+        opacity="0.3"
         pad="15px"
+        onClick={this.toggleActiveState}
       > 
         <Collapsible open={open}>
-          <TransactionDetails transaction={transaction} />
+          <Box animation={open ? "fadeIn" : "fadeOut"} margin={{top: "10px"}}>
+            <TransactionDetails transaction={transaction} />
+          </Box>
         </Collapsible>
       </Card>
     );
@@ -109,6 +110,13 @@ class TransactionCard extends Component {
       .then(transaction => {
         this.setState({ transaction })
       })
+  }
+
+  toggleActiveState = (event) => {
+    event.stopPropagation();
+    const { open, index, setActiveTransaction } = this.props;
+
+    return open ? setActiveTransaction(null) : setActiveTransaction(index);
   }
 }
 

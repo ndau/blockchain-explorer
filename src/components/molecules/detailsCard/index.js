@@ -1,57 +1,14 @@
 import React, { Component } from 'react'
 import { Box, Text } from "grommet"
-import TruncatedText from "../../atoms/truncatedText"
+import Value from '../../molecules/value'
 import Card from '../../atoms/card';
 import Keyword from '../../molecules/keyword'
-
-const Value = ({value}) => {
-  if (!value) {
-    return null;
-  }
-  const type = typeof value;
-
-  switch (type) {
-    case 'object':
-      return <SubDetails value={value} isArray={Array.isArray(value)} />;
-    case 'string':
-      if(!isNaN(Date.parse(value))) {
-        return value
-      }
-      return <TruncatedText value={value} />;
-    default:
-      return value;
-  }
-}
-
-const SubDetails = ({value, isArray}) => {
-  if (isArray) {
-    return value.map((item, index) => {
-      return (
-        <Text key={index}>
-          <Value value={value[item]} />
-        </Text>
-      )
-    });
-  }
-
-  return (
-    <Box  margin={{left: "20px"}}>
-      {
-        Object.keys(value).map((item, index) => {
-          return (
-            <Text key={index}>
-              <Keyword label={item} />: <Value value={value[item]} />
-            </Text>
-          )
-        })
-      }
-    </Box>
-  );
-}
+import { KEYWORD_MAP } from '../../../constants'
+import './style.css'
 
 class DetailsCard extends Component {
   render() {
-    const { data, keywordMap } = this.props;
+    const { data } = this.props;
 
     if (!data) {
       return null;
@@ -64,9 +21,18 @@ class DetailsCard extends Component {
             Object.keys(data).map((item, index) => {
               const value = data[item]
               return (value === 0 || value) && (
-                <Text as="section" key={index}>
-                  <Keyword label={item} keyword={keywordMap[item]} /> {': '} <Value value={value} />
-                </Text>
+                <Box key={index} className="detailField" round="xsmall">
+                  <Text 
+                    as="section"  
+                    margin="5px 0" 
+                  >
+                    <Text>
+                      <Keyword label={item} keyword={KEYWORD_MAP[item]} />
+                    </Text> 
+                    {': '} 
+                    <Value value={value} />
+                  </Text>
+                </Box>
               )
             })
           }

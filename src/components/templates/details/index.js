@@ -4,7 +4,7 @@ import Main from '../main'
 class Details extends Component {
   render() {
     return (
-      <Main>
+      <Main nav={this.props.nav}>
         {this.props.children}
       </Main>
     );
