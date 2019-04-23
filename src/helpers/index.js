@@ -1,6 +1,6 @@
 import qs from 'query-string'
-import * as fetchHelpers from './fetch'
-import * as formatHelpers from './format'
+// import * as fetchHelpers from './fetch'
+// import { formatTime } from './format'
 
 export const makeURLQuery = (additionalQuery) => {
   const query = qs.parse(window.location.search);
@@ -33,11 +33,11 @@ export const truncate = (string) => {
 //   return obj
 // }
 
-const helpers = {
-  ...fetchHelpers,
-  ...formatHelpers,
-  makeURLQuery
-}
+// const helpers = {
+//   ...fetchHelpers,
+//   ...formatHelpers,
+//   makeURLQuery
+// }
 
 
-export default helpers;
+// export default helpers;
