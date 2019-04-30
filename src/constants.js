@@ -3,7 +3,7 @@
 // NODE
 /////////////////////////////////////////
 
-// export const MAIN_NODE_ENDPOINT = 'https://node-0.main.ndau.tech'
+export const MAIN_NODE_ENDPOINT = 'https://api.ndau.tech:32300'
 export const TESTNET_NODE_ENDPOINT = 'https://api.ndau.tech:31300'
 export const DEVNET_NODE_ENDPOINT = 'https://api.ndau.tech:30300'
 export const DEFUALT_NODE_ENDPOINT = TESTNET_NODE_ENDPOINT

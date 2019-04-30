@@ -21,7 +21,7 @@ class TransactionCard extends Component {
 
   render() {
     const { transaction } = this.state;
-    const { open, setActiveTransaction, index } = this.props;
+    const { open } = this.props;
 
     if (!transaction) {
       return (
@@ -41,7 +41,7 @@ class TransactionCard extends Component {
     return (
       <Card
         header={(
-          <header onClick={() => setActiveTransaction(index)}>
+          <header>
             <Box>
               <Text truncate as="article">
                 <Text style={{float: "right"}}>

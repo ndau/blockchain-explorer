@@ -70,9 +70,21 @@ class Navbar extends Component {
                             onValueChange={this.onNodeEndpointChange}
                             value={nodeEndpoint}
                             suggestions={[
-                              // MAIN_NODE_ENDPOINT, 
-                              TESTNET_NODE_ENDPOINT, 
-                              DEVNET_NODE_ENDPOINT 
+                              DEVNET_NODE_ENDPOINT,
+                              TESTNET_NODE_ENDPOINT
+                              // {
+                              //   label:"Mainnet",
+                              //   value: MAIN_NODE_ENDPOINT
+                              // },
+
+                              // {
+                              //   label:"Testnet",
+                              //   value: "testnet node"//TESTNET_NODE_ENDPOINT
+                              // },
+                              // {
+                              //   label:"Devnet",
+                              //   value: DEVNET_NODE_ENDPOINT
+                              // },
                             ]}
                           />
                         ) : (

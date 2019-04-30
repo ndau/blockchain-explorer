@@ -8,6 +8,7 @@ import {
   getBlocks,
   pollForBlocks,
 } from '../../../helpers/fetch'
+import { POLL_INTERVAL } from '../../../constants'
 
 const BLOCK_LIST_LENGTH = 5;
 
@@ -69,32 +70,50 @@ class NdauDashboard extends Component {
           return
         }
 
-        const latestHeight = status.latest_block_height;
-        const maximum = BLOCK_LIST_LENGTH;
+        const latestBlockHeight = status.latest_block_height;
+        const limit = BLOCK_LIST_LENGTH;
+        const hideEmpty = this.state.hideEmpty;
  
-        getBlocks(null, latestHeight, maximum, null)
-          .then((blocks) => {
+        getBlocks(latestBlockHeight, hideEmpty, limit)
+          .then(({blocks}) => {
             if(!blocks) {
               return null;
             }
-
-            const latestBlocks = blocks.slice(0, maximum);
-            const latestBlock = latestBlocks[0];
     
             this.setState({ 
-              blocks: latestBlocks,
-            }, ()=> pollForBlocks(latestHeight, maximum, this.resetData))
-
-            return latestBlock
+              blocks,
+            }, ()=> {
+              this.startPolling(latestBlockHeight, hideEmpty, limit, this.resetData)
+            })
           })
       })
       
   }
 
+  componentWillUnmount() {
+    this.endPolling()
+  }
+
+  startPolling = (latestBlockHeight, hideEmpty, limit, success) => {
+    this.endPolling()
+
+    this.pollInterval = window.setInterval(
+      pollForBlocks(latestBlockHeight, hideEmpty, limit, success), 
+      POLL_INTERVAL
+    );
+  }
+
+  endPolling = () => {
+    if (this.pollInterval) {
+      window.clearInterval(this.pollInterval)
+    }
+  }
+
   resetData = (newBlocks=[], latestBlockHeight, newCurrentOrder) => {
+
     this.setState(({currentOrder}) => {
       return {
-        blocks: newBlocks,
+        blocks: [...newBlocks],
         latestBlockHeight,
         currentOrder: newCurrentOrder || currentOrder
       }

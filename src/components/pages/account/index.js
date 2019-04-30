@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Box, Text } from 'grommet';
 import Details from '../../templates/details'
 import DetailsCard from '../../molecules/detailsCard'
-import { getAccount } from '../../../helpers/fetch'
+import AccountTimeline from '../../organisms/accountTimeline'
+import { getAccount, getAccountHistory } from '../../../helpers/fetch'
 
 class Account extends Component {
   constructor(props) {
@@ -10,13 +11,14 @@ class Account extends Component {
 
     this.state = {
       account: {},
+      history: null,
     }
 
     this.getData();
   }
 
   render() {
-    const { account } = this.state;
+    const { account, history } = this.state;
 
     if (!account) {
       return (
@@ -39,6 +41,20 @@ class Account extends Component {
 
         {/* ACCOUNT DETAILS */}
         <DetailsCard data={account} keywordMap={this.keywordMap} />
+
+        {/* ACCOUNT HISTORY */}
+        {
+          history && 
+          <Box>
+            <Box align="center" margin={{top: "large", bottom: "small"}}>
+              <Text weight="bold">Timeline:</Text>
+            </Box>
+            
+            <AccountTimeline events={history} />
+          </Box>
+          
+        }
+        
       </Details>
     )
   }
@@ -48,7 +64,15 @@ class Account extends Component {
     getAccount(address)
       .then(account => {
         this.setState({ account })
+
+        return account.address
       })
+      .then(address => {
+        getAccountHistory(address)
+          .then(history => {
+            this.setState({ history });
+          })
+      })   
   }
 
   keywordMap = {

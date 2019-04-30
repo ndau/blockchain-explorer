@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'query-string'
-import { HTTP_REQUEST_HEADER,  POLL_INTERVAL, DEFUALT_NODE_ENDPOINT } from '../constants.js';
+import { HTTP_REQUEST_HEADER, DEFUALT_NODE_ENDPOINT } from '../constants.js';
 import {
   formatBlock,
   formatBlocks,
@@ -14,7 +14,7 @@ import {
 /////////////////////////////////////////
 
 export const getBlock = (blockHeight) => {
-  const blockEndpoint = `${getNodeEndpoint()}/block/height/${blockHeight}/?noempty=`
+  const blockEndpoint = `${getNodeEndpoint()}/block/height/${blockHeight}`
   
   return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -27,23 +27,24 @@ export const getBlock = (blockHeight) => {
     })
 }
 
-export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
-  const interval = maximum > 1 ? maximum - 1 : 1;
-  const _blockRangeStart = blockRangeStart || getBlockRangeStart(blockRangeEnd, interval);
-  const blocksEndpoint = `${getNodeEndpoint()}/block/range/${_blockRangeStart}/${blockRangeEnd}?`;
-  // const blocksEndpoint = `${getNodeEndpoint()}/block/before/${_blockRangeStart}/${blockRangeEnd}?`;
-
+export const getBlocks = (latestBlockHeight, noEmpty, limit) => {
+  const query = `?filter=${noEmpty ? 'noempty' : ''}&limit=${limit ? limit : ''}`
+  const blocksEndpoint = `${getNodeEndpoint()}/block/before/${latestBlockHeight}${query}`
 
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      const blocks = response.data.block_metas || [];
-      return formatBlocks(blocks);
+      const { last_height, block_metas } = response.data
+    
+      return {
+        blocks: formatBlocks(block_metas),
+        lastFetchedHeight: last_height
+      };
     })
     .catch(error => console.log(error))
 }
 
-export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
-  let lastHeight = lastBlockHeight;
+export const pollForBlocks = (latestBlockHeight, noEmpty, maximum, success) => {
+  let currentLatestBlockHeight = latestBlockHeight
   const fetchNewBlocks = () => {
     getNodeStatus()
       .then(status => {
@@ -51,26 +52,28 @@ export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
           return;
         }
 
-        const newHeight = status.latest_block_height;
-        if(newHeight > lastHeight) {
-          const blockRangeEnd = newHeight;
-
-          getBlocks(null, blockRangeEnd, maximum, noEmpty)
-            .then(newBlocks => {
-              lastHeight = status.latest_block_height
+        const newLatestBlockHeight = status.latest_block_height;
+        if(newLatestBlockHeight > currentLatestBlockHeight) {
+          const limit = maximum ? maximum : newLatestBlockHeight - currentLatestBlockHeight;
+          getBlocks(newLatestBlockHeight, noEmpty, limit)
+            .then(({blocks}) => {
+              
               getCurrentOrder()
                 .then((order={}) => {
                   if(success) {
-                    success(newBlocks, blockRangeEnd);
+                    success(blocks, newLatestBlockHeight, order);
                   } 
                 })
-              
             })
         }
+
+        currentLatestBlockHeight = newLatestBlockHeight
       })
   }
 
-  window.setInterval(fetchNewBlocks, POLL_INTERVAL);
+  return fetchNewBlocks
+
+  // window.setInterval(fetchNewBlocks, POLL_INTERVAL);
 }
 
 export const getBlockRangeStart = (blockRangeEnd, interval=100) => {
@@ -110,7 +113,7 @@ export const getTransactionHashes = (blockHeight) => {
       return hashes;
     })
     .catch(error => {
-      console.log(error)
+      // TODO: FAIL SAFE
       return;
     })
 }
@@ -141,6 +144,15 @@ export const getAccount = (address) => {
     })
 }
 
+export const getAccountHistory = (address) => {
+  const accountHistoryEndpoint = `${getNodeEndpoint()}/account/history/${address}`
+
+  return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+      const history = response.data.Items;
+      return history
+    })
+}
 
 /////////////////////////////////////////
 // NODE

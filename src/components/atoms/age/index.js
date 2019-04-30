@@ -26,17 +26,8 @@ class Age extends Component {
     this.state= {
       age: this.getAge(),
     }
-  }
-  
 
-  render() {
-    return (
-      <span>{this.state.age}</span>
-    );
-  }
-
-  componentDidMount() {
-    this.ageUpdateInterval = setInterval(()=> {
+    this.ageUpdateInterval = window.setInterval(()=> {
       this.setState(({age}) => {
         const newAge = this.getAge();
         if(newAge !== age) {
@@ -47,9 +38,16 @@ class Age extends Component {
       })
     }, 30000)
   }
+  
+
+  render() {
+    return (
+      <span>{this.state.age}</span>
+    );
+  }
 
   componentWillUnmount() {
-    clearInterval(this.ageUpdateInterval)
+    window.clearInterval(this.ageUpdateInterval)
   }
 
   getAge = () => {

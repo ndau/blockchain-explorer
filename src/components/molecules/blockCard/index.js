@@ -13,7 +13,7 @@ class BlockCard extends Component {
       return <h3>Loading...</h3>;
     }
     
-    const { transactionHashes, height } = block;
+    const { transactionHashes, height, numberOfTransactions } = block;
     const notDisplayed = ["transactions", "numberOfTransactions", "transactionHashes", "timestamp"];
     return (
       <Card background="transparent" pad={{horizontal: "0"}}>
@@ -36,6 +36,7 @@ class BlockCard extends Component {
 
           <TransactionList
             transactionHashes={transactionHashes}
+            numberOfTransactions={numberOfTransactions}
             blockHeight={height}
           />
         </Box>
