@@ -37,10 +37,10 @@ class TransactionsList extends Component{
       <Box>
         <Box>
           <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
-            <b>transactions:</b>
+            <b>transaction{transactionHashes.length > 1 && 's'}:</b>
           </Text>
         </Box>
-        {/* <Box margin={{top: gap}}> */}
+
         <Box 
           style={{
             margin: "10px 0px 0px 15px",

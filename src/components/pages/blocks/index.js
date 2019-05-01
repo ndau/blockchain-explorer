@@ -90,7 +90,7 @@ class Blocks extends Component {
         }
 
         const latestBlockHeight = status.latest_block_height;
-        getBlocks(latestBlockHeight, hideEmpty)
+        getBlocks({before: latestBlockHeight, filter: hideEmpty})
           .then(({blocks, lastFetchedHeight}) => {
             this.setState({
               blocks,
@@ -98,7 +98,11 @@ class Blocks extends Component {
               lastFetchedHeight,
               hideEmpty
             }, () => {
-             this.startPolling(latestBlockHeight, hideEmpty, null, this.resetData);
+             this.startPolling({
+              after: latestBlockHeight, 
+              filter: hideEmpty,
+              success: this.resetData
+            })
             })
           })
       })
@@ -108,11 +112,11 @@ class Blocks extends Component {
     this.endPolling()
   }
 
-  startPolling = (latestBlockHeight, hideEmpty, limit, success) => {
+  startPolling = ({after, filter, limit, success}) => {
     this.endPolling()
 
     this.pollInterval = window.setInterval(
-      pollForBlocks(latestBlockHeight, hideEmpty, limit, success), 
+      pollForBlocks({after, filter, limit, success}), 
       POLL_INTERVAL
     );
   }
@@ -139,7 +143,7 @@ class Blocks extends Component {
 
     this.setState({ loading: true })
 
-    getBlocks(lastFetchedHeight - 1, hideEmpty )
+    getBlocks({before: lastFetchedHeight - 1, filter: hideEmpty})
       .then(({ blocks : previousBlocks, lastFetchedHeight}) => {
         if (previousBlocks.length < 1) {
           return

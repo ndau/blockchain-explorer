@@ -44,15 +44,9 @@ class TransactionDetails extends Component {
       <Card>
         <Box>
           {
-            type && 
-            <Text className="detailField" padding="5px 0">
-              <b>type: </b> <Value value={type} />
-            </Text>
-          }
-          {
             quantity && 
             <Text className="detailField" padding="5px 0">
-              <b>quantity: </b> <Value value={quantity} />
+              <b>amount: </b> <Value value={quantity} />
             </Text>
           }
           {
@@ -80,6 +74,12 @@ class TransactionDetails extends Component {
               <Anchor href={`/account/${target}`}>
                 <TruncatedText value={target} />
               </Anchor>
+            </Text>
+          }
+          {
+            type && 
+            <Text className="detailField" padding="5px 0">
+              <b>type: </b> <Value value={type} />
             </Text>
           }
           {

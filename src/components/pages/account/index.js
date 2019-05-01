@@ -45,14 +45,7 @@ class Account extends Component {
         {/* ACCOUNT HISTORY */}
         {
           history && 
-          <Box>
-            <Box align="center" margin={{top: "large", bottom: "small"}}>
-              <Text weight="bold">Timeline:</Text>
-            </Box>
-            
-            <AccountTimeline events={history} />
-          </Box>
-          
+          <AccountTimeline events={history} />
         }
         
       </Details>

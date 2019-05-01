@@ -27,10 +27,10 @@ export const getBlock = (blockHeight) => {
     })
 }
 
-export const getBlocks = (latestBlockHeight, noEmpty, limit) => {
-  const query = `?filter=${noEmpty ? 'noempty' : ''}&limit=${limit ? limit : ''}`
-  const blocksEndpoint = `${getNodeEndpoint()}/block/before/${latestBlockHeight}${query}`
-
+export const getBlocks = ({before, after, filter, limit}) => {
+  const query = `?after=${after?after:''}&filter=${filter?'noempty':''}&limit=${limit?limit:''}`
+  const blocksEndpoint = `${getNodeEndpoint()}/block/before/${before}${query}`
+  
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       const { last_height, block_metas } = response.data
@@ -43,8 +43,8 @@ export const getBlocks = (latestBlockHeight, noEmpty, limit) => {
     .catch(error => console.log(error))
 }
 
-export const pollForBlocks = (latestBlockHeight, noEmpty, maximum, success) => {
-  let currentLatestBlockHeight = latestBlockHeight
+export const pollForBlocks = ({after, filter, limit, success}) => {
+  let currentLatestBlockHeight = after
   const fetchNewBlocks = () => {
     getNodeStatus()
       .then(status => {
@@ -53,11 +53,13 @@ export const pollForBlocks = (latestBlockHeight, noEmpty, maximum, success) => {
         }
 
         const newLatestBlockHeight = status.latest_block_height;
-        if(newLatestBlockHeight > currentLatestBlockHeight) {
-          const limit = maximum ? maximum : newLatestBlockHeight - currentLatestBlockHeight;
-          getBlocks(newLatestBlockHeight, noEmpty, limit)
+        // const limit = maximum ? maximum : newLatestBlockHeight - currentLatestBlockHeight
+
+        if(limit > 0) {
+          getBlocks({before: newLatestBlockHeight, after: currentLatestBlockHeight, filter, limit})
             .then(({blocks}) => {
-              
+              currentLatestBlockHeight = newLatestBlockHeight
+
               getCurrentOrder()
                 .then((order={}) => {
                   if(success) {
@@ -66,14 +68,10 @@ export const pollForBlocks = (latestBlockHeight, noEmpty, maximum, success) => {
                 })
             })
         }
-
-        currentLatestBlockHeight = newLatestBlockHeight
       })
   }
 
   return fetchNewBlocks
-
-  // window.setInterval(fetchNewBlocks, POLL_INTERVAL);
 }
 
 export const getBlockRangeStart = (blockRangeEnd, interval=100) => {

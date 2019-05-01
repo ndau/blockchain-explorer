@@ -177,6 +177,26 @@ export const formatAccount = (account, additionalData={}) => {
     validationKeys,
     validationScript,
     weightedAverageAge: formatPeriod(weightedAverageAge),
+    ...additionalData
+  }
+}
+
+export const formatAccountEvent = accountEvent => {
+  if(accountEvent) {
+    const {
+      Balance, Timestamp, TxHash, Height
+    } = accountEvent
+  
+    return {
+      balance: convertNapuToNdau(Balance),
+      timestamp: formatTime(Timestamp),
+      transactionHash: TxHash,
+      blockHeight: Height,
+      raw: {
+        balance: Balance,
+        timestamp: Timestamp,
+      }
+    }
   }
 }
 
@@ -186,14 +206,14 @@ export const formatAccount = (account, additionalData={}) => {
 /////////////////////////////////////////
 
 export const convertNapuToNdau = (napuAmount, humanize=true) => {
-  if(napuAmount) {
+  if(napuAmount === 0 || napuAmount) {
     const ndauAmount = napuAmount / 100000000
-    return humanize ? humanizeNumber(ndauAmount, 3) : ndauAmount
+    return humanize ? humanizeNumber(ndauAmount, 2) : ndauAmount
   }
 }
 
 export const humanizeNumber = (number, decimals=0) => {
-  if (number) {
+  if (number === 0 || number) {
     const numberString = parseFloat(number).toFixed(decimals)
     const numberArray = numberString.split("")
     const decimalPlace = numberArray.findIndex(item => item === ".")

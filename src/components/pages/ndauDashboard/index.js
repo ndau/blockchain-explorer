@@ -74,7 +74,7 @@ class NdauDashboard extends Component {
         const limit = BLOCK_LIST_LENGTH;
         const hideEmpty = this.state.hideEmpty;
  
-        getBlocks(latestBlockHeight, hideEmpty, limit)
+        getBlocks({before: latestBlockHeight, filter: hideEmpty, limit})
           .then(({blocks}) => {
             if(!blocks) {
               return null;
@@ -83,7 +83,12 @@ class NdauDashboard extends Component {
             this.setState({ 
               blocks,
             }, ()=> {
-              this.startPolling(latestBlockHeight, hideEmpty, limit, this.resetData)
+              this.startPolling({
+                after: latestBlockHeight, 
+                filter: hideEmpty, 
+                limit, 
+                success: this.resetData
+              })
             })
           })
       })
@@ -94,11 +99,11 @@ class NdauDashboard extends Component {
     this.endPolling()
   }
 
-  startPolling = (latestBlockHeight, hideEmpty, limit, success) => {
+  startPolling = ({after, filter, limit, success}) => {
     this.endPolling()
 
     this.pollInterval = window.setInterval(
-      pollForBlocks(latestBlockHeight, hideEmpty, limit, success), 
+      pollForBlocks({after, filter, limit, success}), 
       POLL_INTERVAL
     );
   }

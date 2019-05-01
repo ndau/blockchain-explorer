@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Box, Text } from 'grommet'
-import TransactionList from '../../organisms/transactionsList'
+import TimelineEvent from '../../molecules/timelineEvent'
+import TimelineChart from '../../molecules/timelineChart'
 
 class AccountTimeline extends Component {
   state = { activeBlock: null }
@@ -12,35 +13,48 @@ class AccountTimeline extends Component {
       return null
     }
 
+    const borderStyle = {border: "1px dashed rgba(255,255,255,0.2)"}
+
     return (
-      <Box
-        // background="#293e63"
-        pad="7px"
-        round="xsmall"
-        elevation="small"
-      >
+      <Box>
+        <Box align="center" margin={{top: "large", bottom: "small"}}>
+          <Text weight="bold">Timeline</Text>
+        </Box>
+
+        <Box margin={{bottom: "10px"}}>
+          <TimelineChart events={events} />
+        </Box>
+
         <Box overflow="hidden">
           {
             events.reverse().map((event, index) => {
-              const { Balance, TxHash, Timestamp } = event;
-              const previousBalance =  index < events.length - 1 ? events[index + 1]["Balance"] : Balance;
-              const difference =  Balance - previousBalance;
+              const previousEvent = events[index + 1] 
 
               return (
-                <Box 
-                  key={index} margin={{bottom: "small"}}
-                  background="#293e63"
-                > 
-                  <Text>{Timestamp}</Text>
-                  <Text>balance: {Balance / 100000000}</Text>
-                  <Text>amount: {difference  / 100000000}</Text>
-                  <Text></Text>
-
-
-                  <Text>
-                    {/* transaction:  */}
-                    <TransactionList transactionHashes={[TxHash]}/>
-                  </Text>
+                <Box key={index}>
+                  <Box 
+                    round="xsmall" 
+                    // style={{border: "1px dotted #666"}}
+                    // elevation="medium"
+                    style={borderStyle}
+                    background="rgba(255,255,255,0.06)"
+                  > 
+                    <TimelineEvent 
+                      event={event}
+                      previousEvent={previousEvent}
+                      index={index}
+                    />
+                  </Box>
+                  {
+                    index !== events.length -1 &&
+                    <Box 
+                      alignSelf="center" 
+                      border="right" 
+                      height="20px" 
+                      width="0"
+                      style={borderStyle}
+                    />
+                  } 
                 </Box>
               )
             })
