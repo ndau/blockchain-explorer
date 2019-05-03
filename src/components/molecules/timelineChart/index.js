@@ -1,35 +1,13 @@
 import React, { Component } from 'react'
-import { Box, Chart, Stack, Text } from "grommet"
-// import { humanizeNumber } from '../../../helpers/format
-import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
-import { PRIMARY_LIME } from '../../../constants'
-
-const X_AXIS_HEIGHT = "20px";
+import { Box, Chart, Stack, Text } from 'grommet'
+import { formatAccountEvent } from '../../../helpers/format'
 
 class TimelineChart extends Component {
-  // constructor(props) {
-  //   super(props)
-
-  //   this.state = {
-  //     events: null,
-  //     xAxis: [],
-  //     yAxis: [],
-  //   }
-
-  //   this.getData();
-  // }
-
   render() {
-
     const chartProps = {
       size: { width: "xlarge", height: "xxsmall" },
       values: this.generateEventsData(),
-      // overflow: true
     };
-
-    // debugger
-
-    const { xAxis=[] } = this
 
     return (
       <Box className="timelineChart">
@@ -43,33 +21,25 @@ class TimelineChart extends Component {
             <Box>
               <Stack
                 guidingChild="first"
-                interactiveChild="last"
-                // margin={{left: "18px"}}
+                // interactiveChild="last"
                 style={{cursor: "pointer"}}
+                pad="0"
               >
                 <Chart
                   {...chartProps}
-                  type="bar"
-                  color={{ color: "rgba(255,255,255,0.06)" }}
-                  thickness="large"
+                  type="line"
+                  round
+                  color={{ color: "#f99d1c", opacity: "strong" }}
+                  thickness="xxsmall"
+                />
+                <Chart
+                  {...chartProps}
+                  type="area"
+                  color={{ color: "#f99d1c", opacity: "weak" }}
+                  thickness="xsmall"
+                  pad="0"
                 />
               </Stack>
-
-              {/* x-axis */}
-              {/* <Box flex border="top" height={X_AXIS_HEIGHT} margin={{left: "18px"}}>
-                {
-                  xAxis &&
-                  <Box
-                    direction="row"
-                    justify="between"
-                    align="center"
-                  >
-                    {
-                      xAxis.map(x => <Text key={x} size="xsmall">{x}</Text>)
-                    }
-                  </Box>
-                }
-              </Box> */}
             </Box>
           </Box>
         </Box>
@@ -77,11 +47,9 @@ class TimelineChart extends Component {
     )
   }
 
-  // generatePriceData generates a data table we can use to calculate extents
-  // It uses the ndau price function
   generateEventsData = () => {
     const { events } = this.props
-    return events.map((event, index) => {
+    return events.reverse().map((event, index) => {
       const eventData = formatAccountEvent(event)
       return [index, eventData.raw.balance]
     })

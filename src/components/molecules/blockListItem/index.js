@@ -60,7 +60,14 @@ class BlockListItem extends Component {
         animation={["slideDown", "fadeIn"]}
       >
         <Collapsible open={active}>
-          <Box animation={active ? "fadeIn" : "fadeOut"}  margin={{top: "10px"}}>
+          <Box 
+            margin={{top: "10px"}}
+            animation={active ? "fadeIn" : {
+              "type": "fadeOut",
+              "delay": 0,
+              "duration": 100,
+            }}
+          >
             <BlockDetails block={block} />
           </Box>
         </Collapsible>

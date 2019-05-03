@@ -68,18 +68,18 @@ class TransactionDetails extends Component {
             </Text>
           }
           {
+            type && 
+            <Text className="detailField" padding="5px 0">
+              <b>type: </b> <Value value={type} />
+            </Text>
+          }
+          {
             target &&
             <Text className="detailField" padding="5px 0">
               <b>target: </b>
               <Anchor href={`/account/${target}`}>
                 <TruncatedText value={target} />
               </Anchor>
-            </Text>
-          }
-          {
-            type && 
-            <Text className="detailField" padding="5px 0">
-              <b>type: </b> <Value value={type} />
             </Text>
           }
           {

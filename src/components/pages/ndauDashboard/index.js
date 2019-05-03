@@ -27,7 +27,7 @@ class NdauDashboard extends Component {
   }
 
   render() {
-    const { blocks, currentOrder={} } = this.state;
+    const { blocks, currentOrder={} } = this.state
   
     return (
       <Dashboard
@@ -56,7 +56,6 @@ class NdauDashboard extends Component {
           return null
         }
 
-        // this.setState({ nodeStatus: status })
         return status;
       })
       .then((status) => {
@@ -82,11 +81,11 @@ class NdauDashboard extends Component {
     
             this.setState({ 
               blocks,
+              latestBlockHeight,
             }, ()=> {
               this.startPolling({
-                after: latestBlockHeight, 
-                filter: hideEmpty, 
-                limit, 
+                after: this.state.latestBlockHeight, 
+                filter: hideEmpty,
                 success: this.resetData
               })
             })
@@ -99,11 +98,11 @@ class NdauDashboard extends Component {
     this.endPolling()
   }
 
-  startPolling = ({after, filter, limit, success}) => {
+  startPolling = ({after, filter, success}) => {
     this.endPolling()
 
     this.pollInterval = window.setInterval(
-      pollForBlocks({after, filter, limit, success}), 
+      pollForBlocks({after, filter, success}), 
       POLL_INTERVAL
     );
   }
@@ -114,15 +113,20 @@ class NdauDashboard extends Component {
     }
   }
 
-  resetData = (newBlocks=[], latestBlockHeight, newCurrentOrder) => {
+  resetData = (newBlocks, latestBlockHeight, newCurrentOrder) => {
+    if (newBlocks && newBlocks.length > 0) {
+      const { blocks=[] } = this.state;
 
-    this.setState(({currentOrder}) => {
-      return {
-        blocks: [...newBlocks],
-        latestBlockHeight,
-        currentOrder: newCurrentOrder || currentOrder
-      }
-    })
+      const latestBlocks = [...newBlocks, ...blocks].slice(0, 5)
+
+      this.setState(({currentOrder}) => {
+        return {
+          blocks: latestBlocks,
+          latestBlockHeight,
+          currentOrder: newCurrentOrder || currentOrder
+        }
+      })
+    }
   }
 }
 

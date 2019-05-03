@@ -28,23 +28,23 @@ export const getBlock = (blockHeight) => {
 }
 
 export const getBlocks = ({before, after, filter, limit}) => {
-  const query = `?after=${after?after:''}&filter=${filter?'noempty':''}&limit=${limit?limit:''}`
+  const query = `?after=${after?after:'1'}&filter=${filter?'noempty':''}&limit=${limit?limit:''}`
   const blocksEndpoint = `${getNodeEndpoint()}/block/before/${before}${query}`
-  
+
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       const { last_height, block_metas } = response.data
     
       return {
         blocks: formatBlocks(block_metas),
-        lastFetchedHeight: last_height
+        lastFetchedHeight: last_height,
+        latestFetchedHeight: block_metas[0] && block_metas[0].header.height
       };
     })
     .catch(error => console.log(error))
 }
 
-export const pollForBlocks = ({after, filter, limit, success}) => {
-  let currentLatestBlockHeight = after
+export const pollForBlocks = ({after, filter, success}) => {
   const fetchNewBlocks = () => {
     getNodeStatus()
       .then(status => {
@@ -52,18 +52,21 @@ export const pollForBlocks = ({after, filter, limit, success}) => {
           return;
         }
 
-        const newLatestBlockHeight = status.latest_block_height;
-        // const limit = maximum ? maximum : newLatestBlockHeight - currentLatestBlockHeight
+        const currentBlockHeight = status.latest_block_height;
+        const limit = currentBlockHeight - after
 
         if(limit > 0) {
-          getBlocks({before: newLatestBlockHeight, after: currentLatestBlockHeight, filter, limit})
+          getBlocks({
+            before: currentBlockHeight, 
+            after, 
+            filter, 
+            // limit
+          })
             .then(({blocks}) => {
-              currentLatestBlockHeight = newLatestBlockHeight
-
               getCurrentOrder()
                 .then((order={}) => {
                   if(success) {
-                    success(blocks, newLatestBlockHeight, order);
+                    success(blocks, currentBlockHeight, order);
                   } 
                 })
             })
@@ -187,7 +190,7 @@ export const getNodeEndpoint = () => {
 /////////////////////////////////////////
 
 export const getCurrentOrder = () => {
-  const statusEndpoint = `${getNodeEndpoint()}/order/current`;
+  const statusEndpoint = `${getNodeEndpoint()}/price/current`;
   return axios.get(statusEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       return response.data;

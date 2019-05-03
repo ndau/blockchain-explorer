@@ -214,12 +214,13 @@ export const convertNapuToNdau = (napuAmount, humanize=true) => {
 
 export const humanizeNumber = (number, decimals=0) => {
   if (number === 0 || number) {
-    const numberString = parseFloat(number).toFixed(decimals)
+    const num = Math.abs(number)
+    const numberString = parseFloat(num).toFixed(decimals)
     const numberArray = numberString.split("")
     const decimalPlace = numberArray.findIndex(item => item === ".")
     let currentLastPlace = decimalPlace !== -1 ? decimalPlace : numberString.length
     
-    while (currentLastPlace > 3) {
+    while (currentLastPlace >= 4) {
       const commaPlace = currentLastPlace - 3
       numberArray.splice(commaPlace, 0, ',')
 

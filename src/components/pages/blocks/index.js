@@ -65,7 +65,6 @@ class Blocks extends Component {
                   onMore={this.loadMoreBlocks}
                   size="medium"
                   className="dataTable"
-                  
                 />
               )
             }
@@ -96,13 +95,14 @@ class Blocks extends Component {
               blocks,
               nodeStatus: status,
               lastFetchedHeight,
+              latestBlockHeight,
               hideEmpty
             }, () => {
-             this.startPolling({
-              after: latestBlockHeight, 
-              filter: hideEmpty,
-              success: this.resetData
-            })
+              this.startPolling({
+                after: this.state.latestBlockHeight, 
+                filter: hideEmpty,
+                success: this.resetData
+              })
             })
           })
       })
@@ -159,13 +159,15 @@ class Blocks extends Component {
       })
   }
 
-  resetData = (newBlocks=[], lastestBlockHeight) => {
-    this.setState(({blocks=[]}) => {
-      return {
-        blocks: [...newBlocks, ...blocks],
-        lastestBlockHeight,
-      }
-    })
+  resetData = (newBlocks, lastestBlockHeight) => {
+    if (newBlocks && newBlocks.length > 0) {
+      this.setState(({blocks=[]}) => {
+        return {
+          blocks: [...newBlocks, ...blocks],
+          lastestBlockHeight,
+        }
+      })
+    }
   }
   
   screenColumns = (screenSize) => {

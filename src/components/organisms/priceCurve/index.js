@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Box, Chart, Stack, Text } from "grommet";
 import { humanizeNumber } from '../../../helpers/format'
-import { price_at_unit, get_market_cap } from '../../../helpers/ndauMath';
+import { price_at_unit } from '../../../helpers/ndauMath';
 import { PRIMARY_LIME } from '../../../constants'
 
 const X_AXIS_HEIGHT = "20px";
@@ -36,7 +36,6 @@ class PriceCurve extends Component {
     const chartProps = {
       size: { width: "xlarge", height: "small" },
       values: priceData,
-      overflow: true
     };
 
     if(!priceData) {
@@ -46,10 +45,6 @@ class PriceCurve extends Component {
         </Box>
       )
     }
-
-    const marketCap = (activeXValue || activeXValue === 0) ?
-      ( get_market_cap(activeXValue).toFixed(2) ) :
-      ( get_market_cap(ndauIssued).toFixed(2) )
 
     const totalNdauIssued = (activeXValue || activeXValue === 0) ?
       activeXValue: ndauIssued
@@ -61,26 +56,14 @@ class PriceCurve extends Component {
       <Box className="ndauPriceCurve">
         <Box align="end" margin={{bottom: "20px"}}>
           <Text>
-            {
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">market cap: </Text>
-                {humanizeNumber(marketCap, 2)} USD
-              </Text>
-            }
-          </Text>
-          <Text>
-            {
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">ndau issued: </Text>
-                {humanizeNumber(totalNdauIssued, 0)}
-              </Text>
-            }
-            {
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">price: </Text>
-                {humanizeNumber(price, 2)} USD
-              </Text>
-            }
+            <Text size="small" margin={{left: "small"}} weight="bold">
+              <Text color="#ffe7c6" size="small" weight="normal">price: </Text>
+              {humanizeNumber(price, 2)} USD
+            </Text>
+            <Text size="small" margin={{left: "small"}} weight="bold">
+              <Text color="#ffe7c6" size="small" weight="normal">ndau issued: </Text>
+              {humanizeNumber(totalNdauIssued, 0)}
+            </Text>
           </Text>
         </Box>
 

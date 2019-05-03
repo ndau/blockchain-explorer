@@ -4,10 +4,10 @@ import { Anchor as StyledAnchor } from 'grommet'
 import { makeURLQuery } from '../../../helpers'
 
 function Anchor(props) {
-  return(
+  return (
     <Link 
       to={`${props.href}${makeURLQuery(props.additionalQuery)}`}
-      onClick={props.onClick}
+      // onClick={(event) => event.stopPropagation()}
       style={{ textDecoration: "none" }}
     >
       <StyledAnchor label={props.label} as="span">

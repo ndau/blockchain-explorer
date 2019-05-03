@@ -41,38 +41,34 @@ class TimelineEvent extends Component {
               </Text>
 
               <Text size="xsmall" color="#aaa">
-                <i><Age timestamp={timestamp} /></i>
+                <i><Age timestamp={accountEvent.raw.timestamp} /></i>
               </Text>
 
-              <Text size="medium" color={amount > 0?'green':'red'} margin={{left: "medium"}}>
-                <b>{amount > 0?'+':''}{convertNapuToNdau(amount)}</b>
+              <Text 
+                size="medium" 
+                color={amount > 0 ? 'green' :'rgba(255,0,0,0.7)'} 
+                margin={{left: "medium"}}
+              >
+                <b>{amount > 0?'+':'-'}{convertNapuToNdau(amount)}</b>
               </Text>
-              
-              {/* <Text size="xsmall" margin={{left: "medium"}} color="#aaa">
-                <i><Age timestamp={timestamp} /></i>
-              </Text> */}
             </Text>
-
-            {/* {
-              !active &&
-              <Box animation="fadeIn">
-                <Text size="small">
-                  {timestamp}
-                </Text>
-              </Box>
-            } */}
           </header>
         )}
         onClick={this.toggleActiveState}
         pad="15px"
-        // background="#293e63"
-        animation={["slideDown", "fadeIn"]}
+        animation="fadeIn"
       >
         <Collapsible open={active}>
-          <Box animation={active ? "fadeIn" : "fadeOut"}  margin={{top: "10px"}}>
+          <Box 
+            margin={{top: "10px"}}
+            animation={active ? "fadeIn" : {
+              "type": "fadeOut",
+              "delay": 0,
+              "duration": 100,
+            }}
+          >
             <Box 
               key={index} margin={{bottom: "small"}}
-              // background="#293e63"
             > 
               <Text>
                 <b>amount: </b> 

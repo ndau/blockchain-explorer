@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Box, Text } from 'grommet';
+import { Box, Text, Collapsible, CheckBox } from 'grommet';
 import Details from '../../templates/details'
 import DetailsCard from '../../molecules/detailsCard'
 import AccountTimeline from '../../organisms/accountTimeline'
@@ -12,13 +12,17 @@ class Account extends Component {
     this.state = {
       account: {},
       history: null,
+      hideDetails: false
     }
 
     this.getData();
+
+    // window.setTimeout(this.toggleShowDetails, 500)
   }
 
   render() {
-    const { account, history } = this.state;
+    const { account, history, hideDetails } = this.state
+    const showDetails = !hideDetails
 
     if (!account) {
       return (
@@ -32,22 +36,65 @@ class Account extends Component {
       <Details>
         <Box margin={{bottom: "20px"}}>
           <Text size="large">
-            Account{' '}
-            <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
-              {account && account.address}
+            {/* hide empty toggle is not fully functional */}
+            <Text
+              size="xsmall"
+              color="#aaa"
+              weight="normal"
+              style={{float: "right"}}
+            >
+              <CheckBox
+                toggle
+                checked={hideDetails}
+                label="hide details"
+                onChange={this.toggleShowDetails}
+                reverse
+                name="small"
+
+              />
+            </Text>
+            <Text>
+              Account{' '}
+              <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
+                {account && account.address}
+              </Text>
             </Text>
           </Text>
         </Box>
 
-        {/* ACCOUNT DETAILS */}
-        <DetailsCard data={account} keywordMap={this.keywordMap} />
+        <Collapsible open={showDetails}>
+          <Box 
+            animation={
+              showDetails ? 'fadeIn' : {
+                "type": "fadeOut",
+                "delay": 0,
+                "duration": 100,
+              }
+            }
+          >
+            {/* ACCOUNT DETAILS */}
+            <DetailsCard data={account} keywordMap={this.keywordMap} />
+          </Box>
+        </Collapsible>
 
-        {/* ACCOUNT HISTORY */}
-        {
-          history && 
-          <AccountTimeline events={history} />
-        }
         
+        <Box>
+          <Text>
+            <b>History{showDetails && ':'}</b>
+          </Text>
+        </Box>
+        <Box 
+          style={showDetails ? {
+            margin: "10px 0px 0px 15px",
+            paddingLeft: "11px",
+            borderLeft: "1px solid rgba(255,255, 255, 0.3)",
+          }:{}}  
+        >
+          <AccountTimeline 
+            events={history && [...history].reverse()} 
+            fill={hideDetails} 
+          />
+        </Box>
       </Details>
     )
   }
@@ -63,9 +110,22 @@ class Account extends Component {
       .then(address => {
         getAccountHistory(address)
           .then(history => {
+            // console.log(history)
             this.setState({ history });
           })
       })   
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.location.key !== prevProps.location.key) {
+      this.setState({ hideDetails: true }, this.getData)
+    }
+  }
+
+  toggleShowDetails = () => {
+    this.setState(({hideDetails}) => {
+      return { hideDetails: !hideDetails }
+    })
   }
 
   keywordMap = {

@@ -1,43 +1,45 @@
 import React, { Component } from 'react'
-import { Box, Text } from 'grommet'
+import { Box } from 'grommet'
 import TimelineEvent from '../../molecules/timelineEvent'
 import TimelineChart from '../../molecules/timelineChart'
 
 class AccountTimeline extends Component {
+  // constructor(props) {
+  //   super()
+  //   this.props.events && this.props.events.reverse()
+  // }
   state = { activeBlock: null }
 
   render() {
-    const { events } = this.props;
+    const { events, fill } = this.props;
 
     if(!events) {
       return null
     }
 
-    const borderStyle = {border: "1px dashed rgba(255,255,255,0.2)"}
+    const borderStyle = "1px dashed rgba(255,255,255,0.2)"
 
     return (
       <Box>
-        <Box align="center" margin={{top: "large", bottom: "small"}}>
-          <Text weight="bold">Timeline</Text>
-        </Box>
+        {
+          events.length > 1 &&
+          <Box margin={{bottom: "20px"}}>
+            <TimelineChart events={[...events, this.initialEvent]} fill={fill}/>
+          </Box>
+        }
+        
 
-        <Box margin={{bottom: "10px"}}>
-          <TimelineChart events={events} />
-        </Box>
-
-        <Box overflow="hidden">
+        <Box>
           {
-            events.reverse().map((event, index) => {
-              const previousEvent = events[index + 1] 
+            events.map((event, index) => {
+              const previousEvent = events[index + 1] || this.initialEvent
 
               return (
                 <Box key={index}>
                   <Box 
-                    round="xsmall" 
-                    // style={{border: "1px dotted #666"}}
-                    // elevation="medium"
-                    style={borderStyle}
-                    background="rgba(255,255,255,0.06)"
+                    round="xsmall"
+                    style={{border: borderStyle}}
+                    background="rgba(255,255,255,0.05)"
                   > 
                     <TimelineEvent 
                       event={event}
@@ -52,7 +54,7 @@ class AccountTimeline extends Component {
                       border="right" 
                       height="20px" 
                       width="0"
-                      style={borderStyle}
+                      style={{borderRight: borderStyle}}
                     />
                   } 
                 </Box>
@@ -66,6 +68,10 @@ class AccountTimeline extends Component {
 
   setActiveBlock = (activeBlock) => {
     this.setState({ activeBlock })
+  }
+
+  initialEvent = {
+    Balance: 0
   }
 }
 

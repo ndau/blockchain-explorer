@@ -7,7 +7,7 @@ import Container from '../../atoms/container'
 import NavbarMenu from '../../molecules/navbarMenu'
 import { 
   NAVBAR_COLOR, 
-  // MAIN_NODE_ENDPOINT, 
+  MAIN_NODE_ENDPOINT, 
   TESTNET_NODE_ENDPOINT, 
   DEVNET_NODE_ENDPOINT 
 } from '../../../constants'
@@ -70,8 +70,10 @@ class Navbar extends Component {
                             onValueChange={this.onNodeEndpointChange}
                             value={nodeEndpoint}
                             suggestions={[
+                              MAIN_NODE_ENDPOINT,
                               DEVNET_NODE_ENDPOINT,
-                              TESTNET_NODE_ENDPOINT
+                              TESTNET_NODE_ENDPOINT,
+                              
                               // {
                               //   label:"Mainnet",
                               //   value: MAIN_NODE_ENDPOINT

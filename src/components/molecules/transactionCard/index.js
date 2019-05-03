@@ -66,7 +66,7 @@ class TransactionCard extends Component {
                       hash &&
                       <Anchor 
                         href={`/transaction/${window.encodeURIComponent(hash)}`} 
-                        onClick={event => event.stopPropagation()}>
+                      >
                         {` `}
                         <TruncatedText value={hash} className="txHash" />
                       </Anchor>
@@ -90,7 +90,14 @@ class TransactionCard extends Component {
         onClick={this.toggleActiveState}
       > 
         <Collapsible open={open}>
-          <Box animation={open ? "fadeIn" : "fadeOut"} margin={{top: "10px"}}>
+          <Box 
+            margin={{top: "10px"}}
+            animation={open ? "fadeIn" : {
+              "type": "fadeOut",
+              "delay": 0,
+              "duration": 100,
+            }}
+          >
             <TransactionDetails transaction={transaction} />
           </Box>
         </Collapsible>
