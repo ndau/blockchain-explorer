@@ -19,7 +19,7 @@ class NdauDashboard extends Component {
     this.state = {
       blocks: null,
       latestBlockHeight: 1,
-      currentOrder: null,
+      priceInfo: null,
       hideEmpty: false,
     }
 
@@ -27,14 +27,13 @@ class NdauDashboard extends Component {
   }
 
   render() {
-    const { blocks, currentOrder={} } = this.state
-  
+    const { blocks, priceInfo={} } = this.state
     return (
       <Dashboard
         browserHistory={this.props.history}
         selectNode
         top={
-          <PriceCurve currentOrder={currentOrder} />
+          <PriceCurve priceInfo={priceInfo} />
         }
         bottom={
           <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />        
@@ -56,11 +55,8 @@ class NdauDashboard extends Component {
           return null
         }
 
-        return status;
-      })
-      .then((status) => {
         getCurrentOrder()
-          .then(currentOrder =>  this.setState({ currentOrder }))
+          .then(priceInfo =>  this.setState({ priceInfo }))
         
         return status
       })
@@ -102,7 +98,7 @@ class NdauDashboard extends Component {
     this.endPolling()
 
     this.pollInterval = window.setInterval(
-      pollForBlocks({after, filter, success}), 
+      () => pollForBlocks({after, filter, success}), 
       POLL_INTERVAL
     );
   }
@@ -113,17 +109,17 @@ class NdauDashboard extends Component {
     }
   }
 
-  resetData = (newBlocks, latestBlockHeight, newCurrentOrder) => {
+  resetData = (newBlocks, latestBlockHeight, newPriceInfo) => {
     if (newBlocks && newBlocks.length > 0) {
       const { blocks=[] } = this.state;
 
       const latestBlocks = [...newBlocks, ...blocks].slice(0, 5)
 
-      this.setState(({currentOrder}) => {
+      this.setState(({priceInfo}) => {
         return {
           blocks: latestBlocks,
           latestBlockHeight,
-          currentOrder: newCurrentOrder || currentOrder
+          priceInfo: newPriceInfo || priceInfo
         }
       })
     }

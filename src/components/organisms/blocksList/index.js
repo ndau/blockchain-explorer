@@ -28,13 +28,14 @@ class BlockList extends Component {
         {
           blocks.map((block, index) =>  {
             return (
-              <BlockListItem
-                key={index} 
-                block={block}
-                setAsActiveBlock={()=> this.setActiveBlock(block)}
-                unsetAsActiveBlock={()=> this.setActiveBlock(null)}
-                active={block.height === activeBlockHeight}
-              /> 
+              <Box key={index} animation={["slideDown", "fadeIn"]}>
+                <BlockListItem 
+                  block={block}
+                  setAsActiveBlock={()=> this.setActiveBlock(block)}
+                  unsetAsActiveBlock={()=> this.setActiveBlock(null)}
+                  active={block.height === activeBlockHeight}
+                />
+              </Box> 
             )
           })
         }

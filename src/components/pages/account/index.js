@@ -26,14 +26,14 @@ class Account extends Component {
 
     if (!account) {
       return (
-        <Details>
+        <Details browserHistory={this.props.history}>
           <Text>No account data was retrieved.</Text>
         </Details>
       );
     }
 
     return (
-      <Details>
+      <Details browserHistory={this.props.history}>
         <Box margin={{bottom: "20px"}}>
           <Text size="large">
             {/* hide empty toggle is not fully functional */}
@@ -110,7 +110,6 @@ class Account extends Component {
       .then(address => {
         getAccountHistory(address)
           .then(history => {
-            // console.log(history)
             this.setState({ history });
           })
       })   
@@ -118,7 +117,7 @@ class Account extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.location.key !== prevProps.location.key) {
-      this.setState({ hideDetails: true }, this.getData)
+      this.setState(this.getData)
     }
   }
 

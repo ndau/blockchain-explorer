@@ -176,6 +176,10 @@ class Blocks extends Component {
       return [height, age, txns];
     }
 
+    if (screenSize === "medium") {
+      return [height, time, txns];
+    }
+
     return [ height, age, time, txns ];
   }
 

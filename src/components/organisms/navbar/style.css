@@ -3,3 +3,7 @@
   width: 100%;
   z-index: 5;
 }
+
+.navbarAction {
+  display: inline-block;
+}

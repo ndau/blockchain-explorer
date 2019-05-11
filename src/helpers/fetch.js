@@ -1,11 +1,12 @@
 import axios from 'axios'
 import qs from 'query-string'
-import { HTTP_REQUEST_HEADER, DEFUALT_NODE_ENDPOINT } from '../constants.js';
+import { HTTP_REQUEST_HEADER, NODE_ENDPOINTS, DEFUALT_NODE_NAME } from '../constants.js';
 import {
   formatBlock,
   formatBlocks,
   formatTransaction,
   formatAccount,
+  formatPriceInfo
 } from './format'
 
 
@@ -173,14 +174,19 @@ export const getNodeStatus = (endpoint) => {
 
 export const getNodeEndpoint = () => {
   const query = qs.parse(window.location.search);
-  const nodeEndpoint = query.node;
+  const nodeEndpoint = NODE_ENDPOINTS[query.node];
   if (nodeEndpoint) {
     return nodeEndpoint
   }
-  // set node endpoint to default node if not present
   else {
-    query.node = DEFUALT_NODE_ENDPOINT;
-    window.location.search = `?${qs.stringify(query)}`
+    query.node = DEFUALT_NODE_NAME;
+    const search = `?${qs.stringify(query)}`
+    const { history, location } = window
+    if (history.pushState) {
+      const newurl = `${location.origin}${location.pathname}${search}`
+      history.replaceState({path:newurl},'',newurl);
+      location.reload();
+    }
   }
 }
 
@@ -193,7 +199,7 @@ export const getCurrentOrder = () => {
   const statusEndpoint = `${getNodeEndpoint()}/price/current`;
   return axios.get(statusEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      return response.data;
+      return formatPriceInfo(response.data);
     })
     .catch(error => console.log(error))
 }

@@ -3,11 +3,14 @@ import { Box, Chart, Stack, Text } from 'grommet'
 import { formatAccountEvent } from '../../../helpers/format'
 
 class TimelineChart extends Component {
+  state = {yAxis: null}
   render() {
     const chartProps = {
       size: { width: "xlarge", height: "xxsmall" },
       values: this.generateEventsData(),
     };
+
+    // const yAxis = [this.findMaxBalance(), 0]
 
     return (
       <Box className="timelineChart">
@@ -17,6 +20,21 @@ class TimelineChart extends Component {
         </Box>
 
         <Box direction="row" fill>
+          {/* y-axis */}
+          {/* <Box flex justify="between" margin={{bottom: "20px", right: "10px"}}>
+            {
+              yAxis.map((y, index) => {
+                return (
+                  <Box key={index} direction="row" align="start" >
+                    <Box fill>
+                      <Text size="xsmall">{y}</Text>
+                    </Box>
+                  </Box>
+                );
+              })
+            }
+          </Box> */}
+
           <Box>
             <Box>
               <Stack
@@ -53,6 +71,17 @@ class TimelineChart extends Component {
       const eventData = formatAccountEvent(event)
       return [index, eventData.raw.balance]
     })
+  }
+
+  findMaxBalance = () => {
+    const { events } = this.props
+    let maxBalance = 0;
+
+    events.forEach(event => {
+      maxBalance = Math.max(maxBalance, event.Balance)
+    });
+
+    return maxBalance / 100000000
   }
 }
 

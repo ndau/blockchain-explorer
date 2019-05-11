@@ -4,14 +4,10 @@ import TimelineEvent from '../../molecules/timelineEvent'
 import TimelineChart from '../../molecules/timelineChart'
 
 class AccountTimeline extends Component {
-  // constructor(props) {
-  //   super()
-  //   this.props.events && this.props.events.reverse()
-  // }
   state = { activeBlock: null }
 
   render() {
-    const { events, fill } = this.props;
+    const { events } = this.props;
 
     if(!events) {
       return null
@@ -24,11 +20,12 @@ class AccountTimeline extends Component {
         {
           events.length > 1 &&
           <Box margin={{bottom: "20px"}}>
-            <TimelineChart events={[...events, this.initialEvent]} fill={fill}/>
+            <TimelineChart 
+              events={[...events, this.initialEvent]}
+            />
           </Box>
         }
         
-
         <Box>
           {
             events.map((event, index) => {

@@ -3,10 +3,16 @@
 // NODE
 /////////////////////////////////////////
 
+export const NODES_ENDPOINT = "https://s3.us-east-2.amazonaws.com/ndau-json/services.json"
 export const MAIN_NODE_ENDPOINT = 'https://api.ndau.tech:32300'
 export const TESTNET_NODE_ENDPOINT = 'https://api.ndau.tech:31300'
 export const DEVNET_NODE_ENDPOINT = 'https://api.ndau.tech:30300'
-export const DEFUALT_NODE_ENDPOINT = TESTNET_NODE_ENDPOINT
+export const DEFUALT_NODE_NAME = "testnet"
+export const NODE_ENDPOINTS = {
+	mainnet: MAIN_NODE_ENDPOINT,
+	testnet: TESTNET_NODE_ENDPOINT,
+	devnet: DEVNET_NODE_ENDPOINT,
+}
 export const BLOCK_RANGE = 100
 export const POLL_INTERVAL = 7000
 export const MAX_FETCH_ATTEMPT = 10

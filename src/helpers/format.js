@@ -1,4 +1,5 @@
 import moment from 'moment'
+import momentTimezone  from 'moment-timezone'
 import { TRANSACTION_TYPES } from '../constants.js'
 
 
@@ -148,7 +149,7 @@ export const formatAccount = (account, additionalData={}) => {
     validationScript,
     weightedAverageAge,
   } = accountData;
-  
+  console.log(accountData)
   return  {
     address, 
     balance: convertNapuToNdau(balance),
@@ -200,6 +201,39 @@ export const formatAccountEvent = accountEvent => {
   }
 }
 
+/////////////////////////////////////////
+// PRICE
+/////////////////////////////////////////
+
+export const formatPriceInfo = (priceInfo) => {
+  if (priceInfo) {
+    const {
+      marketPrice,
+      targetPrice,
+      totalIssued,
+      totalNdau,
+      totalSIB,
+      sib,
+    } = priceInfo
+    // console.log(priceInfo)
+    return {
+      marketPrice: convertNapuToNdau(marketPrice, 0),
+      targetPrice: convertNapuToNdau(targetPrice, 0),
+      totalIssued: convertNapuToNdau(totalIssued, 0),
+      totalNdau: convertNapuToNdau(totalNdau, 0),
+      totalSIB: convertNapuToNdau(totalSIB, 0),
+      sib: convertNapuToNdau(sib),
+      raw: {
+        marketPrice,
+        targetPrice,
+        totalIssued,
+        totalNdau,
+        totalSIB,
+        sib,
+      } 
+    }
+  }
+}
 
 /////////////////////////////////////////
 // GENERIC
@@ -233,9 +267,13 @@ export const humanizeNumber = (number, decimals=0) => {
 
 export const formatTime = (time) => {
   if (time) {
-    return time && moment(time).format('DD MMM YYYY. HH:mm')
+    const timezone = window.Intl.DateTimeFormat().resolvedOptions().timeZone
+    const momentTime = momentTimezone(time)
+    const formattedTime = momentTime && momentTime.tz(timezone).format(`DD MMM YYYY. HH:mm zz`)
+
+    return formattedTime
   }
-} 
+}
 
 export const formatPeriod = (period) => {
   if(period) {

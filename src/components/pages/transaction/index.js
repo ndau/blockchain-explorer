@@ -21,14 +21,14 @@ class Transaction extends Component {
     const { transaction, blockHeight } = this.state;
     if (!transaction) {
       return (
-        <Details>
+        <Details browserHistory={this.props.history}>
           <Text>No transaction data was retrieved.</Text>
         </Details>
       );
     }
 
     return (
-      <Details>
+      <Details browserHistory={this.props.history}>
         <Box margin={{bottom: "20px"}}>
           <Text>
             <Text size="large">
@@ -58,6 +58,12 @@ class Transaction extends Component {
       .then(transaction => {
         this.setState({ transaction, blockHeight })
       })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.location.key !== prevProps.location.key) {
+      this.getData();
+    }
   }
 }
 
