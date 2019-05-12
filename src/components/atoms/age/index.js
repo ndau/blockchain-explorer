@@ -4,19 +4,19 @@ import moment from 'moment';
 moment.updateLocale('en', {
   relativeTime: {
     future: 'in %s',
-    past: '%s ago',
-    s:  'seconds',
-    ss: '%s secs',
-    m:  '1 min',
-    mm: '%d mins',
-    h:  '1 hr',
-    hh: '%d hrs',
-    d:  '1 day',
-    dd: '%d days',
-    M:  '1 month',
-    MM: '%d months',
-    y:  '1 yr',
-    yy: '%d yrs'
+    past: '%s',
+    s:  'just now',
+    ss: '%s secs ago',
+    m:  '1 min ago',
+    mm: '%d mins ago',
+    h:  '1 hr ago',
+    hh: '%d hrs ago',
+    d:  '1 day ago',
+    dd: '%d days ago',
+    M:  '1 month ago',
+    MM: '%d months ago',
+    y:  '1 yr ago',
+    yy: '%d yrs ago'
   }
 });
 

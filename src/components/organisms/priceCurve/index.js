@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Box, Chart, Stack, Text } from "grommet";
+import Age from '../../atoms/age'
 import { humanizeNumber, formatTime } from '../../../helpers/format'
 import { price_at_unit } from '../../../helpers/ndauMath';
 import { PRIMARY_LIME } from '../../../constants'
@@ -54,43 +55,56 @@ class PriceCurve extends Component {
     const totalNdauIssued = active ? activeXValue: ndauIssued
     const nextIssuePrice = active ? activeYValue : currentPrice
 
+    const fadeStyle = {
+      opacity: active ? "0.1" : "1", 
+      transition: "opacity 0.3s"
+    }
+
     return (
       <Box className="ndauPriceCurve">
         <Box align="end" margin={{bottom: "20px"}}>
           <Text 
             as="em"
-            color="#ccc" 
+            color="#999" 
             size="xsmall" 
             margin={{left: "small"}}
           >
-            last updated: {formatTime(lastUpdated)}
+            last updated <Age value={lastUpdated}/>,  {formatTime(lastUpdated)}
           </Text>
+          
+          <Box style={fadeStyle}>
+            <Text>
+              <Text size="small" margin={{left: "small"}} weight="bold">
+                <Text color="#ffe7c6" size="small" weight="normal">ndau in circulation: </Text>
+                {humanizeNumber(totalNdau, 2)}
+              </Text>
+              <Text size="small" margin={{left: "small"}} weight="bold">
+                <Text color="#ffe7c6" size="small" weight="normal">current market price: </Text>
+                {humanizeNumber(marketPrice/1000, 2)} USD
+              </Text>
+            </Text>
+          </Box>
+          
 
           <Text>
-            <Text size="small" margin={{left: "small"}} weight="bold">
-              <Text color="#ffe7c6" size="small" weight="normal">ndau in circulation: </Text>
-              {humanizeNumber(totalNdau, 2)}
-            </Text>
-            <Text size="small" margin={{left: "small"}} weight="bold">
-              <Text color="#ffe7c6" size="small" weight="normal">current market price: </Text>
-              {humanizeNumber(marketPrice/1000, 2)} USD
-            </Text>
-          </Text>
-
-          <Text>
-            <Text size="small" margin={{left: "small"}} weight="bold">
+            <Text 
+              size="small" 
+              margin={{left: "small"}} 
+              weight="bold"
+              style={fadeStyle}
+            >
               <Text color="#ffe7c6" size="small" weight="normal">SIB in effect: </Text>
               {humanizeNumber(sib, 2) ? humanizeNumber(sib, 2) : "--"}
             </Text>
             <Text size="small" margin={{left: "small"}} weight="bold">
               <Text color="#ffe7c6" size="small" weight="normal">ndau issued: </Text>
-              <Text color={active ? "#dcf7c0" : "#fff"} size="small">
+              <Text size="small">
                 {humanizeNumber(totalNdauIssued, 2)}
               </Text>
             </Text>
             <Text size="small" margin={{left: "small"}} weight="bold">
               <Text color="#ffe7c6" size="small" weight="normal">next issued price: </Text>
-              <Text color={active ? "#dcf7c0" : "#fff"} size="small">
+              <Text size="small">
                 {humanizeNumber(nextIssuePrice, 2)} USD
               </Text>
               

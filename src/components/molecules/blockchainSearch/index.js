@@ -53,12 +53,21 @@ class BlockchainSearch extends Component {
         <Stack fill>
           {
             invalidEntry &&
-            <Box pad={{right: "5px"}} justify="center" height="100%" align="end">
+            <Box 
+              justify="end" 
+              height="44px" 
+              align="center"
+              animation={{type: "fadeIn", delay: 0, duration: 300 }}
+            >
               {
                 invalidNode ? (
-                  <Text color="red" size="small">node is inactive!</Text>
+                  <Text color="red" size="xsmall" weight="bold">
+                    {invalidNode || "node"} is down!
+                  </Text>
                 ) : (
-                  <Text color="red" size="small">invalid entry!</Text>
+                  <Text color="red" size="xsmall" weight="bold">
+                    invalid entry!
+                  </Text>
                 )
               }
             </Box>
@@ -107,21 +116,21 @@ class BlockchainSearch extends Component {
     )
   }
 
-  changeNode = ( currentNode ) => {
+  changeNode = ( selectedNode ) => {
     const { browserHistory } = this.props; 
-    const nodeEnpoints = NODE_ENDPOINTS[currentNode]
+    const nodeEnpoints = NODE_ENDPOINTS[selectedNode]
     getNodeStatus(nodeEnpoints)
       .then(status => {
         if(status && browserHistory) {
           browserHistory.push({
             path: `${window.location.origin}${window.location.pathname}`,
-            search: `?node=${currentNode}`
+            search: `?node=${selectedNode}`
           })
     
-          this.setState({ currentNode, invalidNode: false })
+          this.setState({ currentNode: selectedNode, invalidNode: false })
         }
         else {
-          this.setState({ currentNode, invalidNode: true })
+          this.setState({ invalidNode: selectedNode })
         }
       })
   }
@@ -130,7 +139,8 @@ class BlockchainSearch extends Component {
     const { value } = event.target;
     this.setState({ 
       searchTerm: value && value.trim(), 
-      invalidType: null 
+      invalidType: null,
+      invalidNode: null
     })
   }
 
