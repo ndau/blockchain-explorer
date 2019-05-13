@@ -109,6 +109,7 @@ class BlockchainSearch extends Component {
             background: "rgba(0, 0, 0, 0.2)",
             borderRadius: "0 100% 100% 0"
           }}
+          round="100%"
         >
           <Search color="rgba(255,255,255,0.7)"/>
         </Box>

@@ -134,7 +134,7 @@ class PriceCurve extends Component {
                 return (
                   <Box key={index} direction="row" align="start" >
                     <Box fill>
-                      <Text size="xsmall">{`${y}`}</Text>
+                      <Text size="xsmall" style={{lineHeight: "12px"}}>{`${y}`}</Text>
                     </Box>
                   </Box>
                 );

@@ -9,7 +9,7 @@ class TimelineChart extends Component {
     this.chartPoints = this.generateEventsData()
     this.bubblePoints = this.generateBubblePoints(props.events, this.maxBalance)
     this.yAxis = [
-      this.maxBalance === 0 ? "0" : "", 
+      this.maxBalance === 0 ? "" : this.maxBalance, 
       "0"
     ]
     
@@ -24,14 +24,14 @@ class TimelineChart extends Component {
       values: this.chartPoints,
     };
 
-    const { yAxis, bubblePoints } = this
+    const { yAxis } = this
     // const { activeEvent } = this.state;
 
     return (
       <Box className="timelineChart">
         <Box align="end" margin={{bottom: "xsmall"}}>
           <Text size="xsmall">
-            <Text size="xsmall" color="#ffe7c6">balance: </Text>
+            <Text size="xsmall" color="#ffe7c6">current balance: </Text>
             {this.props.balance}
           </Text>
         </Box>
@@ -90,7 +90,7 @@ class TimelineChart extends Component {
                 />
 
                 {/* Bubbles */}
-                <Box fill direction="row" justify="between" align="end">
+                {/* <Box fill direction="row" justify="between" align="end">
                   {
                     bubblePoints.map((bubblePoint, index) => { 
                       return bubblePoint && (
@@ -106,7 +106,7 @@ class TimelineChart extends Component {
                       )
                     })
                   }
-                </Box>
+                </Box> */}
               </Stack>
             </Box>
           </Box>
