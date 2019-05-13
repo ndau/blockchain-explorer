@@ -5,9 +5,9 @@ import './style.css'
 
 class Dashboard extends Component {
   render() {
-    const { top, bottom, browserHistory, selectNode } = this.props;
+    const { top, bottom, browserHistory } = this.props;
     return(
-      <Page browserHistory={browserHistory} selectNode={selectNode}>
+      <Page browserHistory={browserHistory}>
         <Box>
           <Box margin={{bottom: "large"}} className="chartArea">
             {top}

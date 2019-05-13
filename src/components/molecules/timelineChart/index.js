@@ -1,45 +1,76 @@
 import React, { Component } from 'react'
 import { Box, Chart, Stack, Text } from 'grommet'
-import { formatAccountEvent } from '../../../helpers/format'
+import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
 
 class TimelineChart extends Component {
-  state = {yAxis: null}
+  constructor(props) {
+    super(props)
+    this.maxBalance = this.findMaxBalance()
+    this.chartPoints = this.generateEventsData()
+    this.bubblePoints = this.generateBubblePoints(props.events, this.maxBalance)
+    this.yAxis = [
+      this.maxBalance === 0 ? "0" : "", 
+      "0"
+    ]
+    
+
+    this.state = {
+      activeEvent: null
+    }
+  }
   render() {
     const chartProps = {
       size: { width: "xlarge", height: "xxsmall" },
-      values: this.generateEventsData(),
+      values: this.chartPoints,
     };
 
-    // const yAxis = [this.findMaxBalance(), 0]
+    const { yAxis, bubblePoints } = this
+    // const { activeEvent } = this.state;
 
     return (
       <Box className="timelineChart">
-        <Box align="end">
-          <Text>
+        <Box align="end" margin={{bottom: "xsmall"}}>
+          <Text size="xsmall">
+            <Text size="xsmall" color="#ffe7c6">balance: </Text>
+            {this.props.balance}
           </Text>
         </Box>
 
         <Box direction="row" fill>
+          {/* y-axis label */}
+          <Box  direction="column" align="center" width={"10px"} margin={{right: "10px"}}>
+            <Text
+              size="xsmall"
+              color="#ffe7c6"
+              style={{
+                transform: "rotate(-90deg) translateX(-13px)",
+                width: "40px",
+              }}
+            >
+              balance
+            </Text>
+          </Box>
+
           {/* y-axis */}
-          {/* <Box flex justify="between" margin={{bottom: "20px", right: "10px"}}>
+          <Box flex justify="between" margin={{bottom: "0px", right: "10px"}}>
             {
               yAxis.map((y, index) => {
                 return (
                   <Box key={index} direction="row" align="start" >
                     <Box fill>
-                      <Text size="xsmall">{y}</Text>
+                      <Text size="xsmall" style={{lineHeight: "10px"}}>{y}</Text>
                     </Box>
                   </Box>
                 );
               })
             }
-          </Box> */}
+          </Box>
 
           <Box>
             <Box>
               <Stack
                 guidingChild="first"
-                // interactiveChild="last"
+                interactiveChild="last"
                 style={{cursor: "pointer"}}
                 pad="0"
               >
@@ -57,6 +88,25 @@ class TimelineChart extends Component {
                   thickness="xsmall"
                   pad="0"
                 />
+
+                {/* Bubbles */}
+                <Box fill direction="row" justify="between" align="end">
+                  {
+                    bubblePoints.map((bubblePoint, index) => { 
+                      return bubblePoint && (
+                        <Box
+                          key={index}
+                          pad="0"
+                          width="6px"
+                          height="6px"
+                          round
+                          background="rgba(255,255,255,0.3)"
+                          margin={{bottom: bubblePoint.pad}}
+                        />
+                      )
+                    })
+                  }
+                </Box>
               </Stack>
             </Box>
           </Box>
@@ -73,15 +123,30 @@ class TimelineChart extends Component {
     })
   }
 
+  generateBubblePoints = (data=[], highestYAxisValue) => {
+    return data.map(datum => {
+      const event = formatAccountEvent(datum)
+      return {
+        event,
+        pad: `${((parseFloat(event.balance) / parseFloat(this.maxBalance))*48) - 4}px`
+      }  
+    });
+  }
+
+  setShowBubbles = (show=false) => {
+    this.setState({
+      showBubbles:  show
+    })
+  }
+
   findMaxBalance = () => {
-    const { events } = this.props
     let maxBalance = 0;
 
-    events.forEach(event => {
+    this.props && this.props.events.forEach(event => {
       maxBalance = Math.max(maxBalance, event.Balance)
     });
 
-    return maxBalance / 100000000
+    return convertNapuToNdau(maxBalance)
   }
 }
 

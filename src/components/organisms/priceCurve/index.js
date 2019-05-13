@@ -262,7 +262,7 @@ class PriceCurve extends Component {
     this.setState({
       priceCurveData,
       xAxis: [0, humanizeNumber(ndauIssued, 0)],
-      yAxis: [humanizeNumber(currentPrice, 2), `1.00`],
+      yAxis: [humanizeNumber(currentPrice, 2, 2), `1.00`],
       trackerAreaPoints,
       ndauIssued,
       currentPrice,

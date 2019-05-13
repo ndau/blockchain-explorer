@@ -87,7 +87,7 @@ export const formatTransaction = (transaction, additionalData={}) => {
     node: Array.isArray(node) ? node[0] : node,
     noticePeriod,
     ownershipKey: ownershipKey && ownershipKey[1],
-    period,
+    period: formatTime(period),
     power,
     publicKey,
     quantity: convertNapuToNdau(quantity),
@@ -158,7 +158,7 @@ export const formatAccount = (account, additionalData={}) => {
     lastEAIUpdate: formatTime(lastEAIUpdate),
     lastWAAUpdate: formatTime(lastWAAUpdate),
     lock: lock && {
-      bonus: convertNapuToNdau(lock.bonus),
+      bonus: lock.bonus && `${lock.bonus / 10000000000}%`,
       unlocksOn: formatTime(lock.unlocksOn),
       countdownPeriod: formatPeriod(lock.noticePeriod)
     },
@@ -251,10 +251,10 @@ export const convertNanocentsToUSD = (nanocents, humanize=true, decimals=8) => {
   }
 }
 
-export const humanizeNumber = (number, decimals=2, minimumDecimals) => {
+export const humanizeNumber = (number, decimals=2, minimumDecimals=0) => {
   if (number || number === 0) {
-    const scale = Math.pow(10, decimals)
     const num = Math.abs(number)
+    const scale = Math.pow(10, decimals)
     const numberFloat = Math.round(num * scale) / scale// parseFloat(num).toFixed(decimals)
     let numberString = numberFloat.toLocaleString('fullwide', {
       useGrouping: true, 
@@ -262,7 +262,12 @@ export const humanizeNumber = (number, decimals=2, minimumDecimals) => {
     })
     
     if (minimumDecimals && typeof minimumDecimals === "number") {
-      const decimalPlace = numberString.indexOf(".");
+      let decimalPlace = numberString.indexOf(".")
+      if (decimalPlace === -1) {
+        numberString += "."
+        decimalPlace = numberString.indexOf(".")
+      }
+
       const decimalPlaces = numberString.slice(decimalPlace + 1).length
       let remainingDecimalPlaces = minimumDecimals - decimalPlaces
       while(remainingDecimalPlaces > 0) {

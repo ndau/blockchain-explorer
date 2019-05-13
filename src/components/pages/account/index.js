@@ -95,6 +95,7 @@ class Account extends Component {
         >
           <AccountTimeline 
             events={history && [...history].reverse()} 
+            balance={account && account.balance}
             fill={hideDetails} 
           />
         </Box>

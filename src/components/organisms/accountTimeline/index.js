@@ -7,7 +7,7 @@ class AccountTimeline extends Component {
   state = { activeBlock: null }
 
   render() {
-    const { events } = this.props;
+    const { events, balance } = this.props;
 
     if(!events) {
       return null
@@ -22,6 +22,7 @@ class AccountTimeline extends Component {
           <Box margin={{bottom: "20px"}}>
             <TimelineChart 
               events={[...events, this.initialEvent]}
+              balance={balance}
             />
           </Box>
         }

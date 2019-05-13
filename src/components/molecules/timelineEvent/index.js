@@ -49,7 +49,7 @@ class TimelineEvent extends Component {
                 color={amount > 0 ? 'green' :'rgba(255,0,0,0.7)'} 
                 margin={{left: "medium"}}
               >
-                <b>{amount > 0?'+':'-'}{convertNapuToNdau(amount)}</b>
+                <b>{amount !== 0 && amount > 0?'+':'-'}{convertNapuToNdau(amount)}</b>
               </Text>
             </Text>
           </header>
