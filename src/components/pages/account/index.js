@@ -23,17 +23,20 @@ class Account extends Component {
   render() {
     const { account, history, hideDetails } = this.state
     const showDetails = !hideDetails
-
-    if (!account) {
-      return (
-        <Details browserHistory={this.props.history}>
-          <Text>No account data was retrieved.</Text>
-        </Details>
-      );
-    }
+    // debugger
+    // if (!account) {
+    //   return (
+    //     <Details browserHistory={this.props.history}>
+    //       <Text>No account data was retrieved.</Text>
+    //     </Details>
+    //   );
+    // }
 
     return (
-      <Details browserHistory={this.props.history}>
+      <Details 
+        browserHistory={this.props.history} 
+        notFound={!account || !account.address}
+      >
         <Box margin={{bottom: "20px"}}>
           <Text size="large">
             {/* hide empty toggle is not fully functional */}

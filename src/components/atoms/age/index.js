@@ -31,9 +31,10 @@ class Age extends Component {
   }
 
   render() {
+    const { age } = this.state
     const {suffix, recent} = this.props
     return (
-      <span>{this.state.age} {!recent && suffix}</span>
+      <span>{age} {age !== recent && suffix}</span>
     );
   }
 

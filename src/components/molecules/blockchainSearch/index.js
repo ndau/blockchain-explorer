@@ -86,14 +86,14 @@ class BlockchainSearch extends Component {
         </Stack>
 
         <Box 
-          background="rgba(0, 0, 0, 0.06)"
+          background="rgba(0, 0, 0, 0.03)"
           pad={{right: "15px", left: "5px"}}
         >
           <Menu
             size="small"
             items={selectableNodes}
             label={
-              <Text color="#ddd" size="small">
+              <Text color="#f99d1c" size="small">
                 {currentNode || "choose node"}
               </Text>
             }

@@ -3,9 +3,13 @@ import Main from '../main'
 
 class Details extends Component {
   render() {
-    const { browserHistory, nav } = this.props
+    const { browserHistory, nav, notFound } = this.props
     return (
-      <Main history nav={nav} browserHistory={browserHistory}>
+      <Main 
+        nav={nav} 
+        browserHistory={browserHistory}
+        notFound={notFound}
+      >
         {this.props.children}
       </Main>
     );

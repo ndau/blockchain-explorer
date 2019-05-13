@@ -11,7 +11,7 @@ class Block extends Component {
     super(props);
 
     this.state = {
-      block: null,
+      block:{},
       transactionHashes: null,
       latestBlockHeight: null,
     }
@@ -26,6 +26,7 @@ class Block extends Component {
     return (
       <Details
         browserHistory={this.props.history}
+        notFound={!block}
         nav={
           <Box animation="fadeIn">
             <Text>
@@ -51,7 +52,7 @@ class Block extends Component {
         }
       >
         {/* TODO: fix Keyboard control */}
-        <Keyboard> 
+        <Keyboard>
           <Box>
             <Box margin={{bottom: "20px"}}>
               <Text size="large">

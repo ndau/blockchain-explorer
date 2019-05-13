@@ -76,11 +76,11 @@ class PriceCurve extends Component {
             <Text>
               <Text size="small" margin={{left: "small"}} weight="bold">
                 <Text color="#ffe7c6" size="small" weight="normal">ndau in circulation: </Text>
-                {humanizeNumber(totalNdau, 2)}
+                {humanizeNumber(totalNdau, 0)}
               </Text>
               <Text size="small" margin={{left: "small"}} weight="bold">
                 <Text color="#ffe7c6" size="small" weight="normal">current market price: </Text>
-                {humanizeNumber(marketPrice/1000, 2)} USD
+                {humanizeNumber(marketPrice, 2, 2)} USD
               </Text>
             </Text>
           </Box>
@@ -94,18 +94,18 @@ class PriceCurve extends Component {
               style={fadeStyle}
             >
               <Text color="#ffe7c6" size="small" weight="normal">SIB in effect: </Text>
-              {humanizeNumber(sib, 2) ? humanizeNumber(sib, 2) : "--"}
+              {sib === 0 || sib ? `${sib}%` : "--"}
             </Text>
             <Text size="small" margin={{left: "small"}} weight="bold">
               <Text color="#ffe7c6" size="small" weight="normal">ndau issued: </Text>
               <Text size="small">
-                {humanizeNumber(totalNdauIssued, 2)}
+                {humanizeNumber(totalNdauIssued, 0)}
               </Text>
             </Text>
             <Text size="small" margin={{left: "small"}} weight="bold">
               <Text color="#ffe7c6" size="small" weight="normal">next issued price: </Text>
               <Text size="small">
-                {humanizeNumber(nextIssuePrice, 2)} USD
+                {humanizeNumber(nextIssuePrice, 2, 2)} USD
               </Text>
               
             </Text>

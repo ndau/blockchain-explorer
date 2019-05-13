@@ -32,7 +32,7 @@ class Blocks extends Component {
       <Main
         browserHistory={this.props.history}
         selectNode
-      >
+      > 
         <Box margin={{bottom: "20px"}}>
           <Text size="large" weight="bold">
             Blocks{' '}
@@ -176,17 +176,17 @@ class Blocks extends Component {
       return [height, age, txns];
     }
 
-    if (screenSize === "medium") {
-      return [height, time, txns];
-    }
+    // if (screenSize === "medium") {
+    return [height, time, txns];
+    // }
 
-    return [ height, age, time, txns ];
+    // return [ height, age, time, txns ];
   }
 
   columns = {
     "height": {
       property: "height",
-      header: <ColumnHeader>Height</ColumnHeader>,
+      header: <ColumnHeader>height</ColumnHeader>,
       align: "center",
       primary: true,
       render: ({height}) => (
@@ -201,24 +201,33 @@ class Blocks extends Component {
     },
     "age": {
       property: "age",
-      header: <ColumnHeader>Age</ColumnHeader>,
+      header: <ColumnHeader>added</ColumnHeader>,
       align: "center",
       render: ({timestamp}) => (
         <TableData>
-          <Age timestamp={timestamp} />
+          <Age timestamp={timestamp} suffix="ago" />
         </TableData>
       )
     },
     "time": {
       property: "time",
       align: "center",
-      header:  <ColumnHeader>Timestamp</ColumnHeader>,
-      render: ({time}) => <TableData>{time}</TableData>
+      header:  <ColumnHeader>added</ColumnHeader>,
+      render: ({added, timestamp}) => (
+        <TableData>
+          <Text size="small">
+            <Text size="small" style={{fontStyle: "italic"}}>
+              <Age timestamp={timestamp} suffix="ago - " />
+            </Text>
+            {added}
+          </Text>
+        </TableData>
+      )
     },
     "txns": {
       property: "txns",
       align: "center",
-      header: <ColumnHeader>Txns</ColumnHeader>,
+      header: <ColumnHeader>txns</ColumnHeader>,
       render: ({numberOfTransactions, height}) =>  {
         return (
           <TableData>

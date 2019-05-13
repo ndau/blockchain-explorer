@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Drop, Box, Text, ResponsiveContext, TextArea } from 'grommet'
+import { 
+  Drop, Box, Text, ResponsiveContext, TextArea, Stack
+} from 'grommet'
 import { Copy } from 'grommet-icons'
 import { truncate } from '../../../helpers'
 
@@ -10,7 +12,8 @@ class TruncatedText extends Component {
     this.state = {
       showFullWord: false
     }
-
+    
+    this.truncatedWord = this.truncateWord()
     this.ref = React.createRef();
     this.fullWord = React.createRef();
   }
@@ -23,7 +26,7 @@ class TruncatedText extends Component {
       <ResponsiveContext.Consumer>
           {
             width => (
-              width === "small" ? 
+              width === "small" && this.truncatedWord ? 
               <Box 
                 onClick={(event)=> {
                   event.stopPropagation();
@@ -37,7 +40,7 @@ class TruncatedText extends Component {
                   style={{display: "inline"}} 
                   color={showFullWord ? "#ffe7c6" : ""}
                 >
-                  {truncate(value)}
+                  {this.truncatedWord}
                 </Text>
 
                 {
@@ -54,25 +57,29 @@ class TruncatedText extends Component {
                       width="100vw"
                       round="xsmall"
                     >
-                      <Box align="center" onClick={this.copyToClipboard} >
-                        <TextArea 
-                          value={value}
-                          size="small"
-                          plain
-                          fill
-                          ref={this.fullWord}
-                          resize="vertical"
-                          onChange={()=>{}}
-                          spellCheck={false}
-                          style={{
-                            padding: 0,
-                            lineHeight: '14px',
-                            fontSize: "16px",
-                            fontWeight: "normal",
-                            resize: "none",
-                            textAlign: "center",
-                          }}
-                        />  
+                      <Box align="center" onClick={this.copyToClipboard}>
+                        <Stack fill>
+                          <TextArea 
+                            value={value}
+                            size="small"
+                            plain
+                            fill
+                            ref={this.fullWord}
+                            resize="vertical"
+                            onChange={()=>{}}
+                            spellCheck={false}
+                            style={{
+                              padding: 0,
+                              lineHeight: '18px',
+                              fontSize: "16px",
+                              fontWeight: "normal",
+                              resize: "none",
+                              textAlign: "center",
+                            }}
+                          /> 
+                          <Box height="100%" fill></Box>
+                        </Stack>
+                         
                       </Box>
                       <Box 
                         align="center" 
@@ -116,6 +123,14 @@ class TruncatedText extends Component {
 
   setFullWordState = (bool) => {
     this.setState({ showFullWord: bool })
+  }
+
+  truncateWord = () => {
+    const { value } = this.props
+    if ((typeof value !== "string") || (value.indexOf(" ") !== -1) || (!isNaN(new Date(value).getDate()))) {
+      return null
+    }
+    return truncate(value)
   }
 }
 

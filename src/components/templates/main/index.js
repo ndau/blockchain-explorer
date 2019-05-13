@@ -4,10 +4,10 @@ import Page from '../page'
 
 class Main extends Component {
   render() {
-    const { children, nav, browserHistory, selectNode } = this.props;
+    const { children, nav, browserHistory, notFound } = this.props;
   
     return(
-      <Page browserHistory={browserHistory} selectNode={selectNode}>
+      <Page browserHistory={browserHistory} notFound={notFound}>
         <Box pad={{horizontal: "medium"}} margin={{bottom: "small"}}>
           {nav}
         </Box>

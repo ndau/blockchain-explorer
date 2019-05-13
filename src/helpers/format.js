@@ -21,7 +21,7 @@ export const formatBlock = (block) => {
     height: height,
     timestamp: time,
     numberOfTransactions: num_txs,
-    time: formatTime(time),
+    added: formatTime(time),
     hash: last_block_id && last_block_id.hash,
   };
 }
@@ -148,7 +148,6 @@ export const formatAccount = (account, additionalData={}) => {
     validationScript,
     weightedAverageAge,
   } = accountData;
-  console.log(accountData)
 
   return  {
     address, 
@@ -214,14 +213,14 @@ export const formatPriceInfo = (priceInfo) => {
       totalSIB,
       sib,
     } = priceInfo
-    // console.log(priceInfo)
+
     return {
-      marketPrice: convertNapuToNdau(marketPrice, 0),
-      targetPrice: convertNapuToNdau(targetPrice, 0),
+      marketPrice: convertNanocentsToUSD(marketPrice, 0),
+      targetPrice: convertNanocentsToUSD(targetPrice, 0),
       totalIssued: convertNapuToNdau(totalIssued, 0),
       totalNdau: convertNapuToNdau(totalNdau, 0),
       totalSIB: convertNapuToNdau(totalSIB, 0),
-      sib: convertNapuToNdau(sib),
+      sib: sib && (sib / 100000000000 ),
       raw: {
         marketPrice,
         targetPrice,
@@ -245,25 +244,34 @@ export const convertNapuToNdau = (napuAmount, humanize=true, decimals=8) => {
   }
 }
 
-export const humanizeNumber = (number, decimals=2) => {
+export const convertNanocentsToUSD = (nanocents, humanize=true, decimals=8) => {
+  if(nanocents === 0 || nanocents) {
+    const dollarAmount = nanocents / 100000000000
+    return humanize ? humanizeNumber(dollarAmount, decimals) : dollarAmount
+  }
+}
+
+export const humanizeNumber = (number, decimals=2, minimumDecimals) => {
   if (number || number === 0) {
     const scale = Math.pow(10, decimals)
     const num = Math.abs(number)
-    const numberFloat =  Math.round(num * scale) / scale // parseFloat(num).toFixed(decimals)
-    const numberString = String(numberFloat)
-    const numberArray = numberString.split("")
-    const decimalPlace = numberArray.findIndex(item => item === ".")
-    let currentLastPlace = decimalPlace !== -1 ? decimalPlace : numberString.length
+    const numberFloat = Math.round(num * scale) / scale// parseFloat(num).toFixed(decimals)
+    let numberString = numberFloat.toLocaleString('fullwide', {
+      useGrouping: true, 
+      minimumSignificantDigits: 1,
+    })
     
-    while (currentLastPlace >= 4) {
-      const commaPlace = currentLastPlace - 3
-      numberArray.splice(commaPlace, 0, ',')
+    if (minimumDecimals && typeof minimumDecimals === "number") {
+      const decimalPlace = numberString.indexOf(".");
+      const decimalPlaces = numberString.slice(decimalPlace + 1).length
+      let remainingDecimalPlaces = minimumDecimals - decimalPlaces
+      while(remainingDecimalPlaces > 0) {
+        numberString += "0"
+        remainingDecimalPlaces -= 1
+      }
 
-      currentLastPlace = commaPlace
     }
-    
-    const result =  numberArray.join("")
-    return result !== "NaN" && result
+    return numberString
   }
 }
 

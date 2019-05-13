@@ -21,9 +21,7 @@ class Transaction extends Component {
     const { transaction, blockHeight } = this.state;
     if (!transaction) {
       return (
-        <Details browserHistory={this.props.history}>
-          <Text>No transaction data was retrieved.</Text>
-        </Details>
+        <Details browserHistory={this.props.history} notFound/>
       );
     }
 

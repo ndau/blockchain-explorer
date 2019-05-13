@@ -80,6 +80,7 @@ export const KEYWORD_MAP = {
 // STYLES
 /////////////////////////////////////////
 
+export const PRIMARY_ORANGE = "#f99d1c"
 export const NAVBAR_COLOR = "#0f2748";
 export const PRIMARY_LIME = "#8cc74f";
 
