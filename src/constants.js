@@ -30,26 +30,30 @@ export const HTTP_REQUEST_HEADER = {
 /////////////////////////////////////////
 
 export const TRANSACTION_TYPES = {
-  1: "Transfer",
-	2: "ChangeValidation",
-	3: "ReleaseFromEndowment",
-	4: "ChangeSettlementPeriod",
-	5: "Delegate",
-	6: "CreditEAI",
-	7: "Lock",
-	8: "Notify",
-	9: "SetRewardsDestination",
-	10: "ClaimAccount",
+	1:  "Transfer",
+	2:  "ChangeValidation",
+	3:  "ReleaseFromEndowment",
+	4:  "ChangeRecoursePeriod",
+	5:  "Delegate",
+	6:  "CreditEAI",
+	7:  "Lock",
+	8:  "Notify",
+	9:  "SetRewardsDestination",
+	10: "SetValidation",
 	11: "Stake",
 	12: "RegisterNode",
 	13: "NominateNodeReward",
 	14: "ClaimNodeReward",
 	15: "TransferAndLock",
 	16: "CommandValidatorChange",
-	17: "SidechainTx",
 	18: "UnregisterNode",
 	19: "Unstake",
-  20: "Issue",
+	20: "Issue",
+	21: "CreateChildAccount",
+	22: "RecordPrice",
+	23: "SetSysvar",
+	24: "SetStakeRules",
+	30: "ChangeSchema",
 };
 
 export const KEYWORD_MAP = {
@@ -60,14 +64,14 @@ export const KEYWORD_MAP = {
 	incomingRewardsFrom: "rewards",
 	lastEAIUpdate: "EAI",
 	lastWAAUpdate: "WAA",
-	lock: "lock",// {noticePeriod: "1m", unlocksOn: null, bonus: 0}
+	lock: "lock",
 	rewardsTarget: "reward",
 	sequence: "sequence",
-	settlementSettings: "settlement", // {period: "2d", changesAt: null, next: null}
-	settlements: "settlement",
-	stake: "stake", // {Point: "2019-02-26T00:28:44Z", Address: "ndahnsxr8zh7r6u685ka865wz77wb78xcn45rgskpeyiwuza"}
-	validationKeys: "validationKey", 
-	validationScript: "validationScript",
+	recourseSettings: "recourse", 
+	// settlements: "recourse",
+	stake: "stake",
+	validationKeys: "validation", 
+	validationScript: "validation",
 	weightedAverageAge: "WAA",
 }
 

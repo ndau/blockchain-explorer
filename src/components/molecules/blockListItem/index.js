@@ -38,7 +38,7 @@ class BlockListItem extends Component {
               </Text>
               
               <Text size="xsmall" margin={{left: "medium"}} color="#aaa">
-                <i><Age timestamp={timestamp} /></i>
+                <i><Age timestamp={timestamp} suffix="ago"/></i>
               </Text>
             </Text>
 

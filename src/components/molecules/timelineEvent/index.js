@@ -41,7 +41,7 @@ class TimelineEvent extends Component {
               </Text>
 
               <Text size="xsmall" color="#aaa">
-                <i><Age timestamp={accountEvent.raw.timestamp} /></i>
+                <i><Age timestamp={accountEvent.raw.timestamp} suffix="ago" /></i>
               </Text>
 
               <Text 

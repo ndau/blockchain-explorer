@@ -1,11 +1,6 @@
 export const KNOWLEDGE_BASE_ENDPOINT =
   'https://ndaucollective.org/knowledge-base'
 export const KEYWORDS = {
-  // : {
-  //   endpoint: '',
-  //   explanation: ``,
-  // },
-
   // Term: Address
   // https://ndaucollective.org/knowledge-base/addresses/
   address: {
@@ -49,19 +44,34 @@ export const KEYWORDS = {
     endpoint: 'https://ndaucollective.org/knowledge-base/weighted-average-age-waa/',
     explanation: `Weighted Average Age (WAA) is the average age of all the ndau in a 
     specific account. WAA is displayed in years/months/days, with 1 month always equal 
-    to 30 days`,
+    to 30 days.`,
   },
 
   // Term: Settlement Settings (should be renamed "Recourse Period Settings")
   // https://ndaucollective.org/knowledge-base/recourse-period/
   recourse: {
-    endpoint: ' https://ndaucollective.org/knowledge-base/recourse-period/',
+    endpoint: 'https://ndaucollective.org/knowledge-base/recourse-period/',
     explanation: `The period of time (default 2 days) that it takes for a transfer of 
     ndau to become available to the recipient to send to a different account. The ndau 
     is pending during the recourse period, and then is cleared once the recourse period 
     is over. This is similar to how it takes time for a bank check to clear when being 
     deposited. The recourse period exists to help make ndau more resistant to fraud.`
+  },
+
+  // Term: Settlement Settings (should be renamed "Recourse Period Settings")
+  // https://ndaucollective.org/knowledge-base/recourse-period/
+  validation: {
+    endpoint: 'https://ndaucollective.org/knowledge-base/validation-scripts-and-keys/',
+    explanation: `ndau accounts are protected by security mechanisms more powerful and 
+    more flexible than those offered by other digital currencies. Account transactions 
+    may be required to meet multiple criteria before being accepted as valid, such as 
+    having multiple signatures, minimum or maximum amounts, or a minimum time since 
+    the last transaction. Each ndau account must have at least one validation key 
+    associated with it, and it may also have a validation script assigned. Those keys 
+    and validation script are used to validate any subsequent transactions submitted 
+    for that account.`
   }
+
 }
 
 

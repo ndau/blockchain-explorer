@@ -143,13 +143,13 @@ export const formatAccount = (account, additionalData={}) => {
     rewardsTarget,
     sequence,
     settlementSettings,
-    settlements,
     stake,
     validationKeys,
     validationScript,
     weightedAverageAge,
   } = accountData;
   console.log(accountData)
+
   return  {
     address, 
     balance: convertNapuToNdau(balance),
@@ -159,18 +159,17 @@ export const formatAccount = (account, additionalData={}) => {
     lastEAIUpdate: formatTime(lastEAIUpdate),
     lastWAAUpdate: formatTime(lastWAAUpdate),
     lock: lock && {
-      ...lock,
       bonus: convertNapuToNdau(lock.bonus),
       unlocksOn: formatTime(lock.unlocksOn),
-      noticePeriod: formatPeriod(lock.noticePeriod)
+      countdownPeriod: formatPeriod(lock.noticePeriod)
     },
     rewardsTarget,
     sequence,
-    settlementSettings: settlementSettings && {
+    recourseSettings: settlementSettings && {
       ...settlementSettings,
       period: formatPeriod(settlementSettings.period),
+      qty: convertNapuToNdau(settlementSettings.qty)
     },
-    settlements,
     stake: stake && {
       ...stake,
       Point: formatTime(stake.Point)
@@ -239,17 +238,19 @@ export const formatPriceInfo = (priceInfo) => {
 // GENERIC
 /////////////////////////////////////////
 
-export const convertNapuToNdau = (napuAmount, humanize=true) => {
+export const convertNapuToNdau = (napuAmount, humanize=true, decimals=8) => {
   if(napuAmount === 0 || napuAmount) {
     const ndauAmount = napuAmount / 100000000
-    return humanize ? humanizeNumber(ndauAmount, 2) : ndauAmount
+    return humanize ? humanizeNumber(ndauAmount, decimals) : ndauAmount
   }
 }
 
-export const humanizeNumber = (number, decimals=0) => {
-  if (number === 0 || number) {
+export const humanizeNumber = (number, decimals=2) => {
+  if (number || number === 0) {
+    const scale = Math.pow(10, decimals)
     const num = Math.abs(number)
-    const numberString = parseFloat(num).toFixed(decimals)
+    const numberFloat =  Math.round(num * scale) / scale // parseFloat(num).toFixed(decimals)
+    const numberString = String(numberFloat)
     const numberArray = numberString.split("")
     const decimalPlace = numberArray.findIndex(item => item === ".")
     let currentLastPlace = decimalPlace !== -1 ? decimalPlace : numberString.length
@@ -260,8 +261,9 @@ export const humanizeNumber = (number, decimals=0) => {
 
       currentLastPlace = commaPlace
     }
-
-    return numberArray.join("")
+    
+    const result =  numberArray.join("")
+    return result !== "NaN" && result
   }
 }
 

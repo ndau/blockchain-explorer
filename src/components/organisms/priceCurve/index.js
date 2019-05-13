@@ -69,7 +69,7 @@ class PriceCurve extends Component {
             size="xsmall" 
             margin={{left: "small"}}
           >
-            last updated <Age value={lastUpdated}/>,  {formatTime(lastUpdated)}
+            last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>,  {formatTime(lastUpdated)}
           </Text>
           
           <Box style={fadeStyle}>
