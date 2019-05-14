@@ -64,7 +64,7 @@ class Age extends Component {
 
   componentDidUpdate() {
     window.clearInterval(this.ageUpdateInterval)
-    this.ageUpdateInterval = window.setInterval(this.updateAge, 30000)
+    this.ageUpdateInterval = window.setInterval(this.updateAge, 15000)
   }
 }
 

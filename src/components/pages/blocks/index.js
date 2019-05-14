@@ -227,7 +227,7 @@ class Blocks extends Component {
     "txns": {
       property: "txns",
       align: "center",
-      header: <ColumnHeader>txns</ColumnHeader>,
+      header: <ColumnHeader>transactions</ColumnHeader>,
       render: ({numberOfTransactions, height}) =>  {
         return (
           <TableData>

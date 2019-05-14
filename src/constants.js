@@ -14,7 +14,7 @@ export const NODE_ENDPOINTS = {
 	devnet: DEVNET_NODE_ENDPOINT,
 }
 export const BLOCK_RANGE = 100
-export const POLL_INTERVAL = 7000
+export const POLL_INTERVAL = 30000
 export const MAX_FETCH_ATTEMPT = 10
 export const HTTP_REQUEST_HEADER = {
   method: 'GET',

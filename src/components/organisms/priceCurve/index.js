@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Box, Chart, Stack, Text } from "grommet";
 import Age from '../../atoms/age'
+import ChartLengend from '../../molecules/chartLegend'
 import { humanizeNumber, formatTime } from '../../../helpers/format'
 import { price_at_unit } from '../../../helpers/ndauMath';
 import { PRIMARY_LIME } from '../../../constants'
+import './style.css'
 
 const X_AXIS_HEIGHT = "20px";
 
@@ -55,11 +57,6 @@ class PriceCurve extends Component {
     const totalNdauIssued = active ? activeXValue: ndauIssued
     const nextIssuePrice = active ? activeYValue : currentPrice
 
-    const fadeStyle = {
-      opacity: active ? "0.1" : "1", 
-      transition: "opacity 0.3s"
-    }
-
     return (
       <Box className="ndauPriceCurve">
         <Box align="end" margin={{bottom: "20px"}}>
@@ -72,44 +69,82 @@ class PriceCurve extends Component {
             last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>,  {formatTime(lastUpdated)}
           </Text>
           
-          <Box style={fadeStyle}>
-            <Text>
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">ndau in circulation: </Text>
-                {humanizeNumber(totalNdau, 0)}
-              </Text>
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">current market price: </Text>
-                {humanizeNumber(marketPrice, 2, 2)} USD
-              </Text>
-            </Text>
+
+          <Box className="mobileLegend">
+            <ChartLengend 
+              info={[
+                {
+                  label: "ndau in circulation",
+                  value: humanizeNumber(totalNdau, 0),
+                  inactive: active
+                },
+                {
+                  label: "current market price",
+                  value: `${humanizeNumber(marketPrice, 2, 2)} USD`,
+                  inactive: active
+                },
+                {
+                  label: "SIB in effect",
+                  value: (sib === 0 || sib ? `${sib}%` : "--"),
+                  inactive: active
+                },
+                {
+                  label: "ndau issued",
+                  value: humanizeNumber(totalNdauIssued, 0)
+                },
+                {
+                  label: "next issued price", 
+                  value: `${humanizeNumber(nextIssuePrice, 2, 2)} USD`
+                }
+              ]}
+            />
+          </Box>
+
+          <Box className="legend" direction="row" align="end">
+            <Box>
+              <ChartLengend 
+                info={[
+                  {
+                    label: "SIB in effect",
+                    value: (sib === 0 || sib ? `${sib}%` : "--"),
+                    inactive: active
+                  },
+                ]}
+              />
+            </Box>
+            <Box>
+              <ChartLengend 
+                info={[
+                  {
+                    label: "ndau issued",
+                    value: humanizeNumber(totalNdauIssued, 0)
+                  },
+                  {
+                    label: "ndau in circulation",
+                    value: humanizeNumber(totalNdau, 0),
+                    inactive: active
+                  }
+                ]}
+              />
+            </Box>
+
+            <Box>
+              <ChartLengend 
+                info={[
+                  {
+                    label: "next issued price", 
+                    value: `${humanizeNumber(nextIssuePrice, 2, 2)} USD`
+                  },
+                  {
+                    label: "current market price",
+                    value: `${humanizeNumber(marketPrice, 2, 2)} USD`,
+                    inactive: active
+                  },
+                ]}
+              />
+            </Box>
           </Box>
           
-
-          <Text>
-            <Text 
-              size="small" 
-              margin={{left: "small"}} 
-              weight="bold"
-              style={fadeStyle}
-            >
-              <Text color="#ffe7c6" size="small" weight="normal">SIB in effect: </Text>
-              {sib === 0 || sib ? `${sib}%` : "--"}
-            </Text>
-            <Text size="small" margin={{left: "small"}} weight="bold">
-              <Text color="#ffe7c6" size="small" weight="normal">ndau issued: </Text>
-              <Text size="small">
-                {humanizeNumber(totalNdauIssued, 0)}
-              </Text>
-            </Text>
-            <Text size="small" margin={{left: "small"}} weight="bold">
-              <Text color="#ffe7c6" size="small" weight="normal">next issued price: </Text>
-              <Text size="small">
-                {humanizeNumber(nextIssuePrice, 2, 2)} USD
-              </Text>
-              
-            </Text>
-          </Text>
         </Box>
 
         <Box direction="row" fill>

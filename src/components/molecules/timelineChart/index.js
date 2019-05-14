@@ -5,13 +5,7 @@ import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
 class TimelineChart extends Component {
   constructor(props) {
     super(props)
-    this.maxBalance = this.findMaxBalance()
-    this.chartPoints = this.generateEventsData()
-    this.bubblePoints = this.generateBubblePoints(props.events, this.maxBalance)
-    this.yAxis = [
-      this.maxBalance === 0 ? "" : this.maxBalance, 
-      "0"
-    ]
+    // this.generateData()
     
 
     this.state = {
@@ -19,6 +13,7 @@ class TimelineChart extends Component {
     }
   }
   render() {
+    this.generateData()
     const chartProps = {
       size: { width: "xlarge", height: "xxsmall" },
       values: this.chartPoints,
@@ -30,8 +25,8 @@ class TimelineChart extends Component {
     return (
       <Box className="timelineChart">
         <Box align="end" margin={{bottom: "xsmall"}}>
-          <Text size="xsmall">
-            <Text size="xsmall" color="#ffe7c6">current balance: </Text>
+          <Text size="xsmall" weight="bold">
+            <Text size="xsmall" color="#ffe7c6" weight="normal">current balance: </Text>
             {this.props.balance}
           </Text>
         </Box>
@@ -43,7 +38,7 @@ class TimelineChart extends Component {
               size="xsmall"
               color="#ffe7c6"
               style={{
-                transform: "rotate(-90deg) translateX(-13px)",
+                transform: "rotate(-90deg) translateX(-14.5px)",
                 width: "40px",
               }}
             >
@@ -113,6 +108,20 @@ class TimelineChart extends Component {
         </Box>
       </Box>
     )
+  }
+
+  // componentDidUpdate() {
+  //   this.generateData()
+  // }
+
+  generateData = () => {
+    this.maxBalance = this.findMaxBalance()
+    this.chartPoints = this.generateEventsData()
+    this.bubblePoints = this.generateBubblePoints(this.props.events, this.maxBalance)
+    this.yAxis = [
+      this.maxBalance === "0" ? "" : this.maxBalance, 
+      "0"
+    ]
   }
 
   generateEventsData = () => {

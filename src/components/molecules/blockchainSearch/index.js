@@ -87,7 +87,7 @@ class BlockchainSearch extends Component {
 
         <Box 
           background="rgba(0, 0, 0, 0.03)"
-          pad={{right: "15px", left: "5px"}}
+          pad={{right: "small", lleft: "xsmall"}}
         >
           <Menu
             size="small"
@@ -106,7 +106,7 @@ class BlockchainSearch extends Component {
           justify="center"
           style={{
             height: "44px",
-            background: "rgba(0, 0, 0, 0.2)",
+            background: "rgba(0, 0, 0, 0.15)",
             borderRadius: "0 100% 100% 0"
           }}
           round="100%"
@@ -146,11 +146,13 @@ class BlockchainSearch extends Component {
   }
 
   onSearch = () => {
-    const searchType = this.termType()
-    return this.setState({ 
-      searchType,
-      invalidType: searchType ? false : true
-    }, this.goToURL)   
+    if (this.state.searchTerm) {
+      const searchType = this.termType()
+      return this.setState({ 
+        searchType,
+        invalidType: searchType ? false : true
+      }, this.goToURL) 
+    }
   }
 
   termType = () => {
