@@ -7,7 +7,7 @@ export const NODES_ENDPOINT = "https://s3.us-east-2.amazonaws.com/ndau-json/serv
 export const MAIN_NODE_ENDPOINT = 'https://mainnet-0.ndau.tech:3030'
 export const TESTNET_NODE_ENDPOINT = 'https://api.ndau.tech:31300'
 export const DEVNET_NODE_ENDPOINT = 'https://api.ndau.tech:30300'
-export const DEFUALT_NODE_NAME = "testnet"
+export const DEFUALT_NODE_NAME = "mainnet"
 export const NODE_ENDPOINTS = {
 	mainnet: MAIN_NODE_ENDPOINT,
 	testnet: TESTNET_NODE_ENDPOINT,
