@@ -46,8 +46,8 @@ class BlockchainSearch extends Component {
         direction="row"
         align="center" 
         style={{
-          borderColor: invalidEntry ? "rgba(255,0,0,0.5)" : "rgba(255,255,255,0.2)",
-          background: invalidEntry ? "rgba(255,0,0,0.1)" : ""
+          borderColor: invalidEntry ? "rgba(255,0,0,0.5)" : "rgba(255,255,255,0.15)",
+          background: invalidEntry ? "rgba(255,0,0,0.05)" : "transparent"
         }}
       >   
         <Stack fill>
@@ -73,7 +73,7 @@ class BlockchainSearch extends Component {
             </Box>
           }
 
-          <Box justify="center" height="100%">
+          <Box justify="center" height="100%" width="100%">
             <TextInput
               type="search" 
               value={searchTerm}
@@ -81,28 +81,32 @@ class BlockchainSearch extends Component {
               plain
               size="small"
               placeholder="search for blocks, transactions or accounts..."
+              style={{paddingRight: "5px"}}
             />
           </Box>
         </Stack>
 
         <Box 
-          background="rgba(0, 0, 0, 0.03)"
-          pad={{right: "small", lleft: "xsmall"}}
+          background="rgba(0, 0, 0, 0.0)"
+          align="center"
         >
           <Menu
-            size="small"
+            size="xsmall"
+            icon={<Search style={{display: "none"}} />}
             items={selectableNodes}
             label={
               <Text color="#f99d1c" size="small">
                 {currentNode || "choose node"}
               </Text>
             }
+            // style={{padding: "0 5px"}}
+            alignSelf="center"
           />
         </Box>
 
         <Box 
           onClick={this.onSearch} 
-          pad={{right: "20px", left: "15px"}}
+          pad={{right: "20px", left: "small"}}
           justify="center"
           style={{
             height: "44px",
