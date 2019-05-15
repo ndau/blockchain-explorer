@@ -8,6 +8,7 @@ import {
   getBlocks,
   pollForBlocks,
 } from '../../../helpers/fetch'
+import { POLL_INTERVAL } from '../../../constants'
 
 const BLOCK_LIST_LENGTH = 5;
 
@@ -18,22 +19,22 @@ class NdauDashboard extends Component {
     this.state = {
       blocks: null,
       latestBlockHeight: 1,
-      currentOrder: null,
+      priceInfo: null,
       hideEmpty: false,
+      lastUpdated: new Date()
     }
 
     this.getData();
   }
 
   render() {
-    const { blocks, currentOrder={} } = this.state;
-  
+    const { blocks, priceInfo={}, lastUpdated } = this.state
     return (
       <Dashboard
         browserHistory={this.props.history}
         selectNode
         top={
-          <PriceCurve currentOrder={currentOrder} />
+          <PriceCurve priceInfo={priceInfo} lastUpdated={lastUpdated} />
         }
         bottom={
           <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />        
@@ -55,50 +56,68 @@ class NdauDashboard extends Component {
           return null
         }
 
-        // this.setState({ nodeStatus: status })
-        return status;
-      })
-      .then((status) => {
-        getCurrentOrder()
-          .then(currentOrder =>  this.setState({ currentOrder }))
-        
-        return status
-      })
-      .then((status) => {
-        if (!status) {
-          return
-        }
-
-        const latestHeight = status.latest_block_height;
-        const maximum = BLOCK_LIST_LENGTH;
+        const latestBlockHeight = status.latest_block_height;
+        const limit = BLOCK_LIST_LENGTH;
+        const hideEmpty = this.state.hideEmpty;
  
-        getBlocks(null, latestHeight, maximum, null)
-          .then((blocks) => {
+        getBlocks({before: latestBlockHeight, filter: hideEmpty, limit})
+          .then(({blocks}) => {
             if(!blocks) {
               return null;
             }
-
-            const latestBlocks = blocks.slice(0, maximum);
-            const latestBlock = latestBlocks[0];
     
             this.setState({ 
-              blocks: latestBlocks,
-            }, ()=> pollForBlocks(latestHeight, maximum, this.resetData))
-
-            return latestBlock
+              blocks,
+              latestBlockHeight,
+            }, ()=> {
+              this.startPolling({
+                after: this.state.latestBlockHeight, 
+                filter: hideEmpty,
+                success: this.resetData
+              })
+            })
           })
       })
-      
+      .then(()=> {
+        getCurrentOrder()
+          .then(priceInfo =>  this.setState({ priceInfo }))
+      })
   }
 
-  resetData = (newBlocks=[], latestBlockHeight, newCurrentOrder) => {
-    this.setState(({currentOrder}) => {
-      return {
-        blocks: newBlocks,
-        latestBlockHeight,
-        currentOrder: newCurrentOrder || currentOrder
-      }
-    })
+  componentWillUnmount() {
+    this.endPolling()
+  }
+
+  startPolling = ({after, filter, success}) => {
+    this.endPolling()
+
+    this.pollInterval = window.setInterval(
+      pollForBlocks({after, filter, success}), 
+      POLL_INTERVAL
+    );
+  }
+
+  endPolling = () => {
+    if (this.pollInterval) {
+      window.clearInterval(this.pollInterval)
+    }
+  }
+
+  resetData = (newBlocks, latestBlockHeight, newPriceInfo) => {
+    if (newBlocks && newBlocks.length > 0) {
+      const { blocks=[] } = this.state;
+
+      const latestBlocks = [...newBlocks, ...blocks].slice(0, 5)
+
+      this.setState(({priceInfo}) => {
+        return {
+          blocks: latestBlocks,
+          latestBlockHeight,
+          priceInfo: newPriceInfo || priceInfo,
+          lastUpdated: new Date()
+        }
+      })
+    }
   }
 }
 

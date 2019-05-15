@@ -38,7 +38,7 @@ class BlockListItem extends Component {
               </Text>
               
               <Text size="xsmall" margin={{left: "medium"}} color="#aaa">
-                <i><Age timestamp={timestamp} /></i>
+                <i><Age timestamp={timestamp} suffix="ago"/></i>
               </Text>
             </Text>
 
@@ -55,12 +55,19 @@ class BlockListItem extends Component {
         )}
         onClick={this.toggleActiveState}
         pad="15px"
-        background={active ? "#0b1f3a" : "#0f2748"}
+        // background={active ? "#0b1f3a" : "#0f2748"}
+        background={active ? "#0d2342" : "#0f2748"}
         margin="xsmall"
-        animation={["slideDown", "fadeIn"]}
       >
         <Collapsible open={active}>
-          <Box animation={active ? "fadeIn" : "fadeOut"}  margin={{top: "10px"}}>
+          <Box 
+            margin={{top: "10px"}}
+            animation={active ? "fadeIn" : {
+              "type": "fadeOut",
+              "delay": 0,
+              "duration": 100,
+            }}
+          >
             <BlockDetails block={block} />
           </Box>
         </Collapsible>

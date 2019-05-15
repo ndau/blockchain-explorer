@@ -11,7 +11,7 @@ class Block extends Component {
     super(props);
 
     this.state = {
-      block: null,
+      block:{},
       transactionHashes: null,
       latestBlockHeight: null,
     }
@@ -25,6 +25,8 @@ class Block extends Component {
 
     return (
       <Details
+        browserHistory={this.props.history}
+        notFound={!block}
         nav={
           <Box animation="fadeIn">
             <Text>
@@ -38,7 +40,7 @@ class Block extends Component {
               }
               
               {
-                (latestBlockHeight &&  blockHeight !== latestBlockHeight) &&
+                ((blockHeight && latestBlockHeight) &&  blockHeight !== latestBlockHeight) &&
                 <Text style={{float: "right"}}>
                   <Anchor  href={`/block/${blockHeight + 1}`}>
                     <LinkNext size="22px" color="#f99d1c"/>
@@ -50,7 +52,7 @@ class Block extends Component {
         }
       >
         {/* TODO: fix Keyboard control */}
-        <Keyboard> 
+        <Keyboard>
           <Box>
             <Box margin={{bottom: "20px"}}>
               <Text size="large">
@@ -84,10 +86,6 @@ class Block extends Component {
       this.getData();
     }
   }
-
-  // goToPreviousBlock = () => {
-    // debugger
-  // }
 }
 
 export default Block;

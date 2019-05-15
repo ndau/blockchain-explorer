@@ -1,21 +1,14 @@
 import React, { Component } from 'react'
 import { Box, Text } from 'grommet'
 import TransactionCard from '../../molecules/transactionCard'
-// import { makeURLQuery } from '../../../helpers';
 
 class TransactionsList extends Component{
   state = { activeTransactionIndex: null }
 
   render() {
-    const { transactionHashes, blockHeight } = this.props;
+    const { numberOfTransactions, transactionHashes, blockHeight } = this.props;
     
-    if (!transactionHashes) {
-      return (
-       <Text size="medium">Loading...</Text>
-      );
-    }
-
-    if(transactionHashes.length < 1) {
+    if(parseInt(numberOfTransactions) === 0) {
       return (
         <Text size="medium" weight="bold">
           No transactions
@@ -23,16 +16,31 @@ class TransactionsList extends Component{
       )
     }
 
+    if (!transactionHashes) {
+      return (
+        <Box>
+          <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
+            <b>transactions:</b>
+          </Text>
+
+          <Box pad={{horizontal: "xlarge", vertical: "33px" }} animation="pulse">
+            <Text alignSelf="center" size="xsmall">Loading transactions...</Text>
+          </Box>
+        </Box>
+      );
+    }
+
+    
     const gap = "small";
     
     return (
       <Box>
         <Box>
           <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
-            <b>transactions:</b>
+            <b>transaction{transactionHashes.length > 1 && 's'}:</b>
           </Text>
         </Box>
-        {/* <Box margin={{top: gap}}> */}
+
         <Box 
           style={{
             margin: "10px 0px 0px 15px",

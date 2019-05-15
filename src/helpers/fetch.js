@@ -1,11 +1,12 @@
 import axios from 'axios'
 import qs from 'query-string'
-import { HTTP_REQUEST_HEADER,  POLL_INTERVAL, DEFUALT_NODE_ENDPOINT } from '../constants.js';
+import { HTTP_REQUEST_HEADER, NODE_ENDPOINTS, DEFUALT_NODE_NAME } from '../constants.js';
 import {
   formatBlock,
   formatBlocks,
   formatTransaction,
   formatAccount,
+  formatPriceInfo
 } from './format'
 
 
@@ -14,7 +15,7 @@ import {
 /////////////////////////////////////////
 
 export const getBlock = (blockHeight) => {
-  const blockEndpoint = `${getNodeEndpoint()}/block/height/${blockHeight}/?noempty=`
+  const blockEndpoint = `${getNodeEndpoint()}/block/height/${blockHeight}`
   
   return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -27,23 +28,25 @@ export const getBlock = (blockHeight) => {
     })
 }
 
-export const getBlocks = (blockRangeStart, blockRangeEnd, maximum) => {
-  const interval = maximum > 1 ? maximum - 1 : 1;
-  const _blockRangeStart = blockRangeStart || getBlockRangeStart(blockRangeEnd, interval);
-  const blocksEndpoint = `${getNodeEndpoint()}/block/range/${_blockRangeStart}/${blockRangeEnd}?`;
-  // const blocksEndpoint = `${getNodeEndpoint()}/block/before/${_blockRangeStart}/${blockRangeEnd}?`;
-
+export const getBlocks = ({before, after, filter, limit}) => {
+  const query = `?after=${after?after:'1'}&filter=${filter?'noempty':''}&limit=${limit?limit:''}`
+  const blocksEndpoint = `${getNodeEndpoint()}/block/before/${before}${query}`
 
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      const blocks = response.data.block_metas || [];
-      return formatBlocks(blocks);
+      const { last_height, block_metas } = response.data
+    
+      return {
+        blocks: formatBlocks(block_metas),
+        lastFetchedHeight: last_height,
+        latestFetchedHeight: block_metas[0] && block_metas[0].header.height
+      };
     })
     .catch(error => console.log(error))
 }
 
-export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
-  let lastHeight = lastBlockHeight;
+export const pollForBlocks = ({after, filter, success}) => {
+  let pollAfter = after
   const fetchNewBlocks = () => {
     getNodeStatus()
       .then(status => {
@@ -51,26 +54,30 @@ export const pollForBlocks = (lastBlockHeight, maximum, success, noEmpty) => {
           return;
         }
 
-        const newHeight = status.latest_block_height;
-        if(newHeight > lastHeight) {
-          const blockRangeEnd = newHeight;
+        const currentBlockHeight = status.latest_block_height;
+        const limit = currentBlockHeight - pollAfter
 
-          getBlocks(null, blockRangeEnd, maximum, noEmpty)
-            .then(newBlocks => {
-              lastHeight = status.latest_block_height
+        if(limit > 0) {
+          getBlocks({
+            before: currentBlockHeight, 
+            after: pollAfter, 
+            filter, 
+            limit
+          })
+            .then(({blocks}) => {
               getCurrentOrder()
-                .then((order={}) => {
+                .then((order) => {
                   if(success) {
-                    success(newBlocks, blockRangeEnd);
+                    success(blocks, currentBlockHeight, order);
+                    pollAfter = currentBlockHeight
                   } 
                 })
-              
             })
         }
       })
   }
 
-  window.setInterval(fetchNewBlocks, POLL_INTERVAL);
+  return fetchNewBlocks
 }
 
 export const getBlockRangeStart = (blockRangeEnd, interval=100) => {
@@ -110,7 +117,7 @@ export const getTransactionHashes = (blockHeight) => {
       return hashes;
     })
     .catch(error => {
-      console.log(error)
+      // TODO: FAIL SAFE
       return;
     })
 }
@@ -141,6 +148,15 @@ export const getAccount = (address) => {
     })
 }
 
+export const getAccountHistory = (address) => {
+  const accountHistoryEndpoint = `${getNodeEndpoint()}/account/history/${address}`
+
+  return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+      const history = response.data.Items;
+      return history
+    })
+}
 
 /////////////////////////////////////////
 // NODE
@@ -160,14 +176,19 @@ export const getNodeStatus = (endpoint) => {
 
 export const getNodeEndpoint = () => {
   const query = qs.parse(window.location.search);
-  const nodeEndpoint = query.node;
+  const nodeEndpoint = NODE_ENDPOINTS[query.node];
   if (nodeEndpoint) {
     return nodeEndpoint
   }
-  // set node endpoint to default node if not present
   else {
-    query.node = DEFUALT_NODE_ENDPOINT;
-    window.location.search = `?${qs.stringify(query)}`
+    query.node = DEFUALT_NODE_NAME;
+    const search = `?${qs.stringify(query)}`
+    const { history, location } = window
+    if (history.pushState) {
+      const newurl = `${location.origin}${location.pathname}${search}`
+      history.replaceState({path:newurl},'',newurl);
+      location.reload();
+    }
   }
 }
 
@@ -177,10 +198,10 @@ export const getNodeEndpoint = () => {
 /////////////////////////////////////////
 
 export const getCurrentOrder = () => {
-  const statusEndpoint = `${getNodeEndpoint()}/order/current`;
+  const statusEndpoint = `${getNodeEndpoint()}/price/current`;
   return axios.get(statusEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      return response.data;
+      return formatPriceInfo(response.data);
     })
     .catch(error => console.log(error))
 }

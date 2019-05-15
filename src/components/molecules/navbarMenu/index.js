@@ -8,14 +8,19 @@ class NavbarMenu extends Component {
   targetRef = createRef();
   
   render() {
+    const { icon } = this.props;
+
     return (
-      <Box fill align="end">
+      <Box>
         <Box
           ref={this.targetRef}
           onClick={this.toggleOpen}
-          pad={{vertical: "15px"}}
-        >
-          <Menu size="30px" color="#fff" pad="0" justify="center"></Menu>
+        >  
+          {
+            icon ? icon : (
+              <Menu size="30px" color="#fff" pad="0" justify="center"/>
+            )
+          }
         </Box>
 
         {

@@ -7,13 +7,8 @@ import Main from '../../templates/main'
 import ColumnHeader from '../../molecules/columnHeader'
 import TableData from '../../molecules/tableData'
 import Age from '../../atoms/age'
-import { BLOCK_RANGE } from '../../../constants.js'
-import {
-  getNodeStatus,
-  getBlockRangeStart,
-  getBlocks,
-  pollForBlocks,
-} from '../../../helpers/fetch'
+import { getNodeStatus, getBlocks, pollForBlocks } from '../../../helpers/fetch'
+import { POLL_INTERVAL } from '../../../constants'
 import './style.css'
 
 class Blocks extends Component {
@@ -22,22 +17,19 @@ class Blocks extends Component {
 
     this.state = {
       blocks: [],
-      filteredBlocks: [],
       hideEmpty: false,
-      latestBlockHeight: null,
+      lastestBlockHeight: null,
+      lastFetchedHeight: null,
     }
 
-    this.getData();
+    setTimeout(this.toggleHideEmpty, 100)
   }
 
   render() {
-    const { blocks, filteredBlocks, hideEmpty } = this.state;
+    const { blocks, hideEmpty } = this.state;
 
     return (
-      <Main
-        browserHistory={this.props.history}
-        selectNode
-      >
+      <Main browserHistory={this.props.history}> 
         <Box margin={{bottom: "20px"}}>
           <Text size="large" weight="bold">
             Blocks{' '}
@@ -65,7 +57,7 @@ class Blocks extends Component {
             screenSize => {
               return (
                 <DataTable
-                  data={hideEmpty ? filteredBlocks : blocks}
+                  data={blocks}
                   columns={this.screenColumns(screenSize)}
                   onMore={this.loadMoreBlocks}
                   size="medium"
@@ -86,65 +78,93 @@ class Blocks extends Component {
   }
 
   getData = () => {
+    const { hideEmpty } = this.state
     getNodeStatus()
       .then(status => {
         if (!status) {
           return null
         }
 
-        const blockRangeEnd = status.latest_block_height;
-        getBlocks(null, blockRangeEnd, BLOCK_RANGE)
-          .then(blocks => {
+        const latestBlockHeight = status.latest_block_height;
+        getBlocks({before: latestBlockHeight, filter: hideEmpty})
+          .then(({blocks, lastFetchedHeight}) => {
             this.setState({
               blocks,
               nodeStatus: status,
-              earliestBlockHeight: getBlockRangeStart(blockRangeEnd, BLOCK_RANGE)
+              lastFetchedHeight,
+              latestBlockHeight,
+              hideEmpty
+            }, () => {
+              this.startPolling({
+                after: this.state.latestBlockHeight, 
+                filter: hideEmpty,
+                success: this.resetData
+              })
             })
-
-            pollForBlocks(blockRangeEnd, BLOCK_RANGE, this.resetData);
           })
       })
   }
 
-  loadMoreBlocks = () => {
-    const { earliestBlockHeight } = this.state
-    if (!earliestBlockHeight || earliestBlockHeight < 1) {
-      return
-    }
+  componentWillUnmount() {
+    this.endPolling()
+  }
 
-    const blockRangeEnd = earliestBlockHeight - 1 || 1;
-    if (blockRangeEnd <= 1) {
+  startPolling = ({after, filter, limit, success}) => {
+    this.endPolling()
+
+    this.pollInterval = window.setInterval(
+      pollForBlocks({after, filter, limit, success}), 
+      POLL_INTERVAL
+    );
+  }
+
+  endPolling = () => {
+    if (this.pollInterval) {
+      window.clearInterval(this.pollInterval)
+    }
+  }
+
+  toggleHideEmpty = () => {
+    this.setState(({hideEmpty}) => {
+      return { hideEmpty: !hideEmpty }
+    }, () => {
+      this.getData()
+    })
+  }
+
+  loadMoreBlocks = () => {
+    const { lastFetchedHeight, hideEmpty } = this.state
+    if (!lastFetchedHeight || lastFetchedHeight < 2) {
       return
     }
 
     this.setState({ loading: true })
 
-    getBlocks(null, blockRangeEnd, BLOCK_RANGE, true, null)
-      .then(previousBlocks => {
+    getBlocks({before: lastFetchedHeight - 1, filter: hideEmpty})
+      .then(({ blocks : previousBlocks, lastFetchedHeight}) => {
         if (previousBlocks.length < 1) {
           return
         }
 
-        const earliestBlock = previousBlocks[previousBlocks.length - 1];
         this.setState(({ blocks }) => {
           return {
             blocks: [...blocks, ...previousBlocks],
-            earliestBlockHeight:  earliestBlock && earliestBlock.height,
+            lastFetchedHeight,
             loading: false
           }
         })
       })
   }
 
-  resetData = (newBlocks=[], newStatus, latestBlockHeight) => {
-    this.setState(({blocks=[]}) => {
-      console.log(`FOUND ${newBlocks.length} new block(s)!`)
-      return {
-        blocks: [...newBlocks, ...blocks],
-        nodeStatus: newStatus,
-        latestBlockHeight,
-      }
-    })
+  resetData = (newBlocks, lastestBlockHeight) => {
+    if (newBlocks && newBlocks.length > 0) {
+      this.setState(({blocks=[]}) => {
+        return {
+          blocks: [...newBlocks, ...blocks],
+          lastestBlockHeight,
+        }
+      })
+    }
   }
   
   screenColumns = (screenSize) => {
@@ -152,16 +172,14 @@ class Blocks extends Component {
     if (screenSize === "small") {
       return [height, age, txns];
     }
-
-    return [ height, age, time, txns ];
+    return [height, time, txns];
   }
 
   columns = {
     "height": {
       property: "height",
-      header: <ColumnHeader>Height</ColumnHeader>,
+      header: <ColumnHeader>height</ColumnHeader>,
       align: "center",
-      // search: true,
       primary: true,
       render: ({height}) => (
         <TableData>
@@ -175,24 +193,33 @@ class Blocks extends Component {
     },
     "age": {
       property: "age",
-      header: <ColumnHeader>Age</ColumnHeader>,
+      header: <ColumnHeader>added</ColumnHeader>,
       align: "center",
       render: ({timestamp}) => (
         <TableData>
-          <Age timestamp={timestamp} />
+          <Age timestamp={timestamp} suffix="ago" />
         </TableData>
       )
     },
     "time": {
       property: "time",
       align: "center",
-      header:  <ColumnHeader>Timestamp</ColumnHeader>,
-      render: ({time}) => <TableData>{time}</TableData>
+      header:  <ColumnHeader>added</ColumnHeader>,
+      render: ({added, timestamp}) => (
+        <TableData>
+          <Text size="small">
+            <Text size="small" style={{fontStyle: "italic"}}>
+              <Age timestamp={timestamp} suffix="ago - " />
+            </Text>
+            {added}
+          </Text>
+        </TableData>
+      )
     },
     "txns": {
       property: "txns",
       align: "center",
-      header: <ColumnHeader>Txns</ColumnHeader>,
+      header: <ColumnHeader>transactions</ColumnHeader>,
       render: ({numberOfTransactions, height}) =>  {
         return (
           <TableData>
@@ -211,22 +238,6 @@ class Blocks extends Component {
       }
     }
   };
-
-  toggleHideEmpty = () => {
-    this.setState(({hideEmpty, blocks}) => {
-      const newHideEmpty = !hideEmpty;
-      let filteredBlocks = [];
-
-      if (newHideEmpty) {
-        filteredBlocks = blocks.filter(block => block.numberOfTransactions)
-      }
-
-      return {
-        hideEmpty: newHideEmpty,
-        filteredBlocks
-      }
-    })
-  }
 }
 
 export default Blocks;

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Box, Chart, Stack, Text } from "grommet";
-import { humanizeNumber } from '../../../helpers/format'
-import { price_at_unit, get_market_cap } from '../../../helpers/ndauMath';
+import Age from '../../atoms/age'
+import ChartLegend from '../chartLegend'
+import { humanizeNumber, formatTime } from '../../../helpers/format'
+import { price_at_unit } from '../../../helpers/ndauMath';
 import { PRIMARY_LIME } from '../../../constants'
 
 const X_AXIS_HEIGHT = "20px";
@@ -11,35 +13,19 @@ class PriceCurve extends Component {
     super(props)
 
     this.state = {
-      priceData: null,
+      priceCurveData: null,
       xAxis: [],
       yAxis: [],
       trackerAreaPoints: [],
       activeXValue: null,
-      activeYValue: null
+      activeYValue: null,
     }
 
     this.getData();
   }
 
   render() {
-    const {
-      priceData,
-      yAxis, xAxis,
-      trackerAreaPoints,
-      activeXValue,
-      activeYValue,
-      ndauIssued,
-      currentPrice
-    } = this.state;
-
-    const chartProps = {
-      size: { width: "xlarge", height: "small" },
-      values: priceData,
-      overflow: true
-    };
-
-    if(!priceData) {
+    if(!this.state.priceCurveData) {
       return (
         <Box pad="xlarge" animation="pulse">
           <Text alignSelf="center" size="xsmall">Loading price data...</Text>
@@ -47,68 +33,76 @@ class PriceCurve extends Component {
       )
     }
 
-    const marketCap = (activeXValue || activeXValue === 0) ?
-      ( get_market_cap(activeXValue).toFixed(2) ) :
-      ( get_market_cap(ndauIssued).toFixed(2) )
+    const {
+      priceCurveData,
+      yAxis, xAxis,
+      trackerAreaPoints,
+      activeXValue,
+      activeYValue,
+      ndauIssued,
+      currentPrice,
+    } = this.state;
+     
 
-    const totalNdauIssued = (activeXValue || activeXValue === 0) ?
-      activeXValue: ndauIssued
+    const { priceInfo, lastUpdated } = this.props
+    const { marketPrice, totalNdau, sib } = priceInfo || {}
+  
+    const chartProps = {
+      size: { width: "xlarge", height: "small" },
+      values: priceCurveData,
+    };
 
-    const price = (activeXValue || activeXValue === 0) ?
-      activeYValue.toFixed(2) : currentPrice.toFixed(2)
+    const active = activeXValue || activeXValue === 0
+    const totalNdauIssued = active ? activeXValue: ndauIssued
+    const nextIssuePrice = active ? activeYValue : currentPrice
 
     return (
       <Box className="ndauPriceCurve">
         <Box align="end" margin={{bottom: "20px"}}>
-          <Text>
-            {
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">market cap: </Text>
-                {humanizeNumber(marketCap, 2)} USD
-              </Text>
-            }
+          <Text 
+            as="em"
+            color="#999" 
+            size="xsmall" 
+            margin={{left: "small"}}
+          >
+            last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>, {formatTime(lastUpdated)}
           </Text>
-          <Text>
-            {
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">ndau issued: </Text>
-                {humanizeNumber(totalNdauIssued, 0)}
-              </Text>
-            }
-            {
-              <Text size="small" margin={{left: "small"}} weight="bold">
-                <Text color="#ffe7c6" size="small" weight="normal">price: </Text>
-                {humanizeNumber(price, 2)} USD
-              </Text>
-            }
-          </Text>
+          
+
+          <ChartLegend
+            totalNdau={totalNdau} 
+            marketPrice={marketPrice}
+            sib={sib}
+            active={active}
+            totalNdauIssued={totalNdauIssued}
+            nextIssuePrice={nextIssuePrice}
+          />
+          
         </Box>
-
-
 
         <Box direction="row" fill>
           {/* y-axis label */}
-          <Box  direction="column" align="center" width={"40px"} margin={{right: "10px"}}>
+          <Box  direction="column" align="center" width={"20px"} margin={{right: "10px"}}>
             <Text
               size="xsmall"
               color="#ffe7c6"
               style={{
-                transform: "rotate(-90deg) translateX(-65px)",
+                transform: "rotate(-90deg) translateX(-85px)",
                 width: "100px",
-                letterSpacing: "1px"
               }}
             >
-              price (USD)
+              price to issue (USD)
             </Text>
           </Box>
-
+          
+          {/* y-axis */}
           <Box flex justify="between" margin={{bottom: X_AXIS_HEIGHT, right: "10px"}}>
             {
               yAxis && yAxis.map((y, index) => {
                 return (
                   <Box key={index} direction="row" align="start" >
                     <Box fill>
-                      <Text size="xsmall">{y}</Text>
+                      <Text size="xsmall" style={{lineHeight: "12px"}}>{`${y}`}</Text>
                     </Box>
                   </Box>
                 );
@@ -185,7 +179,7 @@ class PriceCurve extends Component {
                     align="center"
                   >
                     {
-                      xAxis.map(x => <Text key={x} size="xsmall">{x}</Text>)
+                      xAxis.map((x, index) => <Text key={index} size="xsmall">{x}</Text>)
                     }
                   </Box>
                 }
@@ -199,9 +193,8 @@ class PriceCurve extends Component {
           <Text
             size="xsmall"
             color="#ffe7c6"
-            style={{ letterSpacing: "0.5px" }}
           >
-            ndau issued
+            issuance of reserve ndau
           </Text>
         </Box>
       </Box>
@@ -209,44 +202,44 @@ class PriceCurve extends Component {
   }
 
   getData = () => {
-    const { currentOrder } = this.props;
-    this.resetState(currentOrder)
+    const { priceInfo } = this.props;
+    this.resetState(priceInfo)
   }
 
   componentDidUpdate = (prevProps) => {
-    const currentOrder = this.props.currentOrder;
-    if(!currentOrder) {
+    const { priceInfo } = this.props;
+    if(!priceInfo) {
       return;
     }
 
-    if (JSON.stringify(currentOrder) !== JSON.stringify(prevProps.currentOrder)) {
-      this.resetState(this.props.currentOrder);
+    if (JSON.stringify(priceInfo) !== JSON.stringify(prevProps.priceInfo)) {
+      return this.resetState(priceInfo);
     }
   }
 
-  resetState = (orderData) => {
-    if(!orderData) {
+  resetState = (priceInfo) => {
+    if(!priceInfo) {
       return null;
     }
 
-    const ndauIssued = orderData.totalIssued / 100000000;
-    const priceData = this.generatePriceData(0, ndauIssued);
+    const ndauIssued = priceInfo.totalIssued;
+    const priceCurveData = this.generatePriceCurveData(0, ndauIssued);
     const currentPrice = price_at_unit(ndauIssued);
-    const trackerAreaPoints = this.generateTrackerAreaPoints(priceData, currentPrice);
+    const trackerAreaPoints = this.generateTrackerAreaPoints(priceCurveData, currentPrice);
    
     this.setState({
-      priceData,
+      priceCurveData,
       xAxis: [0, humanizeNumber(ndauIssued, 0)],
-      yAxis: [humanizeNumber(currentPrice, 2), `1.00`],
+      yAxis: [humanizeNumber(currentPrice, 2, 2), `1.00`],
       trackerAreaPoints,
       ndauIssued,
-      currentPrice
+      currentPrice,
     })
   }
 
   // generatePriceData generates a data table we can use to calculate extents
   // It uses the ndau price function
-  generatePriceData = (start_ndau=0, end_ndau=0) => {
+  generatePriceCurveData = (start_ndau=0, end_ndau=0) => {
     var points = [];
     for (var n = start_ndau; n <= end_ndau; n += Math.floor((end_ndau - start_ndau) / 1000)) {
       points.push([n, price_at_unit(n)]);
@@ -255,8 +248,8 @@ class PriceCurve extends Component {
     return points;
   }
 
-  generateTrackerAreaPoints = (priceData=[], highestYAxisValue) => {
-    return priceData.map(datum => {
+  generateTrackerAreaPoints = (priceCurveData=[], highestYAxisValue) => {
+    return priceCurveData.map(datum => {
       return datum && {
         value: [datum[0], highestYAxisValue],
         onHover: (showMarker) => this.showMarker(showMarker && datum)

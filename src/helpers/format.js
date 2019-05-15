@@ -1,4 +1,6 @@
 import moment from 'moment'
+import momentTimezone from 'moment-timezone'
+// import { getMicrosecondsSinceNdauEpoch } from './date'
 import { TRANSACTION_TYPES } from '../constants.js'
 
 
@@ -20,7 +22,7 @@ export const formatBlock = (block) => {
     height: height,
     timestamp: time,
     numberOfTransactions: num_txs,
-    time: formatTime(time),
+    added: formatTime(time),
     hash: last_block_id && last_block_id.hash,
   };
 }
@@ -86,7 +88,7 @@ export const formatTransaction = (transaction, additionalData={}) => {
     node: Array.isArray(node) ? node[0] : node,
     noticePeriod,
     ownershipKey: ownershipKey && ownershipKey[1],
-    period,
+    period: formatTime(period),
     power,
     publicKey,
     quantity: convertNapuToNdau(quantity),
@@ -142,13 +144,11 @@ export const formatAccount = (account, additionalData={}) => {
     rewardsTarget,
     sequence,
     settlementSettings,
-    settlements,
     stake,
     validationKeys,
     validationScript,
     weightedAverageAge,
   } = accountData;
-  
   return  {
     address, 
     balance: convertNapuToNdau(balance),
@@ -158,68 +158,142 @@ export const formatAccount = (account, additionalData={}) => {
     lastEAIUpdate: formatTime(lastEAIUpdate),
     lastWAAUpdate: formatTime(lastWAAUpdate),
     lock: lock && {
-      ...lock,
-      bonus: convertNapuToNdau(lock.bonus),
+      bonus: lock.bonus && `${lock.bonus / 10000000000}%`,
       unlocksOn: formatTime(lock.unlocksOn),
-      noticePeriod: formatPeriod(lock.noticePeriod)
+      countdownPeriod: formatPeriod(lock.noticePeriod)
     },
     rewardsTarget,
     sequence,
-    settlementSettings: settlementSettings && {
+    recourseSettings: settlementSettings && {
       ...settlementSettings,
       period: formatPeriod(settlementSettings.period),
+      qty: convertNapuToNdau(settlementSettings.qty)
     },
-    settlements,
     stake: stake && {
       ...stake,
       Point: formatTime(stake.Point)
     },
     validationKeys,
     validationScript,
-    weightedAverageAge: formatPeriod(weightedAverageAge),
+    weightedAverageAge,  // formatPeriod(weightedAverageAge),
+    ...additionalData
   }
 }
 
+export const formatAccountEvent = accountEvent => {
+  if(accountEvent) {
+    const {
+      Balance, Timestamp, TxHash, Height
+    } = accountEvent
+  
+    return {
+      balance: convertNapuToNdau(Balance),
+      timestamp: formatTime(Timestamp),
+      transactionHash: TxHash,
+      blockHeight: Height,
+      raw: {
+        balance: Balance,
+        timestamp: Timestamp,
+      }
+    }
+  }
+}
+
+/////////////////////////////////////////
+// PRICE
+/////////////////////////////////////////
+
+export const formatPriceInfo = (priceInfo) => {
+  if (priceInfo) {
+    const {
+      marketPrice,
+      targetPrice,
+      totalIssued,
+      totalNdau,
+      totalSIB,
+      sib,
+    } = priceInfo
+
+    return {
+      marketPrice: convertNanocentsToUSD(marketPrice, 0),
+      targetPrice: convertNanocentsToUSD(targetPrice, 0),
+      totalIssued: convertNapuToNdau(totalIssued, 0),
+      totalNdau: convertNapuToNdau(totalNdau, 0),
+      totalSIB: convertNapuToNdau(totalSIB, 0),
+      sib: sib && (sib / 100000000000 ),
+      raw: {
+        marketPrice,
+        targetPrice,
+        totalIssued,
+        totalNdau,
+        totalSIB,
+        sib,
+      } 
+    }
+  }
+}
 
 /////////////////////////////////////////
 // GENERIC
 /////////////////////////////////////////
 
-export const convertNapuToNdau = (napuAmount, humanize=true) => {
-  if(napuAmount) {
+export const convertNapuToNdau = (napuAmount, humanize=true, decimals=8) => {
+  if(napuAmount === 0 || napuAmount) {
     const ndauAmount = napuAmount / 100000000
-    return humanize ? humanizeNumber(ndauAmount, 3) : ndauAmount
+    return humanize ? humanizeNumber(ndauAmount, decimals) : ndauAmount
   }
 }
 
-export const humanizeNumber = (number, decimals=0) => {
-  if (number) {
-    const numberString = parseFloat(number).toFixed(decimals)
-    const numberArray = numberString.split("")
-    const decimalPlace = numberArray.findIndex(item => item === ".")
-    let currentLastPlace = decimalPlace !== -1 ? decimalPlace : numberString.length
+export const convertNanocentsToUSD = (nanocents, humanize=true, decimals=8) => {
+  if(nanocents === 0 || nanocents) {
+    const dollarAmount = nanocents / 100000000000
+    return humanize ? humanizeNumber(dollarAmount, decimals) : dollarAmount
+  }
+}
+
+export const humanizeNumber = (number, decimals=2, minimumDecimals=0) => {
+  if (number || number === 0) {
+    const num = Math.abs(number)
+    const scale = Math.pow(10, decimals)
+    const numberFloat = Math.round(num * scale) / scale// parseFloat(num).toFixed(decimals)
+    let numberString = numberFloat.toLocaleString('fullwide', {
+      useGrouping: true, 
+      minimumSignificantDigits: 1,
+    })
     
-    while (currentLastPlace > 3) {
-      const commaPlace = currentLastPlace - 3
-      numberArray.splice(commaPlace, 0, ',')
+    if (minimumDecimals && typeof minimumDecimals === "number") {
+      let decimalPlace = numberString.indexOf(".")
+      if (decimalPlace === -1) {
+        numberString += "."
+        decimalPlace = numberString.indexOf(".")
+      }
 
-      currentLastPlace = commaPlace
+      const decimalPlaces = numberString.slice(decimalPlace + 1).length
+      let remainingDecimalPlaces = minimumDecimals - decimalPlaces
+      while(remainingDecimalPlaces > 0) {
+        numberString += "0"
+        remainingDecimalPlaces -= 1
+      }
+
     }
-
-    return numberArray.join("")
+    return numberString
   }
 }
 
 export const formatTime = (time) => {
   if (time) {
-    return time && moment(time).format('DD MMM YYYY. HH:mm')
+    const timezone = window.Intl.DateTimeFormat().resolvedOptions().timeZone
+    const momentTime = momentTimezone(time)
+    const formattedTime = momentTime && momentTime.tz(timezone).format(`DD MMM YYYY. HH:mm zz`)
+
+    return formattedTime
   }
-} 
+}
 
 export const formatPeriod = (period) => {
   if(period) {
     const decoratedPeriod = `P${period.toUpperCase()}`
-    const momentPeriod = moment.duration(decoratedPeriod);
+    const momentPeriod = moment.duration(`${decoratedPeriod}`);
 
     return momentPeriod.invalid ? period : momentPeriod.humanize();
   }

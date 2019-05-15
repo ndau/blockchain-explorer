@@ -3,8 +3,13 @@ import Main from '../main'
 
 class Details extends Component {
   render() {
+    const { browserHistory, nav, notFound } = this.props
     return (
-      <Main nav={this.props.nav}>
+      <Main 
+        nav={nav} 
+        browserHistory={browserHistory}
+        notFound={notFound}
+      >
         {this.props.children}
       </Main>
     );
