@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Box, Chart, Stack, Text } from "grommet";
 import Age from '../../atoms/age'
-import ChartLengend from '../../molecules/chartLegend'
+import ChartLegend from '../chartLegend'
 import { humanizeNumber, formatTime } from '../../../helpers/format'
 import { price_at_unit } from '../../../helpers/ndauMath';
 import { PRIMARY_LIME } from '../../../constants'
-import './style.css'
 
 const X_AXIS_HEIGHT = "20px";
 
@@ -70,80 +69,14 @@ class PriceCurve extends Component {
           </Text>
           
 
-          <Box className="mobileLegend">
-            <ChartLengend 
-              info={[
-                {
-                  label: "ndau in circulation",
-                  value: humanizeNumber(totalNdau, 0),
-                  inactive: active
-                },
-                {
-                  label: "current market price",
-                  value: `${humanizeNumber(marketPrice, 2, 2)} USD`,
-                  inactive: active
-                },
-                {
-                  label: "SIB in effect",
-                  value: (sib === 0 || sib ? `${sib}%` : "--"),
-                  inactive: active
-                },
-                {
-                  label: "ndau issued",
-                  value: humanizeNumber(totalNdauIssued, 0)
-                },
-                {
-                  label: "next issued price", 
-                  value: `${humanizeNumber(nextIssuePrice, 2, 2)} USD`
-                }
-              ]}
-            />
-          </Box>
-
-          <Box className="legend" direction="row" align="end">
-            <Box>
-              <ChartLengend 
-                info={[
-                  {
-                    label: "SIB in effect",
-                    value: (sib === 0 || sib ? `${sib}%` : "--"),
-                    inactive: active
-                  },
-                ]}
-              />
-            </Box>
-            <Box>
-              <ChartLengend 
-                info={[
-                  {
-                    label: "ndau issued",
-                    value: humanizeNumber(totalNdauIssued, 0)
-                  },
-                  {
-                    label: "ndau in circulation",
-                    value: humanizeNumber(totalNdau, 0),
-                    inactive: active
-                  }
-                ]}
-              />
-            </Box>
-
-            <Box>
-              <ChartLengend 
-                info={[
-                  {
-                    label: "next issued price", 
-                    value: `${humanizeNumber(nextIssuePrice, 2, 2)} USD`
-                  },
-                  {
-                    label: "current market price",
-                    value: `${humanizeNumber(marketPrice, 2, 2)} USD`,
-                    inactive: active
-                  },
-                ]}
-              />
-            </Box>
-          </Box>
+          <ChartLegend
+            totalNdau={totalNdau} 
+            marketPrice={marketPrice}
+            sib={sib}
+            active={active}
+            totalNdauIssued={totalNdauIssued}
+            nextIssuePrice={nextIssuePrice}
+          />
           
         </Box>
 

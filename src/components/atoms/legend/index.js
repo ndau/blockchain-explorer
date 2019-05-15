@@ -10,6 +10,7 @@ class Legend extends Component {
         style={{
           opacity: inactive ? "0.1" : "1", 
           transition: "opacity 0.3s",
+          width: "100%"
         }}
         direction="row"
       >

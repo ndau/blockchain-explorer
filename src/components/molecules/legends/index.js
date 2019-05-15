@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Box } from "grommet"
 import Lengend from '../../atoms/legend'
 
-class ChartLegend extends Component {
+class Legends extends Component {
   render() {
     const { info } = this.props;
 
@@ -24,4 +24,4 @@ class ChartLegend extends Component {
   }
 }
 
-export default ChartLegend;
+export default Legends;
