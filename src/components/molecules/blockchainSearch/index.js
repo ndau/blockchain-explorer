@@ -100,7 +100,6 @@ class BlockchainSearch extends Component {
                 {currentNode || "choose node"}
               </Text>
             }
-            // style={{padding: "0 5px"}}
             alignSelf="center"
           />
         </Box>
