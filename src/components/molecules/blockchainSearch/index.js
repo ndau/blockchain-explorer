@@ -89,10 +89,11 @@ class BlockchainSearch extends Component {
         <Box 
           background="rgba(0, 0, 0, 0.0)"
           align="center"
+          pad={{left: "small"}}
         >
           <Menu
             size="xsmall"
-            icon={<Search style={{display: "none"}} />}
+            icon={false}
             items={selectableNodes}
             label={
               <Text color="#f99d1c" size="small">

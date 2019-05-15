@@ -10,7 +10,7 @@ const ndauStyleGuide = {
       background: "#0a1724", 
     },
     drop: {
-      background: "#132844",
+      background: "rgba(0, 0, 0, 0.5)",
       shadowSize: 'medium',
     },
     font: {
