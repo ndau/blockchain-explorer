@@ -89,18 +89,17 @@ class BlockchainSearch extends Component {
         <Box 
           background="rgba(0, 0, 0, 0.0)"
           align="center"
-          pad={{left: "small"}}
         >
           <Menu
             size="xsmall"
             icon={false}
             items={selectableNodes}
+            margin={{horizontal: "small"}}
             label={
               <Text color="#f99d1c" size="small">
                 {currentNode || "choose node"}
               </Text>
             }
-            alignSelf="center"
           />
         </Box>
 
