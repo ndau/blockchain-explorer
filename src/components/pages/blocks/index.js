@@ -175,12 +175,7 @@ class Blocks extends Component {
     if (screenSize === "small") {
       return [height, age, txns];
     }
-
-    // if (screenSize === "medium") {
     return [height, time, txns];
-    // }
-
-    // return [ height, age, time, txns ];
   }
 
   columns = {

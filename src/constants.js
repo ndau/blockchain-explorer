@@ -14,7 +14,7 @@ export const NODE_ENDPOINTS = {
 	devnet: DEVNET_NODE_ENDPOINT,
 }
 export const BLOCK_RANGE = 100
-export const POLL_INTERVAL = 30000
+export const POLL_INTERVAL = 10000
 export const MAX_FETCH_ATTEMPT = 10
 export const HTTP_REQUEST_HEADER = {
   method: 'GET',
@@ -85,3 +85,8 @@ export const NAVBAR_COLOR = "#0f2748";
 export const PRIMARY_LIME = "#8cc74f";
 
 
+/////////////////////////////////////////
+// DATE
+/////////////////////////////////////////
+
+export const NDAU_EPOCH = '2000-01-01T00:00:00Z'

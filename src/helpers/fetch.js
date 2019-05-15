@@ -46,6 +46,7 @@ export const getBlocks = ({before, after, filter, limit}) => {
 }
 
 export const pollForBlocks = ({after, filter, success}) => {
+  let pollAfter = after
   const fetchNewBlocks = () => {
     getNodeStatus()
       .then(status => {
@@ -54,20 +55,21 @@ export const pollForBlocks = ({after, filter, success}) => {
         }
 
         const currentBlockHeight = status.latest_block_height;
-        const limit = currentBlockHeight - after
+        const limit = currentBlockHeight - pollAfter
 
         if(limit > 0) {
           getBlocks({
             before: currentBlockHeight, 
-            after, 
+            after: pollAfter, 
             filter, 
-            // limit
+            limit
           })
             .then(({blocks}) => {
               getCurrentOrder()
-                .then((order={}) => {
+                .then((order) => {
                   if(success) {
                     success(blocks, currentBlockHeight, order);
+                    pollAfter = currentBlockHeight
                   } 
                 })
             })

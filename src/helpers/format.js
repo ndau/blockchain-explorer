@@ -1,5 +1,6 @@
 import moment from 'moment'
-import momentTimezone  from 'moment-timezone'
+import momentTimezone from 'moment-timezone'
+// import { getMicrosecondsSinceNdauEpoch } from './date'
 import { TRANSACTION_TYPES } from '../constants.js'
 
 
@@ -175,7 +176,7 @@ export const formatAccount = (account, additionalData={}) => {
     },
     validationKeys,
     validationScript,
-    weightedAverageAge: formatPeriod(weightedAverageAge),
+    weightedAverageAge,  // formatPeriod(weightedAverageAge),
     ...additionalData
   }
 }
@@ -293,7 +294,7 @@ export const formatTime = (time) => {
 export const formatPeriod = (period) => {
   if(period) {
     const decoratedPeriod = `P${period.toUpperCase()}`
-    const momentPeriod = moment.duration(decoratedPeriod);
+    const momentPeriod = moment.duration(`${decoratedPeriod}`);
 
     return momentPeriod.invalid ? period : momentPeriod.humanize();
   }

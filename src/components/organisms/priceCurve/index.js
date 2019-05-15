@@ -42,11 +42,11 @@ class PriceCurve extends Component {
       activeYValue,
       ndauIssued,
       currentPrice,
-      lastUpdated
     } = this.state;
-    
+     
 
-    const { marketPrice, totalNdau, sib } = this.props.priceInfo || {}
+    const { priceInfo, lastUpdated } = this.props
+    const { marketPrice, totalNdau, sib } = priceInfo || {}
   
     const chartProps = {
       size: { width: "xlarge", height: "small" },
@@ -66,7 +66,7 @@ class PriceCurve extends Component {
             size="xsmall" 
             margin={{left: "small"}}
           >
-            last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>,  {formatTime(lastUpdated)}
+            last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>, {formatTime(lastUpdated)}
           </Text>
           
 
@@ -280,7 +280,7 @@ class PriceCurve extends Component {
     }
 
     if (JSON.stringify(priceInfo) !== JSON.stringify(prevProps.priceInfo)) {
-      this.resetState(priceInfo);
+      return this.resetState(priceInfo);
     }
   }
 
@@ -301,7 +301,6 @@ class PriceCurve extends Component {
       trackerAreaPoints,
       ndauIssued,
       currentPrice,
-      lastUpdated: new Date()
     })
   }
 

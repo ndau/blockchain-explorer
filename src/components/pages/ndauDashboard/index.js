@@ -21,19 +21,20 @@ class NdauDashboard extends Component {
       latestBlockHeight: 1,
       priceInfo: null,
       hideEmpty: false,
+      lastUpdated: new Date()
     }
 
     this.getData();
   }
 
   render() {
-    const { blocks, priceInfo={} } = this.state
+    const { blocks, priceInfo={}, lastUpdated } = this.state
     return (
       <Dashboard
         browserHistory={this.props.history}
         selectNode
         top={
-          <PriceCurve priceInfo={priceInfo} />
+          <PriceCurve priceInfo={priceInfo} lastUpdated={lastUpdated} />
         }
         bottom={
           <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />        
@@ -53,16 +54,6 @@ class NdauDashboard extends Component {
       .then(status => {
         if (!status) {
           return null
-        }
-
-        getCurrentOrder()
-          .then(priceInfo =>  this.setState({ priceInfo }))
-        
-        return status
-      })
-      .then((status) => {
-        if (!status) {
-          return
         }
 
         const latestBlockHeight = status.latest_block_height;
@@ -87,7 +78,10 @@ class NdauDashboard extends Component {
             })
           })
       })
-      
+      .then(()=> {
+        getCurrentOrder()
+          .then(priceInfo =>  this.setState({ priceInfo }))
+      })
   }
 
   componentWillUnmount() {
@@ -98,7 +92,7 @@ class NdauDashboard extends Component {
     this.endPolling()
 
     this.pollInterval = window.setInterval(
-      () => pollForBlocks({after, filter, success}), 
+      pollForBlocks({after, filter, success}), 
       POLL_INTERVAL
     );
   }
@@ -119,7 +113,8 @@ class NdauDashboard extends Component {
         return {
           blocks: latestBlocks,
           latestBlockHeight,
-          priceInfo: newPriceInfo || priceInfo
+          priceInfo: newPriceInfo || priceInfo,
+          lastUpdated: new Date()
         }
       })
     }

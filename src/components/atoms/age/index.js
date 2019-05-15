@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import moment from 'moment';
 
+const AGE_UPDATE_INTERVAL = 10000
+
 moment.updateLocale('en', {
   relativeTime: {
     future: 'in %s',
@@ -24,10 +26,10 @@ class Age extends Component {
   constructor(props) {
     super(props)
     this.state= {
-      age: this.getAge(),
+      age: this.age(),
     }
 
-    this.ageUpdateInterval = window.setInterval(this.updateAge, 30000)
+    this.ageUpdateInterval = window.setInterval(this.updateAge, AGE_UPDATE_INTERVAL)
   }
 
   render() {
@@ -44,14 +46,14 @@ class Age extends Component {
 
   updateAge = () => {
     this.setState(({age}) => {
-      const newAge = this.getAge();
+      const newAge = this.age();
       if(newAge !== age) {
         return { age: newAge }
       }
     })
   }
 
-  getAge = () => {
+  age = () => {
     const { timestamp, recent } = this.props;
     let age = moment(timestamp).fromNow();
 
@@ -63,8 +65,12 @@ class Age extends Component {
   }
 
   componentDidUpdate() {
-    window.clearInterval(this.ageUpdateInterval)
-    this.ageUpdateInterval = window.setInterval(this.updateAge, 15000)
+    this.updateAge()
+
+    if(this.ageUpdateInterval) {
+      window.clearInterval(this.ageUpdateInterval)
+    }
+    this.ageUpdateInterval = window.setInterval(this.updateAge, AGE_UPDATE_INTERVAL)
   }
 }
 
