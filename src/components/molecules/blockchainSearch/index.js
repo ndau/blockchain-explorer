@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Box, TextInput, Menu, Text, Stack } from 'grommet'
+import { Box, TextInput, Menu, Text, Stack, Form } from 'grommet'
 import qs from 'query-string'
 import { Search } from 'grommet-icons'
 import { NODE_ENDPOINTS } from '../../../constants'
@@ -74,15 +74,19 @@ class BlockchainSearch extends Component {
           }
 
           <Box justify="center" height="100%" width="100%">
-            <TextInput
-              type="search" 
-              value={searchTerm}
-              onChange={this.changeSearchTerm}
-              plain
-              size="small"
-              placeholder="search for blocks, transactions or accounts..."
-              style={{paddingRight: "5px"}}
-            />
+            <Form onSubmit={this.onSearch}>
+              <TextInput
+                type="search" 
+                value={searchTerm}
+                onChange={this.changeSearchTerm}
+                spellCheck={false}
+                plain
+                size="small"
+                placeholder="search for blocks, transactions or accounts..."
+                style={{paddingRight: "5px"}}
+              />
+            </Form>
+            
           </Box>
         </Stack>
 

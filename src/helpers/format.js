@@ -1,8 +1,6 @@
 import moment from 'moment'
 import momentTimezone from 'moment-timezone'
-// import { getMicrosecondsSinceNdauEpoch } from './date'
 import { TRANSACTION_TYPES } from '../constants.js'
-
 
 /////////////////////////////////////////
 // BLOCK
@@ -149,7 +147,8 @@ export const formatAccount = (account, additionalData={}) => {
     validationScript,
     weightedAverageAge,
   } = accountData;
-  return  {
+
+  return {
     address, 
     balance: convertNapuToNdau(balance),
     currencySeatDate: formatTime(currencySeatDate),
@@ -175,7 +174,7 @@ export const formatAccount = (account, additionalData={}) => {
     },
     validationKeys,
     validationScript,
-    weightedAverageAge,  // formatPeriod(weightedAverageAge),
+    weightedAverageAge: formatPeriod(weightedAverageAge),
     ...additionalData
   }
 }
@@ -292,7 +291,13 @@ export const formatTime = (time) => {
 
 export const formatPeriod = (period) => {
   if(period) {
-    const decoratedPeriod = `P${period.toUpperCase()}`
+    let truncatedPeriod = period
+    const indexOfS = period.indexOf("s")
+    if(indexOfS !== -1) {
+      truncatedPeriod = period.slice(0, indexOfS + 1)
+    }
+
+    const decoratedPeriod = `P${truncatedPeriod.toUpperCase()}`
     const momentPeriod = moment.duration(`${decoratedPeriod}`);
 
     return momentPeriod.invalid ? period : momentPeriod.humanize();

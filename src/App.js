@@ -8,6 +8,10 @@ const ndauStyleGuide = {
   global: {
     colors: {
       background: "#0a1724", 
+      text: {
+        dark: '#fff',
+        light: '#fff',
+      }
     },
     drop: {
       background: "#132844",

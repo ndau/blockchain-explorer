@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Box, Image, ResponsiveContext } from 'grommet'
+import { Box, ResponsiveContext } from 'grommet'
 import Anchor from '../../atoms/anchor'
 import logoFile from '../../../img/ndau_orange_logo.png'
 
@@ -9,8 +9,10 @@ class Logo extends Component {
       <ResponsiveContext.Consumer>
         {size => (
           <Anchor href="/">
-            <Box height="40px" width={size === "small" ? "65px" : "75px"}>
-              <Image src={logoFile} fit="contain" height="100%"/>
+            <Box 
+              height={size === "small" ? "30px" : "35px"}
+            >
+              <img src={logoFile} style={{height: "100%"}} alt="ndau-logo" />
             </Box>
           </Anchor>
         )}

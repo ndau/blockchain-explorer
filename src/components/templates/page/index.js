@@ -22,8 +22,7 @@ class Page extends Component {
           justify="between" 
           direction="column"
           pad={{vertical: "large"}}
-          // style={{minHeight: "100%"}}
-          flex
+          style={{minHeight: "100vh"}}
         >
           {
             notFound ? (
