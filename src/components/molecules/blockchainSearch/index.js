@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Box, TextInput, Menu, Text, Stack, Form } from 'grommet'
 import qs from 'query-string'
 import { Search } from 'grommet-icons'
@@ -125,15 +126,12 @@ class BlockchainSearch extends Component {
   }
 
   changeNode = ( selectedNode ) => {
-    const { browserHistory } = this.props; 
+    const { history } = this.props; 
     const nodeEnpoints = NODE_ENDPOINTS[selectedNode]
     getNodeStatus(nodeEnpoints)
       .then(status => {
-        if(status && browserHistory) {
-          browserHistory.push({
-            path: `${window.location.origin}${window.location.pathname}`,
-            search: `?node=${selectedNode}`
-          })
+        if(status) {
+          history.push(`${history.location.pathname}?node=${selectedNode}`)
     
           this.setState({ currentNode: selectedNode, invalidNode: false })
         }
@@ -191,20 +189,21 @@ class BlockchainSearch extends Component {
 
   goToURL = () => {
     const { searchTerm , searchType } = this.state
-    const query = window.location.search;
+    const query = window.location.search
+    const { history } = this.props
 
     if (searchType === "blockHeight") {
-      return window.location.href = `/block/${searchTerm}/${query}`
+      return history.push(`/block/${searchTerm}/${query}`)
     }
 
     if (searchType === "address") {
-      return window.location.href = `/account/${searchTerm}/${query}`
+      return history.push(`/account/${searchTerm}/${query}`)
     }
   
     if (searchType === "transactionHash") {
-      return window.location.href = `/transaction/${searchTerm}/${query}`
+      return history.push(`/transaction/${searchTerm}/${query}`)
     }
   }
 }
 
-export default BlockchainSearch;
+export default withRouter(BlockchainSearch);

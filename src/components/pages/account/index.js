@@ -16,8 +16,6 @@ class Account extends Component {
     }
 
     this.getData();
-
-    // window.setTimeout(this.toggleShowDetails, 500)
   }
 
   render() {

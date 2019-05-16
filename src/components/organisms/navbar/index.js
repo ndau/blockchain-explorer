@@ -19,7 +19,7 @@ class Navbar extends Component {
                 <Logo />
                 
                 <Box margin={{left: "medium"}}>
-                  <BlockchainSearch browserHistory={this.props.browserHistory} />
+                  <BlockchainSearch />
                 </Box>
               </Box>
             </Box>

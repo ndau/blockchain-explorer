@@ -7,10 +7,10 @@ class Logo extends Component {
   render() {
     return (
       <ResponsiveContext.Consumer>
-        {size => (
+        {screenSize => (
           <Anchor href="/">
             <Box 
-              height={size === "small" ? "30px" : "35px"}
+              height={screenSize === "small" ? "30px" : "35px"}
             >
               <img src={logoFile} style={{height: "100%"}} alt="ndau-logo" />
             </Box>
