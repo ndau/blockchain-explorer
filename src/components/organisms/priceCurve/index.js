@@ -114,7 +114,6 @@ class PriceCurve extends Component {
             <Box>
               <Stack
                 guidingChild="first"
-                interactiveChild="last"
                 margin={{left: "18px"}}
                 style={{cursor: "pointer"}}
               >
@@ -164,7 +163,7 @@ class PriceCurve extends Component {
                   type="bar"
                   values={trackerAreaPoints}
                   round
-                  color={{ color: "transparent", opacity: "medium" }}
+                  color={{ color: "rgba(0,0,0,0)", opacity: "medium" }}
                   thickness="xsmall"
                 />
               </Stack>
@@ -242,7 +241,9 @@ class PriceCurve extends Component {
   generatePriceCurveData = (start_ndau=0, end_ndau=0) => {
     var points = [];
     for (var n = start_ndau; n <= end_ndau; n += Math.floor((end_ndau - start_ndau) / 1000)) {
-      points.push([n, price_at_unit(n)]);
+      points.push([n, price_at_unit(n)],
+        // onHover: (showMarker) => this.showMarker(showMarker && )
+      );
     }
 
     return points;

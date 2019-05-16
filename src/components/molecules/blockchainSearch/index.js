@@ -152,7 +152,9 @@ class BlockchainSearch extends Component {
     })
   }
 
-  onSearch = () => {
+  onSearch = (event) => {
+    event.preventDefault()
+  
     if (this.state.searchTerm) {
       const searchType = this.termType()
       return this.setState({ 
