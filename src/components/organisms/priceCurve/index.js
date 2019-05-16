@@ -241,9 +241,7 @@ class PriceCurve extends Component {
   generatePriceCurveData = (start_ndau=0, end_ndau=0) => {
     var points = [];
     for (var n = start_ndau; n <= end_ndau; n += Math.floor((end_ndau - start_ndau) / 1000)) {
-      points.push([n, price_at_unit(n)],
-        // onHover: (showMarker) => this.showMarker(showMarker && )
-      );
+      points.push( [n, price_at_unit(n)] )
     }
 
     return points;
