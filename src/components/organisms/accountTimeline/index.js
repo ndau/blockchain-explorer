@@ -2,9 +2,17 @@ import React, { Component } from 'react'
 import { Box } from 'grommet'
 import TimelineEvent from '../../molecules/timelineEvent'
 import TimelineChart from '../../molecules/timelineChart'
+import { TRANSACTION_TYPES } from '../../../constants'
 
 class AccountTimeline extends Component {
-  state = { activeBlock: null }
+  constructor(props) {
+    super(props)
+
+    this.state = { 
+      activeBlock: null, 
+      filterTypes: TRANSACTION_TYPES 
+    }
+  }
 
   render() {
     const { events, balance } = this.props;

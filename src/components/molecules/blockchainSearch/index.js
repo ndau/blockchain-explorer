@@ -90,23 +90,26 @@ class BlockchainSearch extends Component {
             
           </Box>
         </Stack>
-
-        <Box 
-          background="rgba(0, 0, 0, 0.0)"
-          align="center"
-        >
-          <Menu
-            size="xsmall"
-            icon={false}
-            items={selectableNodes}
-            margin={{horizontal: "small"}}
-            label={
-              <Text color="#f99d1c" size="small">
-                {currentNode || "choose node"}
-              </Text>
-            }
-          />
-        </Box>
+        
+        {
+          currentNode &&
+          <Box 
+            background="rgba(0, 0, 0, 0.0)"
+            align="center"
+          > 
+            <Menu
+              size="xsmall"
+              icon={false}
+              items={selectableNodes}
+              margin={{horizontal: "small"}}
+              label={
+                <Text color="#f99d1c" size="small">
+                  {currentNode}
+                </Text>
+              }
+            />
+          </Box>
+        }
 
         <Box 
           onClick={this.onSearch} 

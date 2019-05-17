@@ -29,6 +29,7 @@ class NdauDashboard extends Component {
 
   render() {
     const { blocks, priceInfo={}, lastUpdated } = this.state
+    console.log("from dashboard: ", blocks)
     return (
       <Dashboard
         browserHistory={this.props.history}
@@ -77,6 +78,9 @@ class NdauDashboard extends Component {
               })
             })
           })
+      })
+      .then(()=> {
+        
       })
       .then(()=> {
         getCurrentOrder()
