@@ -5,11 +5,10 @@ import Keyword from '../../molecules/keyword'
 import { humanizeNumber } from '../../../helpers/format'
 
 const Value = ({value}) => {
-  if (!value) {
+  if (value !== 0 && !value) {
     return null;
   }
-  const type = typeof value;
-
+  const type = typeof value
   switch (type) {
     case 'object':
       return <Values value={value} isArray={Array.isArray(value)} />;

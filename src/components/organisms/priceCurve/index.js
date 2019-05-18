@@ -58,7 +58,7 @@ class PriceCurve extends Component {
 
     return (
       <Box className="ndauPriceCurve">
-        <Box align="end" margin={{bottom: "20px"}}>
+         <Box align="end">
           <Text 
             as="em"
             color="#999" 
@@ -67,6 +67,11 @@ class PriceCurve extends Component {
           >
             last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>, {formatTime(lastUpdated)}
           </Text>
+        </Box>
+
+        <Box align="end" margin={{bottom: "15px"}}>
+          
+          
           
 
           <ChartLegend
