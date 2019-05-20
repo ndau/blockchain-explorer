@@ -38,7 +38,7 @@ class Block extends Component {
                   </Anchor>
                 </Text>
               }
-              
+
               {
                 ((blockHeight && latestBlockHeight) &&  blockHeight !== latestBlockHeight) &&
                 <Text style={{float: "right"}}>

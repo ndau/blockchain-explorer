@@ -83,7 +83,7 @@ class PriceCurve extends Component {
         <Box direction="row" fill>
           {/* y-axis label */}
           <Box  direction="column" align="center" width={"20px"} margin={{right: "10px"}}>
-            <Text
+            {/* <Text
               size="xsmall"
               color="#ffe7c6"
               style={{
@@ -92,7 +92,7 @@ class PriceCurve extends Component {
               }}
             >
               price to issue (USD)
-            </Text>
+            </Text> */}
           </Box>
           
           {/* y-axis */}
