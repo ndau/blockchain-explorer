@@ -9,9 +9,8 @@ import { getNodeStatus } from '../../../helpers/fetch'
 class BlockchainSearch extends Component {
   constructor(props) {
     super(props);
-    const query = qs.parse(window.location.search);
+    
     this.state = {
-      currentNode: query.node,
       invalidNode: null,
       searchTerm: '',
       searchType: null,
@@ -21,7 +20,8 @@ class BlockchainSearch extends Component {
   
   render() {
     const { searchTerm, invalidType, invalidNode } = this.state;
-    const { currentNode } = this.state;
+    const query = qs.parse(window.location.search);
+    const currentNode = query.node;
     const nodes = [
       {
         label:"mainnet",
@@ -63,7 +63,7 @@ class BlockchainSearch extends Component {
               {
                 invalidNode ? (
                   <Text color="red" size="xsmall" weight="bold">
-                    {invalidNode || "node"} is down!
+                    {invalidNode || "node"} may be down!
                   </Text>
                 ) : (
                   <Text color="red" size="xsmall" weight="bold">
@@ -136,7 +136,7 @@ class BlockchainSearch extends Component {
         if(status) {
           history.push(`${history.location.pathname}?node=${selectedNode}`)
     
-          this.setState({ currentNode: selectedNode, invalidNode: false })
+          this.setState({invalidNode: false })
         }
         else {
           this.setState({ invalidNode: selectedNode })

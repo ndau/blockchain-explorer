@@ -24,7 +24,7 @@ class TimelineChart extends Component {
 
     return (
       <Box className="timelineChart">
-        <Box align="end" margin={{bottom: "xsmall"}}>
+        <Box align="end" margin={{bottom: "10px"}}>
           <Text size="xsmall" weight="bold">
             <Text size="xsmall" color="#ffe7c6" weight="normal">current balance: </Text>
             {this.props.balance}

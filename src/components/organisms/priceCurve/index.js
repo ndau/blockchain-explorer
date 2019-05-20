@@ -70,10 +70,6 @@ class PriceCurve extends Component {
         </Box>
 
         <Box align="end" margin={{bottom: "15px"}}>
-          
-          
-          
-
           <ChartLegend
             totalNdau={totalNdau} 
             marketPrice={marketPrice}
@@ -82,7 +78,6 @@ class PriceCurve extends Component {
             totalNdauIssued={totalNdauIssued}
             nextIssuePrice={nextIssuePrice}
           />
-          
         </Box>
 
         <Box direction="row" fill>

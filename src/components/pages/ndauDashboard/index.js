@@ -29,7 +29,6 @@ class NdauDashboard extends Component {
 
   render() {
     const { blocks, priceInfo={}, lastUpdated } = this.state
-    console.log("from dashboard: ", blocks)
     return (
       <Dashboard
         browserHistory={this.props.history}
@@ -46,6 +45,7 @@ class NdauDashboard extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.location.key !== prevProps.location.key) {
+      console.log(this.props.location.key, prevProps.location.key)
       this.getData();
     }
   }
@@ -53,38 +53,37 @@ class NdauDashboard extends Component {
   getData = () => {
     getNodeStatus()
       .then(status => {
-        if (!status) {
-          return null
-        }
-
-        const latestBlockHeight = status.latest_block_height;
-        const limit = BLOCK_LIST_LENGTH;
-        const hideEmpty = this.state.hideEmpty;
- 
-        getBlocks({before: latestBlockHeight, filter: hideEmpty, limit})
-          .then(({blocks}) => {
-            if(!blocks) {
-              return null;
+        getCurrentOrder()
+          .then(priceInfo =>  {
+            if (!status) {
+              this.setState({ priceInfo })
+              return null
             }
     
-            this.setState({ 
-              blocks,
-              latestBlockHeight,
-            }, ()=> {
-              this.startPolling({
-                after: this.state.latestBlockHeight, 
-                filter: hideEmpty,
-                success: this.resetData
-              })
-            })
-          })
-      })
-      .then(()=> {
+            const latestBlockHeight = status.latest_block_height;
+            const limit = BLOCK_LIST_LENGTH;
+            const hideEmpty = this.state.hideEmpty;
+     
+            getBlocks({before: latestBlockHeight, filter: hideEmpty, limit})
+              .then(({blocks}) => {
+                if(!blocks) {
+                  return null;
+                }
         
-      })
-      .then(()=> {
-        getCurrentOrder()
-          .then(priceInfo =>  this.setState({ priceInfo }))
+                this.setState({ 
+                  blocks,
+                  latestBlockHeight,
+                  priceInfo
+                }, ()=> {
+                  this.startPolling({
+                    after: this.state.latestBlockHeight, 
+                    filter: hideEmpty,
+                    success: this.resetData
+                  })
+                })
+              }) 
+          })
+        return status
       })
   }
 

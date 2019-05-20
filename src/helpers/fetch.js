@@ -175,9 +175,10 @@ export const getNodeStatus = (endpoint) => {
 }
 
 export const getNodeEndpoint = () => {
-  const { location } = window
+  const { location, history } = window
   const query = qs.parse(location.search);
-  const nodeEndpoint = NODE_ENDPOINTS[query.node];
+  const nodeEndpoint = NODE_ENDPOINTS[query.node]
+   
   if (nodeEndpoint) {
     return nodeEndpoint
   }
@@ -186,7 +187,12 @@ export const getNodeEndpoint = () => {
     const search = `?${qs.stringify(query)}`
     
     const validURL = `${location.origin}${location.pathname}${search}`
-    location.replace(validURL)
+    
+    // location.href = validURL
+    // location.reload()
+    history.replaceState({}, "", validURL)
+    // debugger
+    return  NODE_ENDPOINTS[query.node]
   }
 }
 

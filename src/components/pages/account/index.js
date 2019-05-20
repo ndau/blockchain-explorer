@@ -71,7 +71,7 @@ class Account extends Component {
         </Collapsible>
 
         
-        <Box>
+        <Box animation="fadeIn">
           <Text>
             <b>History{showDetails && ':'}</b>
           </Text>

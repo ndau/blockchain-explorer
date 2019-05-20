@@ -3,6 +3,7 @@ import { Grommet } from 'grommet';
 import { deepMerge } from "grommet/utils";
 import {  dark as grommetDarkTheme } from 'grommet/themes';
 import routes from './routes'
+import 'normalize.css'
 
 const ndauStyleGuide = {
   global: {
@@ -34,7 +35,7 @@ const ndauStyleGuide = {
         large: '0px 8px 16px rgba(0, 0, 0, 0.20)',
         xlarge: '0px 12px 24px rgba(0, 0, 0, 0.20)',
       },
-},
+    },
   },
   anchor: {
     color: "#f99d1c",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Box, Text, Keyboard } from 'grommet'
+import { Box, Text } from 'grommet'
 import { LinkNext, LinkPrevious } from 'grommet-icons'
 import Anchor from '../../atoms/anchor'
 import BlockDetails from '../../organisms/blockDetails'
@@ -51,21 +51,18 @@ class Block extends Component {
           </Box>
         }
       >
-        {/* TODO: fix Keyboard control */}
-        <Keyboard>
-          <Box>
-            <Box margin={{bottom: "20px"}}>
-              <Text size="large">
-                Block{' '}
-                <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
-                  {blockHeight}
-                </Text>
+        <Box>
+          <Box margin={{bottom: "20px"}}>
+            <Text size="large">
+              Block{' '}
+              <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
+                {blockHeight}
               </Text>
-            </Box>
-          
-            <BlockDetails block={block} />
+            </Text>
           </Box>
-        </Keyboard>
+        
+          <BlockDetails block={block} />
+        </Box>
       </Details>
     )
   }
