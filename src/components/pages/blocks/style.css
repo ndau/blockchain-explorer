@@ -4,25 +4,42 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-.dataTable > tbody::-webkit-scrollbar,
-.dataTable > tbody::-moz-scrollbar {
+/* webkit */
+
+.dataTable > tbody::-webkit-scrollbar {
   -webkit-appearance: none;
 }
 
-.dataTable > tbody::-webkit-scrollbar:vertical,
-.dataTable > tbody::-moz-scrollbar:vertical {
+.dataTable > tbody::-webkit-scrollbar:vertical {
   width: 7px;
 }
 
-.dataTable > tbody::-webkit-scrollbar:horizontal,
-.dataTable > tbody::-moz-scrollbar:horizontal {
+.dataTable > tbody::-webkit-scrollbar:horizontal {
   height: 11px;
 }
 
-.dataTable > tbody::-webkit-scrollbar-thumb,
-.dataTable > tbody::-moz-scrollbar-thumb {
+.dataTable > tbody::-webkit-scrollbar-thumb {
   border-radius: 3px;
   border: 4px solid #ffe7c6;
   background-color: #ffe7c6;
 }
 
+/* moz  */
+
+.dataTable > tbody::-moz-scrollbar {
+  -moz-appearance: none;
+}
+
+.dataTable > tbody::-moz-scrollbar:vertical {
+  width: 7px;
+}
+
+.dataTable > tbody::-moz-scrollbar:horizontal {
+  height: 11px;
+}
+
+.dataTable > tbody::-moz-scrollbar-thumb {
+  border-radius: 3px;
+  border: 4px solid #ffe7c6;
+  background-color: #ffe7c6;
+}

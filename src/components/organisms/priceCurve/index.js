@@ -60,10 +60,10 @@ class PriceCurve extends Component {
       <Box className="ndauPriceCurve">
          <Box align="end">
           <Text 
-            as="em"
             color="#999" 
             size="xsmall" 
             margin={{left: "small"}}
+            style={{fontStyle: "italic"}}
           >
             last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>, {formatTime(lastUpdated)}
           </Text>
