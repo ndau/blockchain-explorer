@@ -4,6 +4,7 @@ import Container from '../../atoms/container'
 import Navbar from '../../organisms/navbar'
 import Footer from '../../atoms/footer'
 import Anchor from '../../atoms/anchor'
+import './style.css'
 
 class Page extends Component {
   render() {
@@ -12,17 +13,21 @@ class Page extends Component {
     return(
       <Box as="main">
         <Box gridArea="header">
-          <Navbar
-            browserHistory={browserHistory}
+          <Navbar browserHistory={browserHistory}
           />
         </Box>
 
         
         <Box 
-          justify="between" 
+          // justify="between"
+          // justify="end" 
+          className="Page"
           direction="column"
           pad={{vertical: "large"}}
-          style={{minHeight: "100vh"}}
+          // height="xlarge"
+          // fill
+          // border          
+          // style={{minHeight: "100vh", overflow: "visible"}}
         >
           {
             notFound ? (
@@ -44,7 +49,10 @@ class Page extends Component {
               </Container>
             )
           }
-          <Footer />
+          <Box fill>
+            <Footer />
+          </Box>
+          
         </Box>
       </Box>
     );

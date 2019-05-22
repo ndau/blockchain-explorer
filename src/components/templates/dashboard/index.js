@@ -5,16 +5,11 @@ import './style.css'
 
 class Dashboard extends Component {
   render() {
-    const { top, bottom, browserHistory } = this.props;
+    const { children, browserHistory } = this.props;
     return(
       <Page browserHistory={browserHistory}>
         <Box>
-          <Box margin={{bottom: "large"}} className="chartArea">
-            {top}
-          </Box>
-          <Box>
-            {bottom}
-          </Box>
+          {children}
         </Box>
       </Page>
     );

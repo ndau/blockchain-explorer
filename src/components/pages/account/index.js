@@ -110,8 +110,13 @@ class Account extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.location.key !== prevProps.location.key) {
-      this.setState(this.getData)
+    const getURL = (location={}) => {
+      const {pathname, search} = location
+      return `${pathname}${search}`
+    }
+
+    if (getURL(this.props.location) !== getURL(prevProps.location)) {
+      this.getData();
     }
   }
 

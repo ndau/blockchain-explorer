@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Box } from 'grommet'
 import Dashboard from '../../templates/dashboard'
 import LatestBlocks from '../../organisms/latestBlocks'
 import PriceCurve from '../../organisms/priceCurve'
@@ -33,19 +34,23 @@ class NdauDashboard extends Component {
       <Dashboard
         browserHistory={this.props.history}
         selectNode
-        top={
-          <PriceCurve priceInfo={priceInfo} lastUpdated={lastUpdated} />
-        }
-        bottom={
-          <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />        
-        }
-      />
+      >
+        <Box margin={{bottom: "large"}}>
+         <PriceCurve priceInfo={priceInfo} lastUpdated={lastUpdated} />
+        </Box>
+        
+        <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />        
+      </Dashboard>
     )
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.location.key !== prevProps.location.key) {
-      console.log(this.props.location.key, prevProps.location.key)
+    const getURL = (location={}) => {
+      const {pathname, search} = location
+      return `${pathname}${search}`
+    }
+
+    if (getURL(this.props.location) !== getURL(prevProps.location)) {
       this.getData();
     }
   }
