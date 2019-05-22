@@ -57,7 +57,7 @@ class PriceCurve extends Component {
     const nextIssuePrice = active ? activeYValue : currentPrice
 
     return (
-      <Box style={{display: "block"}}>
+      <Box className="ndauPriceCurve">
          <Box align="end">
           <Text 
             color="#999" 
@@ -80,7 +80,7 @@ class PriceCurve extends Component {
           />
         </Box>
 
-        <Box direction="row" fill>
+        <Box direction="row">
           {/* y-axis label */}
           <Box  direction="column" align="center" width={"20px"} margin={{right: "10px"}}>
             <Text
@@ -101,7 +101,7 @@ class PriceCurve extends Component {
               yAxis && yAxis.map((y, index) => {
                 return (
                   <Box key={index} direction="row" align="start" >
-                    <Box fill>
+                    <Box>
                       <Text size="xsmall" style={{lineHeight: "12px"}}>{`${y}`}</Text>
                     </Box>
                   </Box>

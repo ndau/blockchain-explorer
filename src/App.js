@@ -63,7 +63,7 @@ const ndauTheme = deepMerge(grommetDarkTheme, ndauStyleGuide);
 class App extends Component {
   render() {
     return (
-      <Grommet full theme={ndauTheme}>
+      <Grommet lfull theme={ndauTheme}>
         {routes}
       </Grommet>
     );

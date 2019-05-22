@@ -43,7 +43,7 @@ class Page extends Component {
               </Container>
             )
           }
-          <Box fill>
+          <Box>
             <Footer />
           </Box>
           
