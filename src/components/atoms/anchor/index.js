@@ -7,7 +7,7 @@ function Anchor(props) {
   return (
     <Link 
       to={`${props.href}${makeURLQuery(props.additionalQuery)}`}
-      // onClick={(event) => event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
       style={{ textDecoration: "none" }}
     >
       <StyledAnchor label={props.label} as="span">

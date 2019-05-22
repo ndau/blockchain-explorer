@@ -8,9 +8,12 @@ class Main extends Component {
   
     return(
       <Page browserHistory={browserHistory} notFound={notFound}>
-        <Box pad={{horizontal: "medium"}} margin={{bottom: "small"}}>
-          {nav}
-        </Box>
+        {
+          nav &&
+          <Box pad={{horizontal: "medium"}} margin={{bottom: "small"}}>
+            {nav}
+          </Box>
+        }
 
         <Box
           elevation="medium"

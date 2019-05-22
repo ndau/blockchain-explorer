@@ -43,7 +43,7 @@ class BlockDetails extends Component {
   componentDidUpdate(prevProps) {
     const { block } = this.props;
     if(block && block.height) {
-      if(!prevProps.block || block.height !== prevProps.block.height) {
+      if(!prevProps.block || block.hash !== prevProps.block.hash) {
         this.setTransactionHashes(block)
       }
     } 

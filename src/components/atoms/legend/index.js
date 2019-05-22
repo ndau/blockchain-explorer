@@ -10,11 +10,11 @@ class Legend extends Component {
         style={{
           opacity: inactive ? "0.1" : "1", 
           transition: "opacity 0.3s",
-          width: "100%"
+          // width: "100%"
         }}
         direction="row"
       >
-        <Box className="legendLabel" width="135px" style={{textAlign: "right", marginRight: "3px"}}>
+        <Box className="legendLabel" style={{textAlign: "right", marginRight: "3px", minWidth: "135px"}}>
           <Text size="small" color="#ffe7c6">{label}:</Text>
         </Box>
         <Box className="legendValue">

@@ -58,17 +58,18 @@ class PriceCurve extends Component {
 
     return (
       <Box className="ndauPriceCurve">
-        <Box align="end" margin={{bottom: "20px"}}>
+         <Box align="end">
           <Text 
-            as="em"
             color="#999" 
             size="xsmall" 
             margin={{left: "small"}}
+            style={{fontStyle: "italic"}}
           >
             last updated <Age timestamp={lastUpdated} recent="just now" suffix="ago"/>, {formatTime(lastUpdated)}
           </Text>
-          
+        </Box>
 
+        <Box align="end" margin={{bottom: "15px"}}>
           <ChartLegend
             totalNdau={totalNdau} 
             marketPrice={marketPrice}
@@ -77,10 +78,9 @@ class PriceCurve extends Component {
             totalNdauIssued={totalNdauIssued}
             nextIssuePrice={nextIssuePrice}
           />
-          
         </Box>
 
-        <Box direction="row" fill>
+        <Box direction="row">
           {/* y-axis label */}
           <Box  direction="column" align="center" width={"20px"} margin={{right: "10px"}}>
             <Text
@@ -101,7 +101,7 @@ class PriceCurve extends Component {
               yAxis && yAxis.map((y, index) => {
                 return (
                   <Box key={index} direction="row" align="start" >
-                    <Box fill>
+                    <Box>
                       <Text size="xsmall" style={{lineHeight: "12px"}}>{`${y}`}</Text>
                     </Box>
                   </Box>
@@ -114,7 +114,6 @@ class PriceCurve extends Component {
             <Box>
               <Stack
                 guidingChild="first"
-                interactiveChild="last"
                 margin={{left: "18px"}}
                 style={{cursor: "pointer"}}
               >
@@ -164,7 +163,7 @@ class PriceCurve extends Component {
                   type="bar"
                   values={trackerAreaPoints}
                   round
-                  color={{ color: "transparent", opacity: "medium" }}
+                  color={{ color: "rgba(0,0,0,0)", opacity: "medium" }}
                   thickness="xsmall"
                 />
               </Stack>
@@ -242,7 +241,7 @@ class PriceCurve extends Component {
   generatePriceCurveData = (start_ndau=0, end_ndau=0) => {
     var points = [];
     for (var n = start_ndau; n <= end_ndau; n += Math.floor((end_ndau - start_ndau) / 1000)) {
-      points.push([n, price_at_unit(n)]);
+      points.push( [n, price_at_unit(n)] )
     }
 
     return points;

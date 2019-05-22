@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Box, TextInput, Menu, Text, Stack } from 'grommet'
+import { withRouter } from 'react-router-dom'
+import { Box, TextInput, Menu, Text, Stack, Form } from 'grommet'
 import qs from 'query-string'
 import { Search } from 'grommet-icons'
 import { NODE_ENDPOINTS } from '../../../constants'
@@ -8,9 +9,8 @@ import { getNodeStatus } from '../../../helpers/fetch'
 class BlockchainSearch extends Component {
   constructor(props) {
     super(props);
-    const query = qs.parse(window.location.search);
+    
     this.state = {
-      currentNode: query.node,
       invalidNode: null,
       searchTerm: '',
       searchType: null,
@@ -20,7 +20,8 @@ class BlockchainSearch extends Component {
   
   render() {
     const { searchTerm, invalidType, invalidNode } = this.state;
-    const { currentNode } = this.state;
+    const query = qs.parse(window.location.search);
+    const currentNode = query.node;
     const nodes = [
       {
         label:"mainnet",
@@ -46,8 +47,8 @@ class BlockchainSearch extends Component {
         direction="row"
         align="center" 
         style={{
-          borderColor: invalidEntry ? "rgba(255,0,0,0.5)" : "rgba(255,255,255,0.2)",
-          background: invalidEntry ? "rgba(255,0,0,0.1)" : ""
+          borderColor: invalidEntry ? "rgba(255,0,0,0.5)" : "rgba(255,255,255,0.15)",
+          background: invalidEntry ? "rgba(255,0,0,0.05)" : "transparent"
         }}
       >   
         <Stack fill>
@@ -62,7 +63,7 @@ class BlockchainSearch extends Component {
               {
                 invalidNode ? (
                   <Text color="red" size="xsmall" weight="bold">
-                    {invalidNode || "node"} is down!
+                    {invalidNode || "node"} may be down!
                   </Text>
                 ) : (
                   <Text color="red" size="xsmall" weight="bold">
@@ -73,36 +74,46 @@ class BlockchainSearch extends Component {
             </Box>
           }
 
-          <Box justify="center" height="100%">
-            <TextInput
-              type="search" 
-              value={searchTerm}
-              onChange={this.changeSearchTerm}
-              plain
-              size="small"
-              placeholder="search for blocks, transactions or accounts..."
-            />
+          <Box justify="center" height="100%" width="100%">
+            <Form onSubmit={this.onSearch}>
+              <TextInput
+                type="search" 
+                value={searchTerm}
+                onChange={this.changeSearchTerm}
+                spellCheck={false}
+                plain
+                size="small"
+                placeholder="search for blocks, transactions or accounts..."
+                style={{paddingRight: "5px"}}
+              />
+            </Form>
+            
           </Box>
         </Stack>
-
-        <Box 
-          background="rgba(0, 0, 0, 0.03)"
-          pad={{right: "small", lleft: "xsmall"}}
-        >
-          <Menu
-            size="small"
-            items={selectableNodes}
-            label={
-              <Text color="#f99d1c" size="small">
-                {currentNode || "choose node"}
-              </Text>
-            }
-          />
-        </Box>
+        
+        {
+          currentNode &&
+          <Box 
+            background="rgba(0, 0, 0, 0.0)"
+            align="center"
+          > 
+            <Menu
+              size="xsmall"
+              icon={false}
+              items={selectableNodes}
+              margin={{horizontal: "small"}}
+              label={
+                <Text color="#f99d1c" size="small">
+                  {currentNode}
+                </Text>
+              }
+            />
+          </Box>
+        }
 
         <Box 
           onClick={this.onSearch} 
-          pad={{right: "20px", left: "15px"}}
+          pad={{right: "20px", left: "small"}}
           justify="center"
           style={{
             height: "44px",
@@ -118,17 +129,14 @@ class BlockchainSearch extends Component {
   }
 
   changeNode = ( selectedNode ) => {
-    const { browserHistory } = this.props; 
+    const { history } = this.props; 
     const nodeEnpoints = NODE_ENDPOINTS[selectedNode]
     getNodeStatus(nodeEnpoints)
       .then(status => {
-        if(status && browserHistory) {
-          browserHistory.push({
-            path: `${window.location.origin}${window.location.pathname}`,
-            search: `?node=${selectedNode}`
-          })
+        if(status) {
+          history.push(`${history.location.pathname}?node=${selectedNode}`)
     
-          this.setState({ currentNode: selectedNode, invalidNode: false })
+          this.setState({invalidNode: false })
         }
         else {
           this.setState({ invalidNode: selectedNode })
@@ -145,7 +153,9 @@ class BlockchainSearch extends Component {
     })
   }
 
-  onSearch = () => {
+  onSearch = (event) => {
+    event.preventDefault()
+  
     if (this.state.searchTerm) {
       const searchType = this.termType()
       return this.setState({ 
@@ -182,20 +192,21 @@ class BlockchainSearch extends Component {
 
   goToURL = () => {
     const { searchTerm , searchType } = this.state
-    const query = window.location.search;
+    const query = window.location.search
+    const { history } = this.props
 
     if (searchType === "blockHeight") {
-      return window.location.href = `/block/${searchTerm}/${query}`
+      return history.push(`/block/${searchTerm}/${query}`)
     }
 
     if (searchType === "address") {
-      return window.location.href = `/account/${searchTerm}/${query}`
+      return history.push(`/account/${searchTerm}/${query}`)
     }
   
     if (searchType === "transactionHash") {
-      return window.location.href = `/transaction/${searchTerm}/${query}`
+      return history.push(`/transaction/${searchTerm}/${query}`)
     }
   }
 }
 
-export default BlockchainSearch;
+export default withRouter(BlockchainSearch);

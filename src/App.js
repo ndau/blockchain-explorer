@@ -3,15 +3,22 @@ import { Grommet } from 'grommet';
 import { deepMerge } from "grommet/utils";
 import {  dark as grommetDarkTheme } from 'grommet/themes';
 import routes from './routes'
+import 'normalize.css'
 
 const ndauStyleGuide = {
   global: {
     colors: {
       background: "#0a1724", 
+      text: {
+        dark: '#fff',
+        light: '#fff',
+      }
     },
     drop: {
       background: "#132844",
-      shadowSize: 'medium',
+      extend: {
+        fontSize: "small"
+      }
     },
     font: {
       family: "Titillium Web",
@@ -28,7 +35,7 @@ const ndauStyleGuide = {
         large: '0px 8px 16px rgba(0, 0, 0, 0.20)',
         xlarge: '0px 12px 24px rgba(0, 0, 0, 0.20)',
       },
-},
+    },
   },
   anchor: {
     color: "#f99d1c",

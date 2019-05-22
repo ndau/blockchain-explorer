@@ -12,40 +12,44 @@ class Page extends Component {
     return(
       <Box as="main">
         <Box gridArea="header">
-          <Navbar
-            browserHistory={browserHistory}
+          <Navbar browserHistory={browserHistory}
           />
         </Box>
 
-        
-        <Box 
-          justify="between" 
+        <Box
+          className="Page"
           direction="column"
           pad={{vertical: "large"}}
-          // style={{minHeight: "100%"}}
-          flex
-        >
-          {
-            notFound ? (
-              <Box animation="fadeIn">
-                <Container >
-                  <Box justify="center" height="100%">
-                    <Text alignSelf="center" weight="bold" size="large">
-                      Oops! Nothing was found. Please try again or go back to the{" "}
-                      <Anchor label="homepage" href="/" />
-                    </Text>
-                    </Box>
-                </Container>
-              </Box>
-            ) : (
-              <Container>
-                <Box>
-                  {children}
+          justify="between"
+          style={{minHeight: "100vh"}}
+        > 
+          <Box>
+            {
+              notFound ? (
+                <Box animation="fadeIn">
+                  <Container >
+                    <Box justify="center" height="100%">
+                      <Text alignSelf="center" weight="bold" size="large">
+                        Oops! Nothing was found. Please try again or go back to the{" "}
+                        <Anchor label="homepage" href="/" />
+                      </Text>
+                      </Box>
+                  </Container>
                 </Box>
-              </Container>
-            )
-          }
-          <Footer />
+              ) : (
+                <Container>
+                  <Box>
+                    {children}
+                  </Box>
+                </Container>
+              )
+            }
+          </Box>
+  
+          <Box>
+            <Footer />
+          </Box>
+          
         </Box>
       </Box>
     );

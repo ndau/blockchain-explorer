@@ -163,8 +163,8 @@ export const getAccountHistory = (address) => {
 /////////////////////////////////////////
 
 export const getNodeStatus = (endpoint) => {
-  const baseEndpoint = endpoint || getNodeEndpoint();
-  const statusEndpoint = `${baseEndpoint}/node/status`;
+  const nodeEndpoint =  endpoint || getNodeEndpoint();
+  const statusEndpoint = `${nodeEndpoint}/node/status`;
   
   return axios.get(statusEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -175,20 +175,24 @@ export const getNodeStatus = (endpoint) => {
 }
 
 export const getNodeEndpoint = () => {
-  const query = qs.parse(window.location.search);
-  const nodeEndpoint = NODE_ENDPOINTS[query.node];
+  const { location, history } = window
+  const query = qs.parse(location.search);
+  const nodeEndpoint = NODE_ENDPOINTS[query.node]
+   
   if (nodeEndpoint) {
     return nodeEndpoint
   }
   else {
     query.node = DEFUALT_NODE_NAME;
     const search = `?${qs.stringify(query)}`
-    const { history, location } = window
-    if (history.pushState) {
-      const newurl = `${location.origin}${location.pathname}${search}`
-      history.replaceState({path:newurl},'',newurl);
-      location.reload();
-    }
+    
+    const validURL = `${location.origin}${location.pathname}${search}`
+    
+    // location.href = validURL
+    // location.reload()
+    history.replaceState({}, "", validURL)
+    // debugger
+    return  NODE_ENDPOINTS[query.node]
   }
 }
 

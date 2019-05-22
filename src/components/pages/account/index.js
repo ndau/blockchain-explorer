@@ -16,8 +16,6 @@ class Account extends Component {
     }
 
     this.getData();
-
-    // window.setTimeout(this.toggleShowDetails, 500)
   }
 
   render() {
@@ -73,7 +71,7 @@ class Account extends Component {
         </Collapsible>
 
         
-        <Box>
+        <Box animation="fadeIn">
           <Text>
             <b>History{showDetails && ':'}</b>
           </Text>
@@ -112,8 +110,13 @@ class Account extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.location.key !== prevProps.location.key) {
-      this.setState(this.getData)
+    const getURL = (location={}) => {
+      const {pathname, search} = location
+      return `${pathname}${search}`
+    }
+
+    if (getURL(this.props.location) !== getURL(prevProps.location)) {
+      this.getData();
     }
   }
 
@@ -131,12 +134,12 @@ class Account extends Component {
     incomingRewardsFrom: "rewards",
     lastEAIUpdate: "EAI",
     lastWAAUpdate: "WAA",
-    lock: "lock",// {noticePeriod: "1m", unlocksOn: null, bonus: 0}
+    lock: "lock",
     rewardsTarget: "reward",
     sequence: "sequence",
-    settlementSettings: "settlement", // {period: "2d", changesAt: null, next: null}
+    settlementSettings: "settlement",
     settlements: "settlement",
-    stake: "stake", // {Point: "2019-02-26T00:28:44Z", Address: "ndahnsxr8zh7r6u685ka865wz77wb78xcn45rgskpeyiwuza"}
+    stake: "stake",
     validationKeys: "validationKey", 
     validationScript: "validationScript",
     weightedAverageAge: "WAA",

@@ -21,7 +21,7 @@ class TruncatedText extends Component {
   render() {
     const  { value, className } = this.props
     const { showFullWord } = this.state
-
+    
     return (
       <ResponsiveContext.Consumer>
           {
@@ -56,40 +56,34 @@ class TruncatedText extends Component {
                       background="rgba(255,255,255, 0.95)"
                       width="100vw"
                       round="xsmall"
+                      onClick={this.copyToClipboard}
                     >
-                      <Box align="center" onClick={this.copyToClipboard}>
-                        <Stack fill>
+                        <Stack interactiveChild="last" fill >
                           <TextArea 
                             value={value}
-                            size="small"
                             plain
-                            fill
                             ref={this.fullWord}
-                            resize="vertical"
                             onChange={()=>{}}
+                            focusIndicator={false}
                             spellCheck={false}
+                            color="#444"
+                            fill
                             style={{
                               padding: 0,
-                              lineHeight: '18px',
-                              fontSize: "16px",
+                              fontSize: "medium",
+                              color: "black",
                               fontWeight: "normal",
                               resize: "none",
                               textAlign: "center",
                             }}
                           /> 
-                          <Box height="100%" fill></Box>
+                          <Box fill onClick={event => event.stopPropagation()}></Box>
                         </Stack>
                          
-                      </Box>
-                      <Box 
-                        align="center" 
-                        onClick={this.copyToClipboard}
-                      >
-                        <Box style={{ cursor: "pointer" }}>
-                          <Copy size="18px" color="#f99d1c"/>
+                        <Box align="center">
+                          <Copy size="18px" color="#f99d1c" style={{ cursor: "pointer" }}/> 
                         </Box>
                       </Box>
-                    </Box>
                   </Drop>
                 )}
               </Box>
@@ -107,9 +101,6 @@ class TruncatedText extends Component {
     event.stopPropagation();
     this.fullWord.current.select();
     document.execCommand('copy');
-    event.target.focus();
-
-    this.setState({ copied: true });
   };
 
   toggleFullWordState = (event) => {
@@ -127,7 +118,7 @@ class TruncatedText extends Component {
 
   truncateWord = () => {
     const { value } = this.props
-    if ((typeof value !== "string") || (value.indexOf(" ") !== -1) || (!isNaN(new Date(value).getDate()))) {
+    if (typeof value !== "string" || value.length <= 19 || (value.indexOf(" ") !== -1) || (!isNaN(new Date(value).getDate()))) {
       return null
     }
     return truncate(value)

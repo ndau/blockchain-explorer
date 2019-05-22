@@ -6,9 +6,9 @@ class BlockList extends Component {
   state = { activeBlock: null }
 
   render() {
-    const { blocks } = this.props;
-    const activeBlock = this.state.activeBlock;
-    const activeBlockHeight = activeBlock && activeBlock.height;
+    const { blocks } = this.props
+    const activeBlock = this.state.activeBlock
+    const activeBlockHeight = activeBlock && activeBlock.height
 
     if(!blocks || blocks.length === 0) {
       return (
