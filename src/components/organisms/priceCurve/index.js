@@ -57,7 +57,7 @@ class PriceCurve extends Component {
     const nextIssuePrice = active ? activeYValue : currentPrice
 
     return (
-      <Box className="ndauPriceCurve">
+      <Box style={{display: "block"}}>
          <Box align="end">
           <Text 
             color="#999" 

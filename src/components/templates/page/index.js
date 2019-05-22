@@ -18,16 +18,10 @@ class Page extends Component {
         </Box>
 
         
-        <Box 
-          // justify="between"
-          // justify="end" 
+        <Box
           className="Page"
           direction="column"
           pad={{vertical: "large"}}
-          // height="xlarge"
-          // fill
-          // border          
-          // style={{minHeight: "100vh", overflow: "visible"}}
         >
           {
             notFound ? (
