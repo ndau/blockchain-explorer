@@ -46,7 +46,7 @@ class Account extends Component {
 
               />
             </Text>
-            <Text>
+            <Text size="large">
               Account{' '}
               <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
                 {account && account.address}

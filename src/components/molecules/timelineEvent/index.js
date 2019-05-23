@@ -3,6 +3,7 @@ import { Text, Box, Collapsible } from "grommet"
 import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card'
 import Age from '../../atoms/age'
+import Anchor from '../../atoms/anchor'
 import TransactionList from '../../organisms/transactionsList'
 import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
 
@@ -24,7 +25,8 @@ class TimelineEvent extends Component {
     } = accountEvent;
      
     const formattedPreviousEvent = previousEvent ? formatAccountEvent(previousEvent) : accountEvent
-    const amount = accountEvent.raw.balance - formattedPreviousEvent.raw.balance
+    const napuAmount = accountEvent.raw.balance - formattedPreviousEvent.raw.balance
+    const ndauAmount = convertNapuToNdau(napuAmount)
 
     return (
       <Card
@@ -46,10 +48,10 @@ class TimelineEvent extends Component {
 
               <Text 
                 size="medium" 
-                color={amount > 0 ? 'green' :'rgba(255,0,0,0.7)'} 
+                color={napuAmount > 0 ? 'green' :'rgba(255,0,0,0.7)'} 
                 margin={{left: "medium"}}
               >
-                <b>{amount !== 0 && amount > 0?'+':'-'}{convertNapuToNdau(amount)}</b>
+                <b>{napuAmount > 0?'+':'-'}{ndauAmount}</b>
               </Text>
             </Text>
           </header>
@@ -72,7 +74,7 @@ class TimelineEvent extends Component {
             > 
               <Text>
                 <b>amount: </b> 
-                {convertNapuToNdau(amount)}
+                {ndauAmount}
               </Text>
               <Text>
                 <b>current balance: </b> 
@@ -85,7 +87,13 @@ class TimelineEvent extends Component {
               <Text>
                 <b>time: </b>{timestamp}
               </Text>
-      
+              <Text>
+                <b>block: </b>
+                <Anchor href={`/block/${blockHeight}`}>
+                  #{blockHeight}
+                </Anchor>
+                
+              </Text>
               <Text>
                 {/* transaction:  */}
                 <TransactionList transactionHashes={[transactionHash]} blockHeight={blockHeight}/>

@@ -153,7 +153,7 @@ export const getAccountHistory = (address) => {
 
   return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      const history = response.data.Items;
+      const history = response.data && response.data.Items
       return history
     })
 }
