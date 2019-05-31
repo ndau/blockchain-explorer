@@ -64,9 +64,7 @@ class TransactionCard extends Component {
                   <Text>
                     {
                       hash &&
-                      <Anchor 
-                        href={`/transaction/${window.encodeURIComponent(hash)}`} 
-                      >
+                      <Anchor href={`/transaction/${window.encodeURIComponent(hash)}`}>
                         {` `}
                         <TruncatedText value={hash} className="txHash" />
                       </Anchor>
@@ -76,7 +74,7 @@ class TransactionCard extends Component {
               </Text>
               {
                 (!open && type) &&
-                <Box animation="fadeIn">
+                <Box lanimation="fadeIn">
                   <Text size="xsmall">{type} Transaction</Text>
                 </Box>
               }

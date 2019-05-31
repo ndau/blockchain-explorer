@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Box, Text } from "grommet"
+import { Box, Text, Anchor as GrommetAnchor } from "grommet"
 import Anchor from '../../atoms/anchor'
 import Card from '../../atoms/card'
 import Value from '../../molecules/value'
-import TruncatedText from '../../atoms/truncatedText'
+import TruncatedText from '../../atoms/truncatedText' 
 
 class TransactionDetails extends Component {
   render() {
@@ -14,6 +14,7 @@ class TransactionDetails extends Component {
 
     const { 
       type,
+      fee,
       bonus,
       blockHeight,
       destination,
@@ -39,16 +40,36 @@ class TransactionDetails extends Component {
       validationKeys,
       validationScript, 
     } = transaction;
-
+     
     return (
       <Card>
         <Box>
+          {
+            type && 
+            <Text className="detailField" padding="5px 0">
+              <b>type: </b> <Value value={type} />
+            </Text>
+          }
+          {
+            fee &&
+            <Text className="detailField" padding="5px 0">
+              <b>fee: </b>
+              <GrommetAnchor 
+                  href="https://ndaucollective.org/knowledge-base/transaction-fees/" 
+                  target="_blank"
+                >
+                  <Text color="#ffe7c6" weight="normal" >
+                    {fee}
+                  </Text>
+              </GrommetAnchor>
+            </Text>
+          }
           {
             quantity && 
             <Text className="detailField" padding="5px 0">
               <b>amount: </b> <Value value={quantity} />
             </Text>
-          }
+          }    
           {
             source &&
             <Text className="detailField" padding="5px 0">
@@ -67,12 +88,7 @@ class TransactionDetails extends Component {
               </Anchor>
             </Text>
           }
-          {
-            type && 
-            <Text className="detailField" padding="5px 0">
-              <b>type: </b> <Value value={type} />
-            </Text>
-          }
+          
           {
             target &&
             <Text className="detailField" padding="5px 0">

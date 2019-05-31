@@ -1,6 +1,6 @@
 import moment from 'moment'
 import momentTimezone from 'moment-timezone'
-import { TRANSACTION_TYPES } from '../constants.js'
+import { TRANSACTION_TYPES, TRANSACTION_FEES } from '../constants.js'
 
 /////////////////////////////////////////
 // BLOCK
@@ -75,10 +75,13 @@ export const formatTransaction = (transaction, additionalData={}) => {
       val: validationScript,
     } 
   } = transactionData;
+  
   let type = TRANSACTION_TYPES[TransactableID];
+  const fee = TRANSACTION_FEES[type]
   
   return {
     type: type && type.replace(/([a-z])([A-Z])/g, '$1 $2'),
+    fee,
     bonus,
     destination: Array.isArray(destination) ? destination[0] : destination,
     distributionScript,

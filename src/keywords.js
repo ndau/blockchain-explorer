@@ -70,7 +70,6 @@ export const KEYWORDS = {
     and validation script are used to validate any subsequent transactions submitted 
     for that account.`
   }
-
 }
 
 
