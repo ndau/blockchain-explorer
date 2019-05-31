@@ -3,8 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { Box, TextInput, Menu, Text, Stack, Form } from 'grommet'
 import qs from 'query-string'
 import { Search } from 'grommet-icons'
-import { NODE_ENDPOINTS } from '../../../constants'
-import { getNodeStatus } from '../../../helpers/fetch'
+import { getNodeEndpoint , getNodeStatus } from '../../../helpers/fetch'
 
 class BlockchainSearch extends Component {
   constructor(props) {
@@ -128,9 +127,9 @@ class BlockchainSearch extends Component {
     )
   }
 
-  changeNode = ( selectedNode ) => {
+  changeNode = async (selectedNode) => {
     const { history } = this.props; 
-    const nodeEnpoints = NODE_ENDPOINTS[selectedNode]
+    const nodeEnpoints = await getNodeEndpoint(selectedNode)
     getNodeStatus(nodeEnpoints)
       .then(status => {
         if(status) {
