@@ -171,16 +171,16 @@ export const getNodeStatus = async (endpoint) => {
 
 export const getNodeEndpoint = async (node) => {
   const { location, history } = window
-  const query = qs.parse(location.search)
+  let query = qs.parse(location.search)
   let nodeName = node ||  query.node
   let nodeEndpoint = null
 
   if(!query || !query.node) {
     nodeName = DEFUALT_NODE_NAME
+    query = {node: nodeName}
     const newSearch = `?${qs.stringify(query)}`
     const validURL = `${location.origin}${location.pathname}${newSearch}`
     history.replaceState({}, "", validURL)
-    // location.href = validURL
   }
    
   await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER)
