@@ -52,7 +52,7 @@ class TimelineChart extends Component {
               yAxis.map((y, index) => {
                 return (
                   <Box key={index} direction="row" align="start" >
-                    <Box fill>
+                    <Box sfill>
                       <Text size="xsmall" style={{lineHeight: "10px"}}>{y}</Text>
                     </Box>
                   </Box>
@@ -85,17 +85,17 @@ class TimelineChart extends Component {
                 />
 
                 {/* Bubbles */}
-                {/* <Box fill direction="row" justify="between" align="end">
+                {/* <Box flex direction="row" justify="between" align="end" overflow="hidden">
                   {
-                    bubblePoints.map((bubblePoint, index) => { 
+                    this.bubblePoints.map((bubblePoint, index) => { 
                       return bubblePoint && (
                         <Box
                           key={index}
                           pad="0"
-                          width="6px"
-                          height="6px"
+                          width="8px"
+                          height="8px"
                           round
-                          background="rgba(255,255,255,0.3)"
+                          background={bubblePoint.event.amount > 0 ? 'green' :'rgba(255,255,255,0.3)'}
                           margin={{bottom: bubblePoint.pad}}
                         />
                       )
@@ -137,7 +137,7 @@ class TimelineChart extends Component {
       const event = formatAccountEvent(datum)
       return {
         event,
-        pad: `${((parseFloat(event.balance) / parseFloat(this.maxBalance))*48) - 4}px`
+        pad: `${((parseFloat(event.balance) / parseFloat(this.maxBalance))*48) - 2.5}px`
       }  
     });
   }
@@ -148,7 +148,7 @@ class TimelineChart extends Component {
     })
   }
 
-  findMaxBalance = () => {
+  findMaxBalance = (raw=false) => {
     let maxBalance = 0;
 
     this.props && this.props.events.forEach(event => {
