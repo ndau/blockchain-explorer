@@ -160,7 +160,7 @@ export const formatAccount = (account, additionalData={}) => {
     lastEAIUpdate: formatTime(lastEAIUpdate),
     lastWAAUpdate: formatTime(lastWAAUpdate),
     lock: lock && {
-      bonus: lock.bonus && `${lock.bonus / 10000000000}%`,
+      bonus:  (lock.bonus === 0 || lock.bonus) && `${lock.bonus / 10000000000}%`,
       unlocksOn: formatTime(lock.unlocksOn),
       countdownPeriod: formatPeriod(lock.noticePeriod)
     },
