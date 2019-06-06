@@ -91,7 +91,10 @@ export const getTransaction = async (hash) => {
 
   return axios.get(transactionEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      return response.data && formatTransaction(response.data.Tx, { hash: transactionHash });
+      return response.data && formatTransaction(
+        response.data.Tx, 
+        { hash: transactionHash, blockHeight: response.data.BlockHeight}
+      );
     })
 }
 
@@ -148,10 +151,13 @@ export const getAccountHistory = async (address) => {
 
   return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      const history = response.data && response.data.Items
+      let history = response.data && response.data.Items
+      // return Promise.all(history.map(event => getTransaction(event.TxHash)))
       return history
     })
 }
+
+
 
 /////////////////////////////////////////
 // NODE

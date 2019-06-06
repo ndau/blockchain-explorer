@@ -43,7 +43,6 @@ class Account extends Component {
                 onChange={this.toggleShowDetails}
                 reverse
                 name="small"
-
               />
             </Text>
             <Text size="large">
@@ -76,6 +75,7 @@ class Account extends Component {
             <b>History{showDetails && ':'}</b>
           </Text>
         </Box>
+  
         <Box 
           style={showDetails ? {
             margin: "10px 0px 0px 15px",

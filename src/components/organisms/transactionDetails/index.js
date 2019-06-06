@@ -4,14 +4,18 @@ import Anchor from '../../atoms/anchor'
 import Card from '../../atoms/card'
 import Value from '../../molecules/value'
 import TruncatedText from '../../atoms/truncatedText' 
+import { getBlock } from '../../../helpers/fetch'
 
 class TransactionDetails extends Component {
+  state = {timestamp: null}
+
   render() {
     const { transaction } = this.props;
     if (!transaction) {
       return null;
     }
 
+    const { timestamp } = this.state;
     const { 
       type,
       fee,
@@ -99,19 +103,25 @@ class TransactionDetails extends Component {
             </Text>
           }
           {
-            bonus &&
+            blockHeight && 
             <Text className="detailField" padding="5px 0">
-              <b>bonus: </b> <Value value={bonus} />
+              <b>block: </b> 
+              <Anchor 
+                label={`#${blockHeight}`} 
+                href={`/block/${blockHeight}`}
+              />
             </Text>
           }
           {
-            blockHeight && 
+            blockHeight &&
             <Text className="detailField" padding="5px 0">
-              <b>block height: </b> 
-              <Anchor 
-                label={blockHeight} 
-                href={`/block/${blockHeight}`}
-              />
+              <b>timestamp: </b> {timestamp ?  <Value value={timestamp} /> : ".."}
+            </Text>
+          }
+          {
+            bonus &&
+            <Text className="detailField" padding="5px 0">
+              <b>bonus: </b> <Value value={bonus} />
             </Text>
           }
           {
@@ -222,6 +232,29 @@ class TransactionDetails extends Component {
         </Box> 
       </Card>
     );
+  }
+
+  componentDidUpdate(prevProps) {
+    if(
+      prevProps.transaction && this.props.transaction 
+      && (prevProps.transaction.blockHeight !== this.props.transaction.blockHeight)) {
+      this.getTimestamp()
+    }
+  }
+
+  getTimestamp() {
+    const { transaction } = this.props
+    const blockHeight = transaction && transaction.blockHeight
+    if (!blockHeight) {
+      return null;
+    }
+
+    getBlock(blockHeight)
+      .then(block => {
+        if (block) {
+          this.setState({ timestamp: block.added })
+        }
+      })
   }
 }
 
