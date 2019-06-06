@@ -222,7 +222,7 @@ export const formatPriceInfo = (priceInfo) => {
       totalIssued: convertNapuToNdau(totalIssued, 0),
       totalNdau: convertNapuToNdau(totalNdau, 0),
       totalSIB: convertNapuToNdau(totalSIB, 0),
-      sib: sib && (sib / 100000000000 ),
+      sib: (sib === 0 || sib) && (sib / 100000000000 ),
       raw: {
         marketPrice,
         targetPrice,
