@@ -93,8 +93,6 @@ class AccountTimeline extends Component {
         <Box>
           {
             filteredEvents.map((event, index) => {
-              const previousEvent = events[index + 1] || this.initialEvent
-
               return (
                 <Box key={index}>
                   <Box 
@@ -104,7 +102,7 @@ class AccountTimeline extends Component {
                   > 
                     <TimelineEvent 
                       event={event}
-                      previousEvent={previousEvent}
+                      previousEvent={event && event.previousEvent}
                       index={index}
                     />
                   </Box>
@@ -139,7 +137,7 @@ class AccountTimeline extends Component {
       return []
     }
     
-    Promise.all(events.map(event => this.getTransactionEvent(event)))
+    Promise.all(events.map((event, index) => this.getTransactionEvent(event, index)))
       .then(results => {
         // console.log('results', results)
         const filteredEvents = results.filter((event) => {
@@ -156,10 +154,14 @@ class AccountTimeline extends Component {
   }
 
 
-  getTransactionEvent = (event) => {
+  getTransactionEvent = (event, index) => {
+    const { events } = this.props;
     return getTransaction(event.TxHash)
       .then(transaction => {
+        const previousEvent = events[index + 1] || this.initialEvent
         event.transaction = transaction
+        event.previousEvent = previousEvent
+        
         return event
       })
   }
