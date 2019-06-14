@@ -78,7 +78,7 @@ export const formatTransaction = (transaction, additionalData={}) => {
   
   let type = TRANSACTION_TYPES[TransactableID];
   const fee = TRANSACTION_FEES[type]
-  
+  // console.log(period)
   return {
     type: type && type.replace(/([a-z])([A-Z])/g, '$1 $2'),
     fee,
@@ -104,7 +104,10 @@ export const formatTransaction = (transaction, additionalData={}) => {
     target: Array.isArray(target) ? target[0] : target,
     unlocksOn,
     validationScript,
-    ...additionalData
+    ...additionalData,
+    raw: {
+      type
+    }
   }
 }
 
@@ -294,10 +297,10 @@ export const formatTime = (time) => {
 
 export const formatPeriod = (period) => {
   if(period) {
-    let truncatedPeriod = period
-    const indexOfS = period.indexOf("s")
+    let truncatedPeriod = String(period)
+    const indexOfS = truncatedPeriod.indexOf("s")
     if(indexOfS !== -1) {
-      truncatedPeriod = period.slice(0, indexOfS + 1)
+      truncatedPeriod = truncatedPeriod.slice(0, indexOfS + 1)
     }
 
     const decoratedPeriod = `P${truncatedPeriod.toUpperCase()}`

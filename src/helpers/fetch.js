@@ -178,27 +178,32 @@ export const getNodeStatus = async (endpoint) => {
 export const getNodeEndpoint = async (node) => {
   const { location, history } = window
   let query = qs.parse(location.search)
-  let nodeName = node ||  query.node
-  let nodeEndpoint = null
+  let nodeName = node || query.node
 
-  if(!query || !query.node) {
-    nodeName = DEFUALT_NODE_NAME
-    query = {node: nodeName}
-    const newSearch = `?${qs.stringify(query)}`
-    const validURL = `${location.origin}${location.pathname}${newSearch}`
-    history.replaceState({}, "", validURL)
+  if (validURL(window.decodeURI(nodeName))) {
+    return window.decodeURI(nodeName)
   }
-   
-  await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER)
-    .then(response => {
-      const { networks } = response.data
-      const nodes = networks[nodeName] && networks[nodeName]["nodes"]
-      const randomNodeIndex = Math.floor(Math.random() * Object.keys(nodes).length)
-      const randomNode = Object.values(nodes)[randomNodeIndex]
-      nodeEndpoint = randomNode && randomNode.api
-    })
+  else {
+    let nodeEndpoint
+    if(!query || !query.node) {
+      nodeName = DEFUALT_NODE_NAME
+      query = {node: nodeName}
+      const newSearch = `?${qs.stringify(query)}`
+      const validURL = `${location.origin}${location.pathname}${newSearch}`
+      history.replaceState({}, "", validURL)
+    }
+    
+    await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER)
+      .then(response => {
+        const { networks } = response.data
+        const nodes = networks[nodeName] && networks[nodeName]["nodes"]
+        const randomNodeIndex = Math.floor(Math.random() * Object.keys(nodes).length)
+        const randomNode = Object.values(nodes)[randomNodeIndex]
+        nodeEndpoint = randomNode && randomNode.api
+      })
 
-  return "https://" + nodeEndpoint
+    return "https://" + nodeEndpoint
+  }
 }
 
 /////////////////////////////////////////
@@ -213,4 +218,15 @@ export const getCurrentOrder = async () => {
       return formatPriceInfo(response.data);
     })
     .catch(error => console.log(error))
+}
+
+//
+export const validURL = (str) => {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
 }

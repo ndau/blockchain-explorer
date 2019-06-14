@@ -1,31 +1,35 @@
 import React, { Component } from 'react'
-import { Box,Text, Menu } from 'grommet'
-import { StatusGood, Radial } from 'grommet-icons'
+import { Box } from 'grommet'
+import moment from 'moment'
 import TimelineEvent from '../../molecules/timelineEvent'
 import TimelineChart from '../../molecules/timelineChart'
-import { TRANSACTION_TYPES } from '../../../constants'
-import { getTransaction  } from '../../../helpers/fetch'
+import TimelineFilter from '../../molecules/timelineFilter'
+import { getTransaction } from '../../../helpers/fetch'
 
-const DEFAULT_FILTERS = [
+const DEFAULT_TYPE_FILTERS = [
   "Transfer",
-	"Change Validation",
-  "Change Recourse Period",
+	"ChangeValidation",
+  "ChangeRecoursePeriod",
   "Delegate",
 	"Lock",
 	"Notify",
-	"SetRewards Destination",
-	"Set Validation",
+	"SetRewardsDestination",
+	"SetValidation",
 ]
 
 class AccountTimeline extends Component {
   constructor(props) {
     super(props)
-
+     
+    const { filterStartDate, filterEndDate } =  this.getDateRange(12)
     this.state = { 
-      filters: DEFAULT_FILTERS,
-      filteredEvents: []
+      events: props.events,
+      typeFilters: DEFAULT_TYPE_FILTERS,
+      filterStartDate,
+      filterEndDate,
+      filterRange: "last year",
+      filteredEvents: props.event
     }
-
   }
   
   render() {
@@ -34,48 +38,30 @@ class AccountTimeline extends Component {
       return null
     }
     
-    const { filters, filteredEvents = [] } = this.state
-    // console.log('filteredEvents', filteredEvents)
-    const transanctionTypes = Object.values(TRANSACTION_TYPES)
+    const { 
+      typeFilters,
+      filterStartDate,
+      filterEndDate,
+      filterRange
+     } = this.state
 
-    // let selectedTypes, unselectedTypes;
-
-
-    const unselectedTypes = transanctionTypes.filter(filter => !filters.includes(filter))
-    const sortedTransanctionTypes = [...filters, ...unselectedTypes]
-    // const filteredEvents = this.filterEvents()
-    
-
-    const filterItems = sortedTransanctionTypes.map(type => {
-      const activeFilter = filters.includes(type)
-      return {
-        label: <Text size="small" margin={{left: "small"}}>{type && type.replace(/([a-z])([A-Z])/g, '$1 $2')}</Text>,
-        icon:  activeFilter ? <StatusGood lcolor="lime"/> : <Radial color="#ccc" />,
-        onClick: () => this.toggleFilter(type),
-      }
-    })
-
+    const filteredEvents = this.filterEvents()
     const borderStyle = "1px dashed rgba(255,255,255,0.1)"
 
     return (
       <Box>
         <Box align="center">
-          <Menu 
-            // open={true}
-            size="small"
-            
-            label={`filter by transaction type (${filters.length}/${transanctionTypes.length})`}
-            color="#bbb"
-            items={filterItems}
-            dropProps={{
-              style: {height: "200px", outline: "none"},
-              height: "small",
-              size: "small"
-            }}
-            style={{
-              outline: "none",
-              padding: 0
-            }}
+          <TimelineFilter 
+            events={events}
+            filterEvents={this.filterEvents}
+            filterStartDate={filterStartDate}
+            filterEndDate={filterEndDate}
+            filterRange={filterRange}
+            filteredEventsCount={filteredEvents && filteredEvents.length}
+            typeFilters={typeFilters}
+            selectFilterRange={this.selectFilterRange}
+            setFilterRange={this.setFilterRange}
+            toggleFilter={this.toggleFilter}
           />
         </Box>
 
@@ -125,34 +111,54 @@ class AccountTimeline extends Component {
     );
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate = async (prevProps) => {
     if(!prevProps.events && this.props.events) {
-      this.filterEvents(DEFAULT_FILTERS)
+      await this.getEventTransactions()
     }
   }
 
-  filterEvents = (filters) => {
-    const { events } = this.props
+  filterEvents = () => {
+    const { events, typeFilters } = this.state
     if (!events) {
       return []
     }
     
-    Promise.all(events.map((event, index) => this.getTransactionEvent(event, index)))
-      .then(results => {
-        // console.log('results', results)
-        const filteredEvents = results.filter((event) => {
-          const transactionType = event.transaction && event.transaction.type
-          // console.log(transactionType)
-          return transactionType && filters.includes(transactionType)
-        })
+    const { filterStartDate, filterEndDate } = this.state
+    const filteredEvents =  events.filter(event => {
+      const eventDate = moment(event.Timestamp)
+      const isWithinFilterRange = eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate)
+      const transactionType = event.transaction && event.transaction.raw.type
+      const isSelected = transactionType && typeFilters.includes(transactionType)
 
-        this.setState({
-          filters,
-          filteredEvents
-        })
-      }) 
+      return isWithinFilterRange && isSelected
+    })
+
+    return filteredEvents
   }
 
+  getDateRange = (numberOfMonths) => {
+    return {
+      filterStartDate: moment(new Date()).subtract(numberOfMonths, 'months'),
+      filterEndDate: moment(new Date()),
+    }
+  }
+
+  selectFilterRange = (numberOfMonths, filterRange) => {
+    const { filterStartDate, filterEndDate } = this.getDateRange(numberOfMonths)
+    console.log(filterStartDate, filterEndDate)
+    this.setState({ 
+      filterStartDate, 
+      filterEndDate,
+      filterRange,
+     })
+  }
+
+  setFilterRange = ({startDate, endDate}) => {
+    this.setState({
+      filterStartDate: moment(startDate),
+      filterEndDate: moment(endDate)
+    })
+  }
 
   getTransactionEvent = (event, index) => {
     const { events } = this.props;
@@ -166,21 +172,28 @@ class AccountTimeline extends Component {
       })
   }
 
-  toggleFilter = (typeName) => { 
-    const type = typeName && typeName.replace(/([a-z])([A-Z])/g, '$1 $2')
-    const {filters} = this.state
-    let newFilters = filters;
-    if (!filters.includes(type)) {
-      newFilters = [...filters, type]
-    }
-    else {
-      newFilters = [...filters].filter(filter => filter !== type)
-    }
-    this.filterEvents(newFilters)
+  getEventTransactions = async () => {
+    const { events } = this.props
+
+    await Promise.all(events.map((event, index) => this.getTransactionEvent(event, index)))
+      .then(results => {
+        this.setState({ events: results })
+      }) 
   }
 
-  setActiveBlock = (activeBlock) => {
-    this.setState({ activeBlock })
+  toggleFilter = (type) => {
+    const {typeFilters} = this.state
+    let newTypeFilters = typeFilters;
+    if (!typeFilters.includes(type)) {
+      newTypeFilters = [...typeFilters, type]
+    }
+    else {
+      newTypeFilters = [...typeFilters].filter(filter => filter !== type)
+    }
+
+    this.setState({
+      typeFilters: newTypeFilters
+    })
   }
 
   initialEvent = {
@@ -188,4 +201,4 @@ class AccountTimeline extends Component {
   }
 }
 
-export default AccountTimeline;
+export default AccountTimeline
