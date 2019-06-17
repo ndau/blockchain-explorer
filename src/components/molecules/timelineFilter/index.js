@@ -64,7 +64,7 @@ class TimelineFilter extends Component {
               
               <Text 
                 size="xsmall"
-                color="rgba(255,255,255, 0.7)" // "#ffe7c6" 
+                color="rgba(255,255,255, 0.7)"
                 style={{
                   marginLeft: "5px", 
                   lineHeight: "10px",

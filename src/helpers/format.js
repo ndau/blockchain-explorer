@@ -78,7 +78,7 @@ export const formatTransaction = (transaction, additionalData={}) => {
   
   let type = TRANSACTION_TYPES[TransactableID];
   const fee = TRANSACTION_FEES[type]
-  // console.log(period)
+  
   return {
     type: type && type.replace(/([a-z])([A-Z])/g, '$1 $2'),
     fee,
