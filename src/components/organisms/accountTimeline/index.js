@@ -27,7 +27,7 @@ class AccountTimeline extends Component {
       typeFilters: DEFAULT_TYPE_FILTERS,
       filterStartDate,
       filterEndDate,
-      filterRange: "last year",
+      filterRange: "Last year",
       filteredEvents: props.event
     }
   }
@@ -50,7 +50,7 @@ class AccountTimeline extends Component {
 
     return (
       <Box>
-        <Box align="center">
+        <Box>
           <TimelineFilter 
             events={events}
             filterEvents={this.filterEvents}
@@ -145,7 +145,6 @@ class AccountTimeline extends Component {
 
   selectFilterRange = (numberOfMonths, filterRange) => {
     const { filterStartDate, filterEndDate } = this.getDateRange(numberOfMonths)
-    console.log(filterStartDate, filterEndDate)
     this.setState({ 
       filterStartDate, 
       filterEndDate,

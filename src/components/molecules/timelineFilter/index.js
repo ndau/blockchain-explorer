@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { Box, Text, Collapsible } from 'grommet'
+import { Box, Text, Collapsible, ResponsiveContext } from 'grommet'
 import { StatusGood, Radial, Filter } from 'grommet-icons'
-import moment from 'moment'
 import DateRangePicker from '../../molecules/dateRangePicker'
 import { TRANSACTION_TYPES } from '../../../constants'
-import { getTransaction } from '../../../helpers/fetch'
 import { formatTime } from '../../../helpers/format'
 
 class TimelineFilter extends Component {
@@ -35,156 +33,147 @@ class TimelineFilter extends Component {
 
     const daterangeFilters = [
       {
-        label: "last month", 
-        onClick: () => selectFilterRange(1, "last month")
+        label: "Last month", 
+        onClick: () => selectFilterRange(1, "Last month")
       },
       {
-        label: "last 3 months", 
-        onClick: () => selectFilterRange(3, "last 3 months")
+        label: "Last 3 months", 
+        onClick: () => selectFilterRange(3, "Last 3 months")
       },
       {
-        label: "last 6 months", 
-        onClick: () => selectFilterRange(6, "last 6 months")
+        label: "Last 6 months", 
+        onClick: () => selectFilterRange(6, "Last 6 months")
       },
       {
-        label: "last year", 
-        onClick: () => selectFilterRange(12, "last year")
+        label: "Last year", 
+        onClick: () => selectFilterRange(12, "Last year")
       },
     ]
 
     return (
-      <Box>
-        <Box onClick={this.toggleShowFilter} margin={{bottom: "small"}}>
-          <Text size="xsmall" color="#bbb">
-            {`Showing ${filteredEventsCount || ''} transactions from 
-            ${formatTime(filterStartDate)} to ${formatTime(filterEndDate)},
-            of ${typeFilters.length} / ${transanctionTypes.length} types.`}
-            
-            <Filter size="small" color="#ffe7c6" style={{paddingLeft: "5px"}}/>
-          </Text>
-        </Box>
-
-        <Collapsible open={showFilters}>
-          <Box 
-            style={{
-              background: "rgba(255,255,255, 0.05)",
-              visibility: showFilters ? "visible":"hidden",
-              transition: "visibilty 0.1s",
-            }} 
-            align="center"
-            width="100%"
-            margin={{bottom: "small"}}
-            pad={{vertical: "small"}}
-          >
-            <Box>
-              <Box 
-                width="100%" 
-                style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
-              >
-                <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
-                  filter by date
-                </Text>
-              </Box>
-
-              <Box pad={{bottom: "medium"}}>
-                <DateRangePicker 
-                  startDate={filterStartDate}
-                  endDate={filterEndDate}
-                  onSetRange={setFilterRange} 
-                />
-              </Box>
-
-              <Box>
-                {
-                  daterangeFilters.map(({label, onClick}, index) => {
-                    const IsSelected = filterRange === label
-
-                    return (
-                      <Box key={index} onClick={onClick} direction="row" justify="between">
-                        <Text>
-                          {
-                            IsSelected ? 
-                            <StatusGood size="18px"/> : 
-                            <Radial color="#ccc" size="18px"/>
-                          }
-                          <Text size="small" margin={{left: "xsmall"}}>
-                            {label}
-                          </Text>
-                        </Text>
-                        
-                      </Box>
-                    )
-                  })
-                }
-
-                <Box margin={{bottom:"15px"}}>
-                  <Box 
-                    width="100%" 
-                    style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
-                  >
-                    <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
-                      filter by type
-                    </Text>
-                  </Box>
-                </Box>
+      <ResponsiveContext.Provider>
+        <Box>
+          <Box onClick={this.toggleShowFilter} margin={{bottom: "medium"}} alignSelf="center">
+            <Text 
+              size="xsmall"
+              style={{fontStyle: "italic", color: "rgba(255,255,255, 0.7)"}}
+            >
+              {`Showing ${filteredEventsCount || ''} transactions between 
+              ${formatTime(filterStartDate)} and ${formatTime(filterEndDate)}
+              of the ${typeFilters.length} / ${transanctionTypes.length} selected types.`}
               
-                {
-                  sortedTransanctionTypes.map((type, index) => {
-                    const IsSelected = typeFilters.includes(type)
+              <Text 
+                size="xsmall"
+                color="rgba(255,255,255, 0.7)" // "#ffe7c6" 
+                style={{
+                  marginLeft: "5px", 
+                  lineHeight: "10px",
+                  fontStyle: "normal", 
+                  fontWeight: "bold",
+                  borderBottom: "0.5px dashed #ffe7c6"
+                }}
+                bold
+              >
+                {showFilters ? "Hide" : "Show"} filter options
+                <Filter size="small" color="rgba(255,255,255, 0.8)" style={{paddingLeft: "2px"}}/>
+              </Text>
+            </Text>
+          </Box>
+          
+          <Collapsible open={showFilters}>
+            <Box 
+              style={{
+                background: "rgba(255,255,255, 0.03)",
+                visibility: showFilters ? "visible":"hidden",
+                transition: "visibilty 0.1s",
+              }} 
+              align="center"
+              width="100%"
+              margin={{bottom: "medium"}}
+              pad={{vertical: "medium"}}
+              round="small"
+            >
+              <Box>
+                <Box 
+                  width="100%" 
+                  style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
+                >
+                  <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
+                    filter by date
+                  </Text>
+                </Box>
 
-                    return (
-                      <Box key={index} onClick={() => toggleFilter(type)} >
-                        <Text>
-                          {
-                            IsSelected ? <StatusGood size="18px"/> : <Radial color="#ccc" size="18px"/>
-                          }
-                          <Text size="small" margin={{left: "xsmall"}}>
-                            {type && type.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                <Box pad={{bottom: "medium"}}>
+                  <DateRangePicker 
+                    startDate={filterStartDate}
+                    endDate={filterEndDate}
+                    onSetRange={setFilterRange} 
+                  />
+                </Box>
+
+                <Box>
+                  {
+                    daterangeFilters.map(({label, onClick}, index) => {
+                      const IsSelected = filterRange === label
+
+                      return (
+                        <Box key={index} onClick={onClick} direction="row" justify="between">
+                          <Text style={{lineHeight: "18px", justifySelf: "center"}} >
+                            {
+                              IsSelected ? 
+                              <StatusGood size="18px"/> : 
+                              <Radial color="#ccc" size="18px"/>
+                            }
+                            <Text size="small" margin={{left: "xsmall"}}>
+                              {label}
+                            </Text>
                           </Text>
-                        </Text>
-                        
-                      </Box>
-                    )
-                  })
-                }  
+                          
+                        </Box>
+                      )
+                    })
+                  }
+
+                  <Box margin={{bottom:"15px"}}>
+                    <Box 
+                      width="100%" 
+                      style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
+                    >
+                      <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
+                        filter by type
+                      </Text>
+                    </Box>
+                  </Box>
+                
+                  {
+                    sortedTransanctionTypes.map((type, index) => {
+                      const IsSelected = typeFilters.includes(type)
+
+                      return (
+                        <Box key={index} onClick={() => toggleFilter(type)} >
+                          <Text>
+                            {
+                              IsSelected ? <StatusGood size="18px"/> : <Radial color="#ccc" size="18px"/>
+                            }
+                            <Text size="small" margin={{left: "xsmall"}}>
+                              {type && type.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                            </Text>
+                          </Text>
+                          
+                        </Box>
+                      )
+                    })
+                  }  
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </Collapsible>
-      </Box>
+          </Collapsible>
+        </Box>
+      </ResponsiveContext.Provider>
     );
   }
 
-  getDateRange = (numberOfMonths) => {
-    return {
-      filterStartDate: moment(new Date()).subtract(numberOfMonths, 'months'),
-      filterEndDate: moment(new Date()),
-    }
-  }
-
-  selectFilterRange = (numberOfMonths, filterRange) => {
-    const { filterStartDate, filterEndDate } =  this.getDateRange(numberOfMonths)
-    this.setState({ 
-      filterStartDate, 
-      filterEndDate,
-      filterRange,
-     })
-  }
-
-  getTransactionEvent = (event, index) => {
-    const { events } = this.props;
-    return getTransaction(event.TxHash)
-      .then(transaction => {
-        const previousEvent = events[index + 1] || this.initialEvent
-        event.transaction = transaction
-        event.previousEvent = previousEvent
-        
-        return event
-      })
-  }
-
   toggleShowFilter = () => {
-
     this.setState(({showFilters}) => ({ showFilters: !showFilters }))
   }
 }

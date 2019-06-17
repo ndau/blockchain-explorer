@@ -32,9 +32,7 @@ class DateRangePicker extends Component {
 
   componentDidUpdate(prevProps) {
     const { startDate, endDate } = this.props
-    console.log('range picker updated')
     if (startDate !== prevProps.startDate || endDate !== prevProps.endDate) {
-      console.log('state updated')
       this.setState({
         startDate, endDate
       })
@@ -43,7 +41,6 @@ class DateRangePicker extends Component {
 
   onSelect = arg => {
     if (Array.isArray(arg)) {
-      console.log(arg)
       this.setState({ 
         dates: arg, date: null 
       }, () => {

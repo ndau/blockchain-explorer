@@ -12,6 +12,7 @@ class TimelineChart extends Component {
       activeEvent: null
     }
   }
+
   render() {
     this.generateData()
     const chartProps = {
@@ -109,10 +110,6 @@ class TimelineChart extends Component {
       </Box>
     )
   }
-
-  // componentDidUpdate() {
-  //   this.generateData()
-  // }
 
   generateData = () => {
     this.maxBalance = this.findMaxBalance()
