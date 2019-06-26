@@ -7,8 +7,8 @@ export const price_at_unit = (nunits_sold) => {
 
   if (sale_block <= phase_blocks * 1) {
     // price in phase 1 has 14 doublings, from a starting point of $1 to a finishing price
-    // of $16384 at the 10-millionth unit
-    var price1 = Math.pow(2.0, sale_block * 14 / 10000);
+    // of $16384 at the ten-thousandth block (the one that starts at 999,900)
+    var price1 = Math.pow(2.0, sale_block * 14 / 9999);
     return price1;
   }
 
