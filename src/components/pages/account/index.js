@@ -25,7 +25,7 @@ class Account extends Component {
     return (
       <Details 
         browserHistory={this.props.history} 
-        notFound={!account || !account.address}
+        notFound={!account}
       >
         <Box margin={{bottom: "20px"}}>
           <Text size="large">
@@ -99,9 +99,12 @@ class Account extends Component {
       .then(account => {
         this.setState({ account })
 
-        return account.address
+        return account && account.address
       })
       .then(address => {
+        if(!address) {
+          return 
+        }
         getAccountHistory(address)
           .then(history => {
             this.setState({ history });

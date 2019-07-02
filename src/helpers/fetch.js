@@ -142,7 +142,10 @@ export const getAccount = async (address) => {
         ...response.data[address]
       }
 
-      return formatAccount(account)
+      return response.data[address] && formatAccount(account)
+    })
+    .catch(error => {
+      return
     })
 }
 
@@ -151,8 +154,7 @@ export const getAccountHistory = async (address) => {
 
   return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      let history = response.data && response.data.Items
-      // return Promise.all(history.map(event => getTransaction(event.TxHash)))
+      let history = response.data && response.data.Items 
       return history
     })
 }

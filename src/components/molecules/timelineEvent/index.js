@@ -14,8 +14,9 @@ class TimelineEvent extends Component {
       return <div></div>;
     }
 
-    const { event, previousEvent, index } = this.props
-    const { active } = this.state
+    const { event, previousEvent, index, selected } = this.props
+    const { active: activeState } = this.state
+    const active = selected || activeState
     const accountEvent = formatAccountEvent(event)
     const {
       balance,
@@ -48,10 +49,17 @@ class TimelineEvent extends Component {
 
               <Text 
                 size="medium" 
-                color={napuAmount > 0 ? 'green' :'rgba(255,0,0,0.7)'} 
+                // color={napuAmount < 0 ?'rgba(255,0,0,0.7)':'green'} 
+                color={
+                  napuAmount === 0 ? 'rgba(255,255,255, 0.7)' : ( 
+                    napuAmount < 0 ? 'rgba(255,0,0,0.7)':'rgba(0,255,0,0.7)'
+                )}
                 margin={{left: "medium"}}
               >
-                <b>{napuAmount > 0?'+':'-'}{ndauAmount}</b>
+                <b>
+                  {napuAmount === 0 ? '' : (napuAmount < 0 ?'-':'+')}
+                  {napuAmount === 0 ? '--' : ndauAmount}
+                </b>
               </Text>
             </Text>
           </header>
@@ -61,6 +69,7 @@ class TimelineEvent extends Component {
         animation="fadeIn"
       >
         <Collapsible open={active}>
+        {/* <Collapsible open={selected || active}> */}
           <Box 
             margin={{top: "10px"}}
             animation={active ? "fadeIn" : {
@@ -110,6 +119,10 @@ class TimelineEvent extends Component {
     this.setState(({active}) => {
       return { active: !active }
     })
+  }
+
+  componentWillUpdate(nextProps) {
+
   }
 }
 

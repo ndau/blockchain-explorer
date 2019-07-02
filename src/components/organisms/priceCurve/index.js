@@ -27,7 +27,7 @@ class PriceCurve extends Component {
   render() {
     if(!this.state.priceCurveData) {
       return (
-        <Box pad="xlarge" animation="pulse">
+        <Box pad="xlarge" animation="pulse" height="small" direction="row" justify="center"> 
           <Text alignSelf="center" size="xsmall">Loading price data...</Text>
         </Box>
       )

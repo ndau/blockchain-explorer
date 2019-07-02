@@ -304,8 +304,7 @@ export const formatPeriod = (period) => {
     }
 
     const decoratedPeriod = `P${truncatedPeriod.toUpperCase()}`
-    const momentPeriod = moment.duration(`${decoratedPeriod}`);
-
-    return momentPeriod.invalid ? period : momentPeriod.humanize();
+    const momentPeriod = moment.duration(`${decoratedPeriod}`)
+    return momentPeriod.invalid ? period : momentPeriod.humanize()
   }
 }

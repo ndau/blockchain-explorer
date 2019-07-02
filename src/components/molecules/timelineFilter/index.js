@@ -24,8 +24,25 @@ class TimelineFilter extends Component {
       filteredEventsCount,
       selectFilterRange,
       setFilterRange,
-      toggleFilter
+      toggleFilter,
+      selectedEvent,
      } = this.props
+
+    if (selectedEvent) {
+      return (
+        <Box>
+          <Box onClick={this.toggleShowFilter} margin={{bottom: "medium"}} alignSelf="center">
+            <Text 
+              size="xsmall"
+              style={{fontStyle: "italic", color: "rgba(255,255,255, 0.7)"}}
+            >
+              Showing selected transaction
+            </Text>
+          </Box>
+          
+        </Box>
+      )
+    }
 
     const transanctionTypes = Object.values(TRANSACTION_TYPES)
     const unselectedTypes = transanctionTypes.filter(filter => !typeFilters.includes(filter))
@@ -50,6 +67,8 @@ class TimelineFilter extends Component {
       },
     ]
 
+
+
     return (
       <ResponsiveContext.Provider>
         <Box>
@@ -58,7 +77,7 @@ class TimelineFilter extends Component {
               size="xsmall"
               style={{fontStyle: "italic", color: "rgba(255,255,255, 0.7)"}}
             >
-              {`Showing ${filteredEventsCount || ''} transactions between 
+              {`${filteredEventsCount === 0 ? 'No transactions found ': `Showing ${filteredEventsCount || ''} transactions` } between 
               ${formatTime(filterStartDate)} and ${formatTime(filterEndDate)}
               of the ${typeFilters.length} / ${transanctionTypes.length} selected types.`}
               

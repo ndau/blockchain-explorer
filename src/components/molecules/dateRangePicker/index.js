@@ -15,13 +15,15 @@ class DateRangePicker extends Component {
   }
 
   render() {
-    const { date, dates } = this.state
+    const { date, dates, startDate, endDate } = this.state
+    const range = startDate && endDate ? [[startDate.toISOString(), endDate.toISOString()]] : dates
+    // console.log(startDate.toISOString(), endDate.toISOString())
 
     return (
       <Calendar
         range
-        date={date} 
-        dates={dates}
+        date={date}   
+        dates={range}
         onSelect={this.onSelect} 
         lstyle={{lbackground: "#fafafa", border: "1px solid #aaa"}}
         size="small"
