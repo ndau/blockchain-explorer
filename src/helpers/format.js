@@ -141,7 +141,7 @@ export const formatAccount = (account, additionalData={}) => {
     lock,
     rewardsTarget,
     sequence,
-    settlementSettings,
+    recourseSettings,
     stake,
     validationKeys,
     validationScript,
@@ -163,10 +163,10 @@ export const formatAccount = (account, additionalData={}) => {
     },
     rewardsTarget,
     sequence,
-    recourseSettings: settlementSettings && {
-      ...settlementSettings,
-      period: formatPeriod(settlementSettings.period),
-      qty: convertNapuToNdau(settlementSettings.qty)
+    recourseSettings: recourseSettings && {
+      ...recourseSettings,
+      period: formatPeriod(recourseSettings.period),
+      qty: convertNapuToNdau(recourseSettings.qty)
     },
     stake: stake && {
       ...stake,
