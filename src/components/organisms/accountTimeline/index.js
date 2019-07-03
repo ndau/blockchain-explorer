@@ -102,7 +102,7 @@ class AccountTimeline extends Component {
                   > 
                     <TimelineEvent 
                       event={event}
-                      previousEvent={events[event.index + 1]}
+                      previousEvent={this.getPreviousEvent(event)}
                       index={index}
                       selected={isSelected}
                     />
@@ -128,9 +128,17 @@ class AccountTimeline extends Component {
   }
 
   componentDidUpdate = async (prevProps) => {
-    if(!prevProps.events && this.props.events) {
+    const { events } = this.props
+    if((!prevProps.events && this.props.events) || JSON.stringify(events) !== JSON.stringify(prevProps.events)) {
       await this.getEventTransactions()
     }
+  }
+
+  getPreviousEvent = (currentEvent) => {
+    const { events } = this.props
+    const isFirstEvent = JSON.stringify(currentEvent) === JSON.stringify(events[events.length-1])
+
+    return isFirstEvent ? this.initialEvent : events[currentEvent.index + 1]
   }
 
   filterEvents = () => {
