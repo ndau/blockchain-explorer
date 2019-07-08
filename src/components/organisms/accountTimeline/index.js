@@ -54,7 +54,6 @@ class AccountTimeline extends Component {
     const displayedEvents = selectedEvent ? [selectedEvent] : filteredEvents
     const borderStyle = "1px dashed rgba(255,255,255,0.1)"
 
-    console.log(displayedEvents.length, events.length)
     return (
       <Box>
         {
