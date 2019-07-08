@@ -50,10 +50,11 @@ class AccountTimeline extends Component {
       activeEvent
      } = this.state
 
-    const filteredEvents = selectedEvent ? events : this.filteredEvents || events
+    const filteredEvents = selectedEvent ? events : this.filterEvents() || events
     const displayedEvents = selectedEvent ? [selectedEvent] : filteredEvents
     const borderStyle = "1px dashed rgba(255,255,255,0.1)"
 
+    console.log(displayedEvents.length, events.length)
     return (
       <Box>
         {
@@ -73,7 +74,6 @@ class AccountTimeline extends Component {
         <Box>
           <TimelineFilter 
             events={events}
-            filterEvents={this.filterEvents}
             filterStartDate={filterStartDate}
             filterEndDate={filterEndDate}
             filterRange={filterRange}
@@ -148,7 +148,7 @@ class AccountTimeline extends Component {
     }
     
     const { filterStartDate, filterEndDate } = this.state
-    this.filteredEvents =  events.filter(event => {
+    this.filteredEvents = events.filter(event => {
       const eventDate = moment(event.Timestamp)
       const isWithinFilterRange = eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate)
       const transactionType = event.transaction && event.transaction.raw.type
@@ -157,7 +157,7 @@ class AccountTimeline extends Component {
       return isWithinFilterRange && isSelected
     })
 
-    // return this filteredEvents
+    return this.filteredEvents
   }
 
   getDateRange = (numberOfMonths) => {
@@ -173,14 +173,14 @@ class AccountTimeline extends Component {
       filterStartDate, 
       filterEndDate,
       filterRange,
-     }, this.filterEvents)
+     })
   }
 
   setFilterRange = ({startDate, endDate}) => {
     this.setState({
       filterStartDate: moment(startDate),
       filterEndDate: moment(endDate)
-    }, this.filterEvents)
+    })
   }
 
   getTransactionEvent = (event, index) => {
@@ -214,7 +214,7 @@ class AccountTimeline extends Component {
 
     this.setState({
       typeFilters: newTypeFilters
-    }, this.filteredEvents)
+    })
   }
 
   toggleSelectedEvent = (event) => {
