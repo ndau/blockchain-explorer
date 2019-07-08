@@ -50,7 +50,7 @@ class AccountTimeline extends Component {
       activeEvent
      } = this.state
 
-    const filteredEvents = selectedEvent ? events : this.filterEvents() || events
+    const filteredEvents = this.filterEvents() || events
     const displayedEvents = selectedEvent ? [selectedEvent] : filteredEvents
     const borderStyle = "1px dashed rgba(255,255,255,0.1)"
 
