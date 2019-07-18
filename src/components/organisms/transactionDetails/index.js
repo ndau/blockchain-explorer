@@ -42,7 +42,8 @@ class TransactionDetails extends Component {
       target,
       unlocksOn,
       validationKeys,
-      validationScript, 
+      validationScript,
+      raw 
     } = transaction;
      
     return (
@@ -115,7 +116,11 @@ class TransactionDetails extends Component {
           {
             blockHeight &&
             <Text className="detailField" padding="5px 0">
-              <b>timestamp: </b> {timestamp ?  <Value value={timestamp} /> : ".."}
+              <b>timestamp: </b> 
+              {
+                timestamp ? 
+                <Value value={timestamp} rawValue={this.state.raw.timestamp}/> 
+                : ".."}
             </Text>
           }
           {
@@ -220,7 +225,7 @@ class TransactionDetails extends Component {
           {
             unlocksOn &&
             <Text className="detailField" padding="5px 0">
-              <b>unlocks on: </b> <Value value={unlocksOn} />
+              <b>unlocks on: </b> <Value value={unlocksOn} rawValue={raw.unlocksOn}/>
             </Text>
           }
           {
@@ -252,7 +257,12 @@ class TransactionDetails extends Component {
     getBlock(blockHeight)
       .then(block => {
         if (block) {
-          this.setState({ timestamp: block.added })
+          this.setState({ 
+            timestamp: block.added,
+            raw: {
+              timestamp: block.raw.added
+            }
+          })
         }
       })
   }

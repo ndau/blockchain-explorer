@@ -22,6 +22,11 @@ export const formatBlock = (block) => {
     numberOfTransactions: num_txs,
     added: formatTime(time),
     hash: last_block_id && last_block_id.hash,
+
+    raw: {
+      added: time
+    }
+
   };
 }
 
@@ -102,11 +107,12 @@ export const formatTransaction = (transaction, additionalData={}) => {
     signatures: signatures,
     source: Array.isArray(source) ? source[0] : source,
     target: Array.isArray(target) ? target[0] : target,
-    unlocksOn,
+    unlocksOn: formatTime(unlocksOn),
     validationScript,
     ...additionalData,
     raw: {
-      type
+      type,
+      unlocksOn
     }
   }
 }
@@ -147,7 +153,7 @@ export const formatAccount = (account, additionalData={}) => {
     lock,
     rewardsTarget,
     sequence,
-    settlementSettings,
+    recourseSettings,
     stake,
     validationKeys,
     validationScript,
@@ -169,10 +175,10 @@ export const formatAccount = (account, additionalData={}) => {
     },
     rewardsTarget,
     sequence,
-    recourseSettings: settlementSettings && {
-      ...settlementSettings,
-      period: formatPeriod(settlementSettings.period),
-      qty: convertNapuToNdau(settlementSettings.qty)
+    recourseSettings: recourseSettings && {
+      ...recourseSettings,
+      period: formatPeriod(recourseSettings.period),
+      qty: convertNapuToNdau(recourseSettings.qty)
     },
     stake: stake && {
       ...stake,
@@ -181,7 +187,12 @@ export const formatAccount = (account, additionalData={}) => {
     validationKeys,
     validationScript,
     weightedAverageAge: formatPeriod(weightedAverageAge),
-    ...additionalData
+    ...additionalData, 
+    raw: {
+      lastEAIUpdate,
+      lastWAAUpdate,
+      weightedAverageAge,
+    }
   }
 }
 
@@ -285,17 +296,17 @@ export const humanizeNumber = (number, decimals=2, minimumDecimals=0) => {
   }
 }
 
-export const formatTime = (time) => {
+export const formatTime = (time, format="DD MMM YYYY. HH:mm zz") => {
   if (time) {
     const timezone = window.Intl.DateTimeFormat().resolvedOptions().timeZone
     const momentTime = momentTimezone(time)
-    const formattedTime = momentTime && momentTime.tz(timezone).format(`DD MMM YYYY. HH:mm zz`)
+    const formattedTime = momentTime && momentTime.tz(timezone).format(format)
 
     return formattedTime
   }
 }
 
-export const formatPeriod = (period) => {
+export const formatPeriod = (period, format=true) => {
   if(period) {
     let truncatedPeriod = String(period)
     const indexOfS = truncatedPeriod.indexOf("s")
@@ -305,6 +316,44 @@ export const formatPeriod = (period) => {
 
     const decoratedPeriod = `P${truncatedPeriod.toUpperCase()}`
     const momentPeriod = moment.duration(`${decoratedPeriod}`)
-    return momentPeriod.invalid ? period : momentPeriod.humanize()
+
+    if (momentPeriod.invalid || !format) {
+      return period
+    }
+    // debugger
+    return momentPeriod.humanize()
   }
+}
+
+export const expandPeriod = (period) => {
+  if(period) {
+    let truncatedPeriod = String(period)
+    const indexOfS = truncatedPeriod.indexOf("s")
+    if(indexOfS !== -1) {
+      truncatedPeriod = truncatedPeriod.slice(0, indexOfS + 1)
+    }
+
+    const decoratedPeriod = `P${truncatedPeriod.toUpperCase()}`
+    const momentPeriod = moment.duration(`${decoratedPeriod}`)
+
+    if (momentPeriod.invalid) {
+      return period
+    } 
+    
+    const periodFields = momentPeriod._data
+    const periodDetails = []
+
+    periodFields && Object.keys(periodFields).forEach(field => {
+      const value = periodFields[field]
+      if(value) {
+        periodDetails.push(`${value} ${field}`)
+      }
+    })
+
+    return periodDetails.reverse().join(', ')
+  }
+}
+
+export const expandTime = time => {
+  return formatTime(time, "Do MMMM YYYY. HH:mm:ss:SS zz")
 }

@@ -13,12 +13,14 @@ class DetailsCard extends Component {
     if (!data) {
       return null;
     }
+
+    const {raw, ...details} = data
   
     return (
       <Card background="transparent">
         <Box>
           {
-            Object.keys(data).map((item, index) => {
+            Object.keys(details).map((item, index) => {
               const value = data[item]
               return (value === 0 || value) && (
                 <Box key={index} className="detailField" round="xsmall">
@@ -30,7 +32,7 @@ class DetailsCard extends Component {
                       <Keyword label={item} keyword={KEYWORD_MAP[item]} />
                     </Text> 
                     {': '} 
-                    <Value value={value} />
+                    <Value value={value} rawValue={raw[item]} />
                   </Text>
                 </Box>
               )
