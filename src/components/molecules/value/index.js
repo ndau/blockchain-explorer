@@ -1,10 +1,11 @@
 import React from 'react'
 import { Box, Text } from "grommet"
 import TruncatedText from "../../atoms/truncatedText"
+import ExpandedTime from "../../atoms/expandedTime"
 import Keyword from '../../molecules/keyword'
 import { humanizeNumber } from '../../../helpers/format'
 
-const Value = ({value}) => {
+const Value = ({value, rawValue}) => {
   if (value !== 0 && !value) {
     return null;
   }
@@ -13,8 +14,8 @@ const Value = ({value}) => {
     case 'object':
       return <Values value={value} isArray={Array.isArray(value)} />;
     case 'string':
-      if(!isNaN(Date.parse(value))) {
-        return value
+      if(rawValue) {
+        return <ExpandedTime value={value} rawValue={rawValue} />
       }
 
       return <TruncatedText value={value} />;

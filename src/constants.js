@@ -56,6 +56,31 @@ export const TRANSACTION_TYPES = {
 	30: "ChangeSchema",
 };
 
+export const TRANSACTION_FEES = {
+	SetValidation: "0.005 + 0.0001 per byte",
+	ChangeValidation:	"0.005 + 0.0001 per byte",
+	CreateChildAccount:	"0.005 + 0.0001 per byte",
+	ReleaseFromEndowment:		"0.1% of amount between 0.005 and 0.5",
+	Transfer:	"0.1% of amount between 0.005 and 0.5",
+	TransferAndLock:	"transfer fee + 0.005",
+	ChangeRecoursePeriod:	"0.005",
+	Delegate:	"0.005",
+	Lock:	"0.005",
+	Notify:	"0.005",
+	CreditEAI: "0.005",
+	ClaimNodeReward: "0.005",
+	NominateNodeReward: "0.005",
+	CommandValidatorChange:	"0.005",
+	RecordPrice: "0.005",
+	SetSysvar: "0.005",
+	SetRewardsDestination: "0.005",
+	Unstake: "0.005",
+	Issue: "0.005",
+	RegisterNode:	"1",
+	UnregisterNode:	"1",
+	Stake: "1",
+}
+
 export const KEYWORD_MAP = {
 	address: "address",
 	balance: "balance",
@@ -68,13 +93,11 @@ export const KEYWORD_MAP = {
 	rewardsTarget: "reward",
 	sequence: "sequence",
 	recourseSettings: "recourse", 
-	// settlements: "recourse",
 	stake: "stake",
 	validationKeys: "validation", 
 	validationScript: "validation",
 	weightedAverageAge: "WAA",
 }
-
 
 /////////////////////////////////////////
 // STYLES

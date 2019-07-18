@@ -1,6 +1,6 @@
 import moment from 'moment'
 import momentTimezone from 'moment-timezone'
-import { TRANSACTION_TYPES } from '../constants.js'
+import { TRANSACTION_TYPES, TRANSACTION_FEES } from '../constants.js'
 
 /////////////////////////////////////////
 // BLOCK
@@ -22,6 +22,11 @@ export const formatBlock = (block) => {
     numberOfTransactions: num_txs,
     added: formatTime(time),
     hash: last_block_id && last_block_id.hash,
+
+    raw: {
+      added: time
+    }
+
   };
 }
 
@@ -75,10 +80,13 @@ export const formatTransaction = (transaction, additionalData={}) => {
       val: validationScript,
     } 
   } = transactionData;
+  
   let type = TRANSACTION_TYPES[TransactableID];
+  const fee = TRANSACTION_FEES[type]
   
   return {
     type: type && type.replace(/([a-z])([A-Z])/g, '$1 $2'),
+    fee,
     bonus,
     destination: Array.isArray(destination) ? destination[0] : destination,
     distributionScript,
@@ -99,9 +107,13 @@ export const formatTransaction = (transaction, additionalData={}) => {
     signatures: signatures,
     source: Array.isArray(source) ? source[0] : source,
     target: Array.isArray(target) ? target[0] : target,
-    unlocksOn,
+    unlocksOn: formatTime(unlocksOn),
     validationScript,
-    ...additionalData
+    ...additionalData,
+    raw: {
+      type,
+      unlocksOn
+    }
   }
 }
 
@@ -157,7 +169,7 @@ export const formatAccount = (account, additionalData={}) => {
     lastEAIUpdate: formatTime(lastEAIUpdate),
     lastWAAUpdate: formatTime(lastWAAUpdate),
     lock: lock && {
-      bonus: lock.bonus && `${lock.bonus / 10000000000}%`,
+      bonus:  (lock.bonus === 0 || lock.bonus) && `${lock.bonus / 10000000000}%`,
       unlocksOn: formatTime(lock.unlocksOn),
       countdownPeriod: formatPeriod(lock.noticePeriod)
     },
@@ -175,7 +187,12 @@ export const formatAccount = (account, additionalData={}) => {
     validationKeys,
     validationScript,
     weightedAverageAge: formatPeriod(weightedAverageAge),
-    ...additionalData
+    ...additionalData, 
+    raw: {
+      lastEAIUpdate,
+      lastWAAUpdate,
+      weightedAverageAge,
+    }
   }
 }
 
@@ -219,7 +236,7 @@ export const formatPriceInfo = (priceInfo) => {
       totalIssued: convertNapuToNdau(totalIssued, 0),
       totalNdau: convertNapuToNdau(totalNdau, 0),
       totalSIB: convertNapuToNdau(totalSIB, 0),
-      sib: sib && (sib / 100000000000 ),
+      sib: (sib === 0 || sib) && (sib / 100000000000 ),
       raw: {
         marketPrice,
         targetPrice,
@@ -279,27 +296,64 @@ export const humanizeNumber = (number, decimals=2, minimumDecimals=0) => {
   }
 }
 
-export const formatTime = (time) => {
+export const formatTime = (time, format="DD MMM YYYY. HH:mm zz") => {
   if (time) {
     const timezone = window.Intl.DateTimeFormat().resolvedOptions().timeZone
     const momentTime = momentTimezone(time)
-    const formattedTime = momentTime && momentTime.tz(timezone).format(`DD MMM YYYY. HH:mm zz`)
+    const formattedTime = momentTime && momentTime.tz(timezone).format(format)
 
     return formattedTime
   }
 }
 
-export const formatPeriod = (period) => {
+export const formatPeriod = (period, format=true) => {
   if(period) {
-    let truncatedPeriod = period
-    const indexOfS = period.indexOf("s")
+    let truncatedPeriod = String(period)
+    const indexOfS = truncatedPeriod.indexOf("s")
     if(indexOfS !== -1) {
-      truncatedPeriod = period.slice(0, indexOfS + 1)
+      truncatedPeriod = truncatedPeriod.slice(0, indexOfS + 1)
     }
 
     const decoratedPeriod = `P${truncatedPeriod.toUpperCase()}`
-    const momentPeriod = moment.duration(`${decoratedPeriod}`);
+    const momentPeriod = moment.duration(`${decoratedPeriod}`)
 
-    return momentPeriod.invalid ? period : momentPeriod.humanize();
+    if (momentPeriod.invalid || !format) {
+      return period
+    }
+    // debugger
+    return momentPeriod.humanize()
   }
+}
+
+export const expandPeriod = (period) => {
+  if(period) {
+    let truncatedPeriod = String(period)
+    const indexOfS = truncatedPeriod.indexOf("s")
+    if(indexOfS !== -1) {
+      truncatedPeriod = truncatedPeriod.slice(0, indexOfS + 1)
+    }
+
+    const decoratedPeriod = `P${truncatedPeriod.toUpperCase()}`
+    const momentPeriod = moment.duration(`${decoratedPeriod}`)
+
+    if (momentPeriod.invalid) {
+      return period
+    } 
+    
+    const periodFields = momentPeriod._data
+    const periodDetails = []
+
+    periodFields && Object.keys(periodFields).forEach(field => {
+      const value = periodFields[field]
+      if(value) {
+        periodDetails.push(`${value} ${field}`)
+      }
+    })
+
+    return periodDetails.reverse().join(', ')
+  }
+}
+
+export const expandTime = time => {
+  return formatTime(time, "Do MMMM YYYY. HH:mm:ss:SS zz")
 }

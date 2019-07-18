@@ -5,13 +5,13 @@ import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
 class TimelineChart extends Component {
   constructor(props) {
     super(props)
-    // this.generateData()
     
-
     this.state = {
-      activeEvent: null
+      activeEvent: null,
+      selectedTransactionIndex: null
     }
   }
+
   render() {
     this.generateData()
     const chartProps = {
@@ -52,7 +52,7 @@ class TimelineChart extends Component {
               yAxis.map((y, index) => {
                 return (
                   <Box key={index} direction="row" align="start" >
-                    <Box fill>
+                    <Box sfill>
                       <Text size="xsmall" style={{lineHeight: "10px"}}>{y}</Text>
                     </Box>
                   </Box>
@@ -85,23 +85,60 @@ class TimelineChart extends Component {
                 />
 
                 {/* Bubbles */}
-                {/* <Box fill direction="row" justify="between" align="end">
+                <Box flex direction="row" justify="between" align="end" overflow="visible">
                   {
-                    bubblePoints.map((bubblePoint, index) => { 
+                    this.bubblePoints.map((bubblePoint, index) => { 
+                      const {eventIndex, pad, event, isActive, isSelected, display, onSelect} = bubblePoint
+                      const previousEvent = this.props.events[eventIndex - 1]
+                      const amount = previousEvent && event.Balance - previousEvent.Balance
+
+                      // console.log(isActive, index) 
                       return bubblePoint && (
-                        <Box
-                          key={index}
-                          pad="0"
-                          width="6px"
-                          height="6px"
-                          round
-                          background="rgba(255,255,255,0.3)"
-                          margin={{bottom: bubblePoint.pad}}
-                        />
+                        <Box pad={{bottom: pad}} key={index}>
+                          <Stack>
+                            {
+                              (isActive || isSelected) &&
+                              <Box
+                                // margin="2px"
+                                width="8px"
+                                height="8px"
+                                animation={["fadeIn", {
+                                  "type": "pulse",
+                                  "delay": 0,
+                                  "duration": 600,
+                                  "size": "large"
+                                }]}
+                                background="transparent"
+                                // margin={{bottom: bubblePoint.pad}}
+                                // onClick={bubblePoint.onSelect}
+                                round
+                                style={{
+                                  border:"1px solid #bbb",
+                                  // overflow: "hidden"
+                                  // visibility: bubblePoint.display ? "visible":"hidden",
+                                }}
+                              />
+                            }
+                            <Box
+                              pad="0"
+                              width="8px"
+                              height="8px"
+                              round
+                              background={
+                                amount === 0 ? 'rgba(255,255,255, 0.3)' : ( 
+                                  amount < 0 ? 'rgba(255,0,0,0.3)':'rgba(0,255,0,0.3)'
+                              )}
+                              onClick={onSelect}
+                              style={{
+                                visibility: display ? "visible":"hidden",
+                              }}
+                            />
+                          </Stack>
+                        </Box>
                       )
                     })
                   }
-                </Box> */}
+                </Box>
               </Stack>
             </Box>
           </Box>
@@ -109,10 +146,6 @@ class TimelineChart extends Component {
       </Box>
     )
   }
-
-  // componentDidUpdate() {
-  //   this.generateData()
-  // }
 
   generateData = () => {
     this.maxBalance = this.findMaxBalance()
@@ -132,14 +165,33 @@ class TimelineChart extends Component {
     })
   }
 
-  generateBubblePoints = (data=[], highestYAxisValue) => {
-    return data.map(datum => {
-      const event = formatAccountEvent(datum)
+  generateBubblePoints = () => {
+    const { 
+      events, filteredEvents, activeEvent, selectedEvent, toggleSelectedEvent 
+    } = this.props
+    return events.map((event, index) => {
+      const displayState = filteredEvents.find(transaction => {
+        return transaction.TxHash === event.TxHash
+      })
+
+      const pad = `${(event.Balance / this.findMaxBalance(true)) *40}px`
+      
       return {
         event,
-        pad: `${((parseFloat(event.balance) / parseFloat(this.maxBalance))*48) - 4}px`
+        pad,
+        display: displayState,
+        isActive: activeEvent && ( activeEvent.TxHash === event.TxHash ),
+        isSelected: selectedEvent && selectedEvent.TxHash === event.TxHash,
+        onSelect: () => toggleSelectedEvent(event),
+        eventIndex: index
       }  
     });
+  }
+
+  setSelectedTransaction = (index) => {
+    this.setState({
+      selectedTransactionIndex: index
+    })
   }
 
   setShowBubbles = (show=false) => {
@@ -148,14 +200,14 @@ class TimelineChart extends Component {
     })
   }
 
-  findMaxBalance = () => {
+  findMaxBalance = (raw=false) => {
     let maxBalance = 0;
 
     this.props && this.props.events.forEach(event => {
       maxBalance = Math.max(maxBalance, event.Balance)
     });
 
-    return convertNapuToNdau(maxBalance)
+    return raw ? maxBalance : convertNapuToNdau(maxBalance)
   }
 }
 

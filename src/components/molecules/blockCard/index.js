@@ -12,22 +12,24 @@ class BlockCard extends Component {
     if (!block) {
       return <h3>Loading...</h3>;
     }
+
+    const {raw, ...blockDetails} = block
     
-    const { transactionHashes, height, numberOfTransactions } = block;
+    const { transactionHashes, height, numberOfTransactions } = blockDetails;
     const notDisplayed = ["transactions", "numberOfTransactions", "transactionHashes", "timestamp"];
     return (
       <Card background="transparent" pad={{horizontal: "0"}}>
         <Box>
           {
-            Object.keys(block).map((property, index) => {
+            Object.keys(blockDetails).map((property, index) => {
               if(notDisplayed.includes(property)) { return null }
-              const value = block[property];
+              const value = blockDetails[property];
               return (
                 <Box key={index} className="detailField" round="xsmall">
                   <Text key={index}>
                     <b>{property}: </b>
                     {
-                      <Value value={value} />
+                      <Value value={value} rawValue={raw[property]} />
                     }
                   </Text>
                 </Box>

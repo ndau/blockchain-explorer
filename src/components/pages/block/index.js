@@ -40,7 +40,7 @@ class Block extends Component {
               }
 
               {
-                ((blockHeight && latestBlockHeight) &&  blockHeight !== latestBlockHeight) &&
+                ((blockHeight && latestBlockHeight) && blockHeight !== latestBlockHeight) &&
                 <Text style={{float: "right"}}>
                   <Anchor  href={`/block/${blockHeight + 1}`}>
                     <LinkNext size="22px" color="#f99d1c"/>

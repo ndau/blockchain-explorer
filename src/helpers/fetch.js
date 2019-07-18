@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'query-string'
-import { HTTP_REQUEST_HEADER, NODE_ENDPOINTS, DEFUALT_NODE_NAME } from '../constants.js';
+import { HTTP_REQUEST_HEADER, DEFUALT_NODE_NAME, NODES_ENDPOINT } from '../constants.js';
 import {
   formatBlock,
   formatBlocks,
@@ -14,8 +14,8 @@ import {
 // BLOCK
 /////////////////////////////////////////
 
-export const getBlock = (blockHeight) => {
-  const blockEndpoint = `${getNodeEndpoint()}/block/height/${blockHeight}`
+export const getBlock = async (blockHeight) => {
+  const blockEndpoint = `${await getNodeEndpoint()}/block/height/${blockHeight}`
   
   return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -28,9 +28,9 @@ export const getBlock = (blockHeight) => {
     })
 }
 
-export const getBlocks = ({before, after, filter, limit}) => {
+export const getBlocks = async ({before, after, filter, limit}) => {
   const query = `?after=${after?after:'1'}&filter=${filter?'noempty':''}&limit=${limit?limit:''}`
-  const blocksEndpoint = `${getNodeEndpoint()}/block/before/${before}${query}`
+  const blocksEndpoint = `${await getNodeEndpoint()}/block/before/${before}${query}`
 
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -80,23 +80,21 @@ export const pollForBlocks = ({after, filter, success}) => {
   return fetchNewBlocks
 }
 
-export const getBlockRangeStart = (blockRangeEnd, interval=100) => {
-  let blockRangeStart = parseInt(blockRangeEnd) - interval;
-  return blockRangeStart > 0 ? blockRangeStart : 1;
-}
-
 
 /////////////////////////////////////////
 // TRANSACTION
 /////////////////////////////////////////
 
-export const getTransaction = (hash) => {
+export const getTransaction = async (hash) => {
   const transactionHash = window.decodeURIComponent(hash);
-  const transactionEndpoint = `${getNodeEndpoint()}/transaction/${window.encodeURIComponent(transactionHash)}`;
+  const transactionEndpoint = `${await getNodeEndpoint()}/transaction/${window.encodeURIComponent(transactionHash)}`;
 
   return axios.get(transactionEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      return response.data && formatTransaction(response.data.Tx, { hash: transactionHash });
+      return response.data && formatTransaction(
+        response.data.Tx, 
+        { hash: transactionHash, blockHeight: response.data.BlockHeight}
+      );
     })
 }
 
@@ -108,8 +106,8 @@ export const getTransactions = (transactionHashes=[]) => {
   return axios.all(transactionRequests);
 }
 
-export const getTransactionHashes = (blockHeight) => {
-  const transactionsEndpoint = `${getNodeEndpoint()}/block/transactions/${blockHeight}`
+export const getTransactionHashes = async (blockHeight) => {
+  const transactionsEndpoint = `${await getNodeEndpoint()}/block/transactions/${blockHeight}`
   
   return axios.get(transactionsEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -134,8 +132,8 @@ export const getBlockTransactions = (blockHeight) => {
 // ACCOUNT
 /////////////////////////////////////////
 
-export const getAccount = (address) => {
-  const accountStateEndpoint = `${getNodeEndpoint()}/account/account/${address}`
+export const getAccount = async (address) => {
+  const accountStateEndpoint = `${await getNodeEndpoint()}/account/account/${address}`
 
   return axios.get(accountStateEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
@@ -144,26 +142,31 @@ export const getAccount = (address) => {
         ...response.data[address]
       }
 
-      return formatAccount(account)
+      return response.data[address] && formatAccount(account)
+    })
+    .catch(error => {
+      return
     })
 }
 
-export const getAccountHistory = (address) => {
-  const accountHistoryEndpoint = `${getNodeEndpoint()}/account/history/${address}`
+export const getAccountHistory = async (address) => {
+  const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`
 
   return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      const history = response.data.Items;
+      let history = response.data && response.data.Items 
       return history
     })
 }
+
+
 
 /////////////////////////////////////////
 // NODE
 /////////////////////////////////////////
 
-export const getNodeStatus = (endpoint) => {
-  const nodeEndpoint =  endpoint || getNodeEndpoint();
+export const getNodeStatus = async (endpoint) => {
+  const nodeEndpoint =  endpoint || await getNodeEndpoint();
   const statusEndpoint = `${nodeEndpoint}/node/status`;
   
   return axios.get(statusEndpoint, HTTP_REQUEST_HEADER)
@@ -174,38 +177,58 @@ export const getNodeStatus = (endpoint) => {
     .catch(error => console.log(error))
 }
 
-export const getNodeEndpoint = () => {
+export const getNodeEndpoint = async (node) => {
   const { location, history } = window
-  const query = qs.parse(location.search);
-  const nodeEndpoint = NODE_ENDPOINTS[query.node]
-   
-  if (nodeEndpoint) {
-    return nodeEndpoint
+  let query = qs.parse(location.search)
+  let nodeName = node || query.node
+
+  if (validURL(window.decodeURI(nodeName))) {
+    return window.decodeURI(nodeName)
   }
   else {
-    query.node = DEFUALT_NODE_NAME;
-    const search = `?${qs.stringify(query)}`
+    let nodeEndpoint
+    if(!query || !query.node) {
+      nodeName = DEFUALT_NODE_NAME
+      query = {node: nodeName}
+      const newSearch = `?${qs.stringify(query)}`
+      const validURL = `${location.origin}${location.pathname}${newSearch}`
+      history.replaceState({}, "", validURL)
+    }
     
-    const validURL = `${location.origin}${location.pathname}${search}`
-    
-    // location.href = validURL
-    // location.reload()
-    history.replaceState({}, "", validURL)
-    // debugger
-    return  NODE_ENDPOINTS[query.node]
+    await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER)
+      .then(response => {
+        const { networks } = response.data
+        const nodes = networks[nodeName] && networks[nodeName]["nodes"]
+        const randomNodeIndex = Math.floor(Math.random() * Object.keys(nodes).length)
+        const randomNode = Object.values(nodes)[randomNodeIndex]
+        nodeEndpoint = randomNode && randomNode.api
+      })
+
+    return "https://" + nodeEndpoint
   }
 }
-
 
 /////////////////////////////////////////
 // ORDER
 /////////////////////////////////////////
 
-export const getCurrentOrder = () => {
-  const statusEndpoint = `${getNodeEndpoint()}/price/current`;
-  return axios.get(statusEndpoint, HTTP_REQUEST_HEADER)
+export const getCurrentOrder = async () => {
+  const priceEndpoint = `${await getNodeEndpoint()}/price/current`
+
+  return axios.get(priceEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       return formatPriceInfo(response.data);
     })
     .catch(error => console.log(error))
+}
+
+//
+export const validURL = (str) => {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
 }
