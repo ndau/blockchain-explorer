@@ -3,6 +3,7 @@ import { Box } from 'grommet'
 import Container from '../../atoms/container'
 import Logo from '../../atoms/logo'
 import BlockchainSearch from '../../molecules/blockchainSearch'
+import Bookmark from '../../molecules/bookmark'
 import { NAVBAR_COLOR } from '../../../constants'
 import './style.css'
 
@@ -20,6 +21,10 @@ class Navbar extends Component {
                 
                 <Box margin={{left: "medium"}}>
                   <BlockchainSearch />
+                </Box>
+
+                <Box>
+                  <Bookmark />
                 </Box>
               </Box>
             </Box>

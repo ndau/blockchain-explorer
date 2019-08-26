@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Box, TextInput, Menu, Text, Stack, Form } from 'grommet'
 import qs from 'query-string'
-import { Search } from 'grommet-icons'
+import { Search, Bookmark } from 'grommet-icons'
 import { getNodeEndpoint , getNodeStatus, validURL } from '../../../helpers/fetch'
 
 class BlockchainSearch extends Component {
@@ -44,7 +44,7 @@ class BlockchainSearch extends Component {
         border
         width="large"
         direction="row"
-        align="center" 
+        // align="end" 
         style={{
           borderColor: invalidEntry ? "rgba(255,0,0,0.5)" : "rgba(255,255,255,0.15)",
           background: invalidEntry ? "rgba(255,0,0,0.05)" : "transparent"
@@ -108,8 +108,7 @@ class BlockchainSearch extends Component {
             }
           />
         </Box>
-        {/* } */}
-
+      
         <Box 
           onClick={this.onSearch} 
           pad={{right: "20px", left: "small"}}
