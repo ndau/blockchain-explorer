@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Box, TextInput, Menu, Text, Stack, Form } from 'grommet'
 import qs from 'query-string'
-import { Search, Bookmark } from 'grommet-icons'
+import { Search } from 'grommet-icons'
 import { getNodeEndpoint , getNodeStatus, validURL } from '../../../helpers/fetch'
 
 class BlockchainSearch extends Component {

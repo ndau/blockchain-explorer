@@ -10,8 +10,6 @@ class Bookmark extends Component {
   constructor(props) {
     super(props)
 
-    this.URL = window.location.href
-
     const bookmarkData = window.localStorage.getItem(BOOKMARKS_KEY)
     const bookmarks = bookmarkData ? JSON.parse(bookmarkData) : {}
 
@@ -22,7 +20,7 @@ class Bookmark extends Component {
   }
   render() {
     const { bookmarks, showBookmarks } = this.state
-    const bookmarked = !!bookmarks[this.URL] 
+    const bookmarked = !!bookmarks[window.location.href] 
 
     return (
       <Box>  
@@ -48,7 +46,13 @@ class Bookmark extends Component {
               responsive
               background="whitesmoke"
             > 
-              <Box height="100%" background="whitesmoke"  width="large" lmargin={{top: "67px"}} pad="medium">
+              <Box 
+                height="100%" 
+                background="white"  
+                width="large"
+                pad="medium"
+                round="xsmall"
+              >
                 <Box>
                   <Button 
                     // label="close" 
@@ -59,38 +63,48 @@ class Bookmark extends Component {
                     gap="xsmall"
                     plain
                     reverse
-                    margin={{bottom: "medium"}}
+                    // margin={{bottom: "medium"}}
                     style={{ color: "black" }}
                 
                   />
                 </Box>
 
                 <Box>
-                  <Button 
-                    label="add bookmark"
-                    icon={<Add />}
-                    style={{ color: "black" }}
-                    onClick={this.addBookmark} 
-                  />
-                  <Button 
-                    label="remove bookmark" 
-                    icon={<Trash />}
-                    style={{ color: "black" }}
-                    onClick={this.removeBookmark} 
-                  />
+                  {
+                    bookmarked ? 
+                    <Button 
+                      label="remove bookmark" 
+                      icon={<Trash color="white" />}
+                      style={{ background: "red", borderColor: "red" }}
+                      onClick={this.removeBookmark} 
+                      round="2px"
+                      alignSelf="center"
+                    /> 
+                    :
+                    <Button 
+                      label="add bookmark"
+                      icon={<Add color="white" />}
+                      style={{ background: "#f99d1c", border: "#f99d1c" }}
+                      onClick={this.addBookmark} 
+                      round="false"
+                      alignSelf="center"
+                    />
+                  }
                 </Box>
 
                 <Box margin={{top: "medium"}}>
                   <Box margin={{bottom: "small"}}>
                     <Text color="black" alignSelf="center">Bookmarks</Text>
                   </Box>
-                  {
-                    Object.keys(bookmarks).map((bookmark, index) => (
-                      <Box key={index}>
-                        <Anchor label={bookmark} />
-                      </Box>
-                    )) 
-                  }
+                  <Box style={{maxHeight: "100vh", overflowY: "scroll"}}>
+                    {
+                      Object.keys(bookmarks).map((bookmark, index) => (
+                        <Box key={index}>
+                          <Anchor label={bookmark} />
+                        </Box>
+                      )) 
+                    }
+                  </Box>
                 </Box>
               </Box>
             </Layer>
@@ -112,20 +126,22 @@ class Bookmark extends Component {
   }
 
   addBookmark = () => {
+    const URL = window.location.href
     const bookmarkData = window.localStorage.getItem(BOOKMARKS_KEY)
     const bookmarks = bookmarkData ? JSON.parse(bookmarkData) : {}
     const { tag } = this.state
 
-    bookmarks[this.URL] = { tag }
+    bookmarks[URL] = { tag }
     this.setState({ bookmarks })
     window.localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks))
   }
 
   removeBookmark = () => {
+    const URL = window.location.href
     const bookmarkData = window.localStorage.getItem(BOOKMARKS_KEY)
     const bookmarks = bookmarkData ? JSON.parse(bookmarkData) : {}
 
-    delete bookmarks[this.URL]
+    delete bookmarks[URL]
     this.setState({ bookmarks })
     window.localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks))
   }
