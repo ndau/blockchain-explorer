@@ -3,7 +3,7 @@ import { Box } from 'grommet'
 import Container from '../../atoms/container'
 import Logo from '../../atoms/logo'
 import BlockchainSearch from '../../molecules/blockchainSearch'
-import Bookmark from '../../molecules/bookmark'
+import BookmarkMenu from '../../molecules/bookmarkMenu'
 import { NAVBAR_COLOR } from '../../../constants'
 import './style.css'
 
@@ -24,7 +24,7 @@ class Navbar extends Component {
                 </Box>
 
                 <Box>
-                  <Bookmark />
+                  <BookmarkMenu />
                 </Box>
               </Box>
             </Box>

@@ -238,7 +238,6 @@ class Blocks extends Component {
               '0'
             }
           </TableData>
-
         )
       }
     }

@@ -1,13 +1,21 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import localforage from 'localforage'
 import { Box, Text } from 'grommet'
 import Container from '../../atoms/container'
 import Navbar from '../../organisms/navbar'
 import Footer from '../../atoms/footer'
 import Anchor from '../../atoms/anchor'
+import './style.css'
+
+const BOOKMARKS_KEY = "ndau_explorer_bookmarks"
 
 class Page extends Component {
+  state = { bookmarkNote: null,  }
+
   render() {
-    const { children, browserHistory, notFound } = this.props;
+    const { children, browserHistory, notFound } = this.props
+    const { bookmarkNote } = this.state
   
     return(
       <Box as="main">
@@ -45,6 +53,26 @@ class Page extends Component {
               )
             }
           </Box>
+
+          {
+            bookmarkNote && 
+            <Box 
+              className="bookmarkNote" 
+              background="#fefefe" alignSelf="start" 
+              pad="small" 
+              animation={{
+                "type": "fadeIn",
+                "delay": 0,
+                "duration": 200,
+              }}
+              elevation="medium"
+            >
+              <Text color="#000">
+                <Text weight="bold">Note: </Text>
+                {bookmarkNote}
+              </Text>
+            </Box>
+          }
   
           <Box>
             <Footer />
@@ -54,6 +82,38 @@ class Page extends Component {
       </Box>
     );
   }
+
+  componentDidMount = () => {
+    this.setBookmarkNote()
+  }
+
+  componentDidUpdate = (prevProps) => {
+    if(this.getURL(prevProps.location) !== this.getURL()) {
+      // debugger
+      this.setBookmarkNote()
+    }
+  }
+
+  setBookmarkNote = ()=> {
+    const url =this.getURL()
+     
+      if(url) {
+        localforage.getItem(BOOKMARKS_KEY).then((bookmarks={}) => {
+          const bookmarksCopy = {...bookmarks}
+          const bookmark = bookmarksCopy[url]
+          const note = bookmark && bookmark.note 
+          if(note !== this.state.bookmarkNote) {
+            this.setState({ bookmarkNote: note })
+          }
+        })
+      }
+  }
+
+  getURL = (location) => {
+    const { pathname, search } = location || this.props.location
+    const path = pathname + search
+    return path
+  }
 }
 
-export default Page;
+export default withRouter(Page)

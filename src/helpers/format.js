@@ -1,6 +1,6 @@
 import moment from 'moment'
 import momentTimezone from 'moment-timezone'
-import { TRANSACTION_TYPES, TRANSACTION_FEES } from '../constants.js'
+// import { TRANSACTION_FEES } from '../constants.js'
 
 /////////////////////////////////////////
 // BLOCK
@@ -44,72 +44,58 @@ export const formatBlocks = (blocks=[]) => {
 /////////////////////////////////////////
 // TRANSACTION
 /////////////////////////////////////////
-
-export const formatTransaction = (transaction, additionalData={}) => {
+export const formatTransaction = (transaction) => {
   if(!transaction) {
     return;
   }
   
-  let transactionData = transaction;
-  
   const { 
-    TransactableID,
-    Transactable: {
-      bonus,
-      dst: destination,
-      dis: distributionScript,
-      // key: newKeys,
-      nod: node,
-      notice: noticePeriod,
-      own: ownershipKey,
-      per: period,
-      pow: power,
-      tm_pk: publicKey,
-      qty: quantity,
-      rpc: RPCAddress,
-      rnd: random,
-      seq: sequence,
-      sch: sidechainID,
-      ssb: sidechainSignableBytes,
-      ssg: sidechainSignatures,
-      sig: signatures,
-      src: source,
-      tgt: target,
-      unlock: unlocksOn,
-      key: validationKeys,
-      val: validationScript,
-    } 
-  } = transactionData;
-  
-  let type = TRANSACTION_TYPES[TransactableID];
-  const fee = TRANSACTION_FEES[type]
-  
+    BlockHeight: blockHeight,
+    Timestamp: timestamp,
+    TxOffset: offset,
+    Fee: fee,
+    SIB: sib,
+    TxType: type,
+    TxHash: hash,
+    TxData: metadata,
+  } = transaction
+
+  const {
+    // source,
+    // destination,
+    qty,
+    // period,
+    unlocksOn,
+    // validationKeys,
+    // ownershipKey,
+    // node,
+    // RPCAddress,
+    // target,
+  } = metadata
+
   return {
-    type: type && type.replace(/([a-z])([A-Z])/g, '$1 $2'),
-    fee,
-    bonus,
-    destination: Array.isArray(destination) ? destination[0] : destination,
-    distributionScript,
-    validationKeys: validationKeys && [ validationKeys[0] && validationKeys[0][1] ],
-    node: Array.isArray(node) ? node[0] : node,
-    noticePeriod,
-    ownershipKey: ownershipKey && ownershipKey[1],
-    period: formatTime(period),
-    power,
-    publicKey,
-    quantity: convertNapuToNdau(quantity),
-    RPCAddress: Array.isArray(RPCAddress) ? RPCAddress[0] : RPCAddress,
-    random,
-    sequence,
-    sidechainID,
-    sidechainSignableBytes,
-    sidechainSignatures,
-    signatures: signatures,
-    source: Array.isArray(source) ? source[0] : source,
-    target: Array.isArray(target) ? target[0] : target,
-    unlocksOn: formatTime(unlocksOn),
-    validationScript,
-    ...additionalData,
+    type: separaeteWords(type),
+    amount: convertNapuToNdau(qty),
+    timestamp: formatTime(timestamp),
+    blockHeight,
+    fee: convertNapuToNdau(fee),
+    sib, 
+    offset,
+    hash,
+    details: {
+      ...metadata,
+      
+      // destination: Array.isArray(destination) ? destination[0] : destination,
+      // validationKeys: validationKeys && [ validationKeys[0] && validationKeys[0][1] ],
+      // node: Array.isArray(node) ? node[0] : node,
+      // ownershipKey: ownershipKey && ownershipKey[1],
+      // period: formatTime(period),
+      // quantity: convertNapuToNdau(quantity),
+      // RPCAddress: Array.isArray(RPCAddress) ? RPCAddress[0] : RPCAddress,
+      // source: Array.isArray(source) ? source[0] : source,
+      // target: Array.isArray(target) ? target[0] : target,
+      // unlocksOn: formatTime(unlocksOn),
+    },
     raw: {
       type,
       unlocksOn
@@ -252,6 +238,12 @@ export const formatPriceInfo = (priceInfo) => {
 /////////////////////////////////////////
 // GENERIC
 /////////////////////////////////////////
+
+export const separaeteWords = (string) => {
+  if(string) {
+    return string.replace(/([a-z])([A-Z])/g, '$1 $2')
+  }
+}
 
 export const convertNapuToNdau = (napuAmount, humanize=true, decimals=8) => {
   if(napuAmount === 0 || napuAmount) {

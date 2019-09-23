@@ -87,14 +87,11 @@ export const pollForBlocks = ({after, filter, success}) => {
 
 export const getTransaction = async (hash) => {
   const transactionHash = window.decodeURIComponent(hash);
-  const transactionEndpoint = `${await getNodeEndpoint()}/transaction/${window.encodeURIComponent(transactionHash)}`;
+  const transactionEndpoint = `${await getNodeEndpoint()}/transaction/detail/${window.encodeURIComponent(transactionHash)}`;
 
   return axios.get(transactionEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      return response.data && formatTransaction(
-        response.data.Tx, 
-        { hash: transactionHash, blockHeight: response.data.BlockHeight}
-      );
+      return response.data && formatTransaction(response.data)
     })
 }
 
@@ -127,6 +124,9 @@ export const getBlockTransactions = (blockHeight) => {
     })
 }
 
+export const getAllTransactions = () => {
+  
+}
 
 /////////////////////////////////////////
 // ACCOUNT
@@ -198,8 +198,9 @@ export const getNodeEndpoint = async (node) => {
     await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER)
       .then(response => {
         const { networks } = response.data
-        const nodes = networks[nodeName] && networks[nodeName]["nodes"]
-        const randomNodeIndex = Math.floor(Math.random() * Object.keys(nodes).length)
+        const nodeKey = networks[nodeName] ? nodeName : DEFUALT_NODE_NAME
+        const nodes = networks[nodeKey] && networks[nodeKey]["nodes"]
+        const randomNodeIndex = nodes && Math.floor(Math.random() * Object.keys(nodes).length)
         const randomNode = Object.values(nodes)[randomNodeIndex]
         nodeEndpoint = randomNode && randomNode.api
       })

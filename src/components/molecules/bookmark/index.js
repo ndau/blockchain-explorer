@@ -1,150 +1,171 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Box, Layer, Button, Text } from 'grommet'
-import { Bookmark as BookmarkIcon, Close, Add, Trash } from 'grommet-icons'
+import { Box, Text, Button, Stack, Collapsible, TextArea } from 'grommet'
+import { Notification, Trash, Notes } from 'grommet-icons'
 import Anchor from '../../atoms/anchor'
-
-const BOOKMARKS_KEY = "ndau_explorer_bookmarks"
+// import Age from '../../atoms/age'
+import './style.css'
 
 class Bookmark extends Component {  
   constructor(props) {
     super(props)
-
-    const bookmarkData = window.localStorage.getItem(BOOKMARKS_KEY)
-    const bookmarks = bookmarkData ? JSON.parse(bookmarkData) : {}
-
+    
     this.state = {
-      bookmarks,
-      showBookmarks: false
+      active: props.isActive,
+      showNoteForm: false,
+      noteState: props.data && props.data.note,
     }
   }
+
   render() {
-    const { bookmarks, showBookmarks } = this.state
-    const bookmarked = !!bookmarks[window.location.href] 
+    const {
+      closeBookmarks,
+      deleteBookmark,
+      data: { 
+        node, type, identifier, url, note, // added,
+      }
+    } = this.props 
+
+    const { showNoteForm, noteState, active } = this.state
 
     return (
-      <Box>  
-        <Box 
-          margin={{left: "small"}} 
-          onClick={this.toggleShowBookmarks}
-        >
-          <BookmarkIcon 
-            size="20px" 
-            color={bookmarked ? "#f99d1c" : "rgba(255,255,255,0.7)"}
-          />
-        </Box>
-
-        <Box>
-          {showBookmarks && (
-            <Layer 
-              // full="vertical" position="right"
-              onEsc={() => this.setShowBookmarks(false)}
-              onClickOutside={() => this.setShowBookmarks(false)}
-              // modal="false"
-              modal
-              // plain
-              responsive
-              background="whitesmoke"
-            > 
-              <Box 
-                height="100%" 
-                background="white"  
-                width="large"
-                pad="medium"
-                round="xsmall"
+      <Box 
+        className="bookmark" 
+        pad="small" 
+        round="xsmall" 
+        onMouseOver={() => this.setActiveState(true)}
+        onMouseOut={() => this.setActiveState(false)}
+      >
+        <Stack> 
+          <Text color="black">
+            <Text weight="bold">
+              <Anchor 
+                href={url} 
+                additionalQuery={{ node }} 
+                onClick={closeBookmarks}
               >
-                <Box>
-                  <Button 
-                    // label="close" 
-                    icon={<Close size="medium" color="black"/>}
-                    onClick={() => this.setShowBookmarks(false)} 
-                    // color="black"
-                    alignSelf="end"
-                    gap="xsmall"
-                    plain
-                    reverse
-                    // margin={{bottom: "medium"}}
-                    style={{ color: "black" }}
-                
-                  />
-                </Box>
-
-                <Box>
+                <Text color="#000" weight="normal">
                   {
-                    bookmarked ? 
-                    <Button 
-                      label="remove bookmark" 
-                      icon={<Trash color="white" />}
-                      style={{ background: "red", borderColor: "red" }}
-                      onClick={this.removeBookmark} 
-                      round="2px"
-                      alignSelf="center"
-                    /> 
-                    :
-                    <Button 
-                      label="add bookmark"
-                      icon={<Add color="white" />}
-                      style={{ background: "#f99d1c", border: "#f99d1c" }}
-                      onClick={this.addBookmark} 
-                      round="false"
-                      alignSelf="center"
-                    />
+                    node &&
+                    <Text>
+                      {node}
+                    </Text>
                   }
-                </Box>
+                  {
+                    type && 
+                    <Text>
+                      <Text size="large" color="#f99d1c" margin={{horizontal: 'xxsmall'}}>/</Text>
+                      {type}
+                    </Text>
+                  }
+                  {
+                    identifier &&
+                    <Text>
+                      <Text size="large"  color="#f99d1c">/</Text>
+                      <Text style={{fontStyle: "italic"}}>{identifier}</Text>
+                    </Text>
+                  }
+                </Text>
+              </Anchor>
+            </Text>
+            
+            <Text style={{float: "right", opacity: active ? 1 : 0.1}}>
+              {/* <Text as="div" alignSelf="end" size="xsmall">
+                <Age timestamp={added} suffix="ago"/>
+              </Text> */}
+              {
+                type === "account" &&
+                <Text>
+                  <Stack anchor="top-right" style={{display: "inline-block"}}>
+                    <Notification size="20px" style={{position: "relative", top: "2px", right: "3px"}}/>
+                    <Box
+                      background="red"
+                      pad={{ horizontal: '5px' }}
+                      margin={{ left: 'small', bottom: 'small' }}
+                      round
+                      style={{opacity: 1}}
+                    >
+                      <Text size="xsmall">1</Text>
+                    </Box>
+                  </Stack>
+                </Text>
+              }
 
-                <Box margin={{top: "medium"}}>
-                  <Box margin={{bottom: "small"}}>
-                    <Text color="black" alignSelf="center">Bookmarks</Text>
-                  </Box>
-                  <Box style={{maxHeight: "100vh", overflowY: "scroll"}}>
-                    {
-                      Object.keys(bookmarks).map((bookmark, index) => (
-                        <Box key={index}>
-                          <Anchor label={bookmark} />
-                        </Box>
-                      )) 
-                    }
-                  </Box>
-                </Box>
-              </Box>
-            </Layer>
-          )}
-        </Box>
+              <Text margin={{left: "xsmall"}}>
+                <Button icon={<Notes size="20px" />} onClick={this.toggleShowNoteForm} plain/>
+              </Text>
 
+              <Text margin={{left: "xsmall"}}>
+                <Button icon={<Trash size="20px" />} onClick={deleteBookmark} plain/>
+              </Text>
+            </Text>
+          </Text>
+        </Stack>
+
+        {
+          !showNoteForm && note &&
+          <Box>
+            <Text color="#444" size="small">
+              {" "}
+              Note: {note}
+            </Text>
+          </Box>
+        }
+
+        <Collapsible open={showNoteForm}>
+          <Box
+            width="100%"
+            border={{ color: "#999", size: "xsmall" }}
+            round="xsmall"
+            // height="xxsmall"
+          >
+            <TextArea 
+              value={noteState} 
+              onChange={this.updateNoteState} 
+              style={{color: "#000"}}
+              resize="vertical"
+              fill
+              plain
+              size="small"
+              onSubmit={this.submitNote}
+              
+            />
+          </Box>
+          <Button 
+            label="submit"
+            style={{ textDecoration: "underline", color: "#f99d1c" }}
+            onClick={this.submitNote} 
+            alignSelf="center"
+
+            plain
+          />
+        </Collapsible>
       </Box>
     )
   }
 
-  setShowBookmarks = (bool) => {
-    this.setState({ showBookmarks: bool })
+  toggleShowNoteForm = () => {
+    this.setState(({showNoteForm}) => {
+      return { showNoteForm: !showNoteForm }
+    }) 
   }
 
-  toggleShowBookmarks = (bool) => {
-    this.setState(({showBookmarks}) => {
-      return { showBookmarks: !showBookmarks }
-    })
+  updateNoteState = (event) => {
+    const { value } = event.target
+
+    this.setState({ noteState: value })
   }
 
-  addBookmark = () => {
-    const URL = window.location.href
-    const bookmarkData = window.localStorage.getItem(BOOKMARKS_KEY)
-    const bookmarks = bookmarkData ? JSON.parse(bookmarkData) : {}
-    const { tag } = this.state
-
-    bookmarks[URL] = { tag }
-    this.setState({ bookmarks })
-    window.localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks))
+  submitNote = () => {
+    this.setState({ showNoteForm: false })
+    this.props.updateNote(
+      this.props.label,
+      this.state.noteState
+    )
   }
 
-  removeBookmark = () => {
-    const URL = window.location.href
-    const bookmarkData = window.localStorage.getItem(BOOKMARKS_KEY)
-    const bookmarks = bookmarkData ? JSON.parse(bookmarkData) : {}
-
-    delete bookmarks[URL]
-    this.setState({ bookmarks })
-    window.localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks))
+  setActiveState = (bool) => {
+    this.setState({ active: bool })
   }
 }
 
-export default withRouter(Bookmark);
+export default Bookmark;

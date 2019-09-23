@@ -72,8 +72,10 @@ class Transanctions extends Component {
         }
 
         const latestBlockHeight = status.latest_block_height;
-        getBlocks({before: latestBlockHeight, filter: hideEmpty})
+        getBlocks({before: latestBlockHeight, filter: hideEmpty, limit: 1})
           .then(({blocks, lastFetchedHeight}) => {
+            const currentBlock = blocks[0]
+            
             this.setState({
               blocks,
               nodeStatus: status,

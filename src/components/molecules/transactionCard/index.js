@@ -3,7 +3,9 @@ import { Text, Collapsible, Box } from 'grommet'
 import Anchor from '../../atoms/anchor'
 import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card'
-import TransactionDetails from '../../organisms/transactionDetails'
+// import TransactionDetails from '../../organisms/transactionDetails'
+// import TransactionDetails from '../../organisms/txDetails'
+import DetailsCard from '../../molecules/detailsCard'
 import TruncatedText from '../../atoms/truncatedText'
 import { getTransaction } from '../../../helpers/fetch'
 import './style.css'
@@ -96,7 +98,7 @@ class TransactionCard extends Component {
               "duration": 100,
             }}
           >
-            <TransactionDetails transaction={transaction} />
+            <DetailsCard data={transaction} />
           </Box>
         </Collapsible>
       </Card>

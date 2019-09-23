@@ -13,7 +13,7 @@ export default (
       <Route exact path="/blocks" component={Blocks} />
       <Route exact path="/block/:blockHeight" component={Block} />
       <Route exact path="/transaction/:transactionHash" component={Transaction} />
-      <Route exact path="/account/:address" component={Account} />
+      <Route exact path="/account/:accountAddress" component={Account} />
 
       {/* <Route component={NotFound} /> */}
     </Switch>
