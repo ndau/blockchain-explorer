@@ -10,6 +10,7 @@ import {
 } from './format'
 import { Return } from 'grommet-icons';
 import Transanctions from '../components/pages/transactions/index.js';
+import { transitions } from 'polished';
 
 
 /////////////////////////////////////////
@@ -126,6 +127,22 @@ export const getBlockTransactions = (blockHeight) => {
     })
 }
 
+export const getNewestTransaction = async () => {
+  const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/start/?limit=1`
+  let tx 
+  await axios.get(transactionsEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+      const transaction = response.data && response.data.Txs && response.data.Txs[0]
+      tx = formatTransaction(transaction)
+    })
+    .catch(error => {
+      // TODO: FAIL SAFE
+      return;
+    })
+  
+  return tx
+}
+
 export const getTransactionsBefore = async (txHash) => {
   const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/${txHash}`
   
@@ -137,6 +154,45 @@ export const getTransactionsBefore = async (txHash) => {
       // TODO: FAIL SAFE
       return;
     })
+}
+
+export const pollForTransactions = ({currentTxHash, success}) => {
+  const fetchNewTransactions = () => {
+    getNodeStatus()
+      .then(async status => {
+        if (!status) {
+          return
+        }
+
+        const newestTx = await getNewestTransaction()
+        if(newestTx.hash === currentTxHash) {
+          return
+        }
+
+        await getTransactionsBefore("start")
+          .then(({Txs}) => {
+            const newTransactions = [] 
+            let counter = 0
+            const newCurrentTxHash = Txs[0].TxHash
+            let hash = newCurrentTxHash
+            
+            
+            while (hash !== currentTxHash) {
+              const transaction = Txs[counter]
+              if (transaction) {
+                newTransactions.push(transaction)
+
+                counter = counter + 1
+                hash = transaction.TxHash
+              }
+            }
+
+            success(newTransactions, newCurrentTxHash)
+          })
+      })
+  }
+
+  return fetchNewTransactions
 }
 
 /////////////////////////////////////////

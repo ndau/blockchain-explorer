@@ -8,12 +8,14 @@ import TableData from '../../molecules/tableData'
 import Age from '../../atoms/age'
 import Anchor from '../../atoms/anchor'
 import TruncatedText from '../../atoms/truncatedText'
-import { getNodeStatus,  getTransactionsBefore } from '../../../helpers/fetch'
+import { getNodeStatus,  getTransactionsBefore, pollForTransactions } from '../../../helpers/fetch'
 import { formatTransactions } from '../../../helpers/format'
-import { POLL_INTERVAL } from '../../../constants'
+// import { POLL_INTERVAL } from '../../../constants'
 import './style.css'
 
+const POLL_INTERVAL = 10000
 const CURRENT_TX_HASH =  "start"
+
 class Transanctions extends Component {
   constructor(props) {
     super(props);
@@ -82,14 +84,14 @@ class Transanctions extends Component {
           .then(({Txs, NextTxHash}) => {
          
             if(Txs) {
-              const currentTxHash = Txs[0].currentTxHash
+              const currentTxHash = Txs[0].TxHash
 
               this.setState({
                 transactions: Txs,
                 currentTxHash,
                 nextTxHash: NextTxHash
               }, () => {
-                // this.startPolling()
+                this.startPolling()
               })
             }
             
@@ -105,10 +107,13 @@ class Transanctions extends Component {
   startPolling = () => {
     this.endPolling()
 
-    // this.pollInterval = window.setInterval(
-    //   pollForBlocks({after, filter, limit, success}), 
-    //   POLL_INTERVAL
-    // );
+    this.pollInterval = window.setInterval(
+      pollForTransactions({
+        currentTxHash: this.state.currentTxHash,
+        success: this.resetData
+      }), 
+      POLL_INTERVAL
+    );
   }
 
   endPolling = () => {
@@ -139,15 +144,15 @@ class Transanctions extends Component {
       })
   }
 
-  resetData = (newBlocks, lastestBlockHeight) => {
-    // if (newBlocks && newBlocks.length > 0) {
-    //   this.setState(({blocks=[]}) => {
-    //     return {
-    //       blocks: [...newBlocks, ...blocks],
-    //       lastestBlockHeight,
-    //     }
-    //   })
-    // }
+  resetData = (newTransactions, currentTxHash) => {
+    if (newTransactions && newTransactions.length > 0) {
+      this.setState(({transactions=[]}) => {
+        return {
+          transactions: [...newTransactions, ...transactions],
+          currentTxHash,
+        }
+      })
+    }
   }
 
   columns = [
@@ -187,7 +192,7 @@ class Transanctions extends Component {
       property: "added",
       header: <ColumnHeader>added</ColumnHeader>,
       // align: "end",
-      render: ({timestamp}) => {
+      render: ({raw: {timestamp} }) => {
         return (
           <TableData>
             <Text size="small">
