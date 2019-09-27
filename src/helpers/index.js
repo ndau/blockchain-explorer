@@ -11,13 +11,14 @@ export const makeURLQuery = (additionalQuery) => {
   return `?${qs.stringify(newQuery)}`;
 };
 
-export const truncate = (string) => { 
-  if (!string || string.length < 19) {
+export const truncate = (string, maxLength=19) => { 
+  if (!string || string.length < maxLength) {
     return string
   }
-
+  
+  const subLength = Math.floor((maxLength - 3 ) / 2)
   const length = string.length;
-  return `${string.slice(0, 8)}...${string.slice(length - 8, length)}`
+  return `${string.slice(0, subLength)}...${string.slice(length - subLength, length)}`
 }
 
 // export const b64MsgPackToObj = b64data => {

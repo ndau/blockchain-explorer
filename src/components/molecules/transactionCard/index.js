@@ -112,7 +112,8 @@ class TransactionCard extends Component {
   }
 
   getTransaction = () => {
-    const { transactionHash } = this.props;
+    const { transactionHash } = this.props
+  
     getTransaction(transactionHash)
       .then(transaction => {
         this.setState({ transaction })

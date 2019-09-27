@@ -8,6 +8,8 @@ import {
   formatAccount,
   formatPriceInfo
 } from './format'
+import { Return } from 'grommet-icons';
+import Transanctions from '../components/pages/transactions/index.js';
 
 
 /////////////////////////////////////////
@@ -24,7 +26,7 @@ export const getBlock = async (blockHeight) => {
     })
     .catch(error => {
       console.log(error)
-      return;
+      return
     })
 }
 
@@ -35,12 +37,12 @@ export const getBlocks = async ({before, after, filter, limit}) => {
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       const { last_height, block_metas } = response.data
-    
+
       return {
         blocks: formatBlocks(block_metas),
         lastFetchedHeight: last_height,
         latestFetchedHeight: block_metas[0] && block_metas[0].header.height
-      };
+      }
     })
     .catch(error => console.log(error))
 }
@@ -124,8 +126,17 @@ export const getBlockTransactions = (blockHeight) => {
     })
 }
 
-export const getAllTransactions = () => {
+export const getTransactionsBefore = async (txHash) => {
+  const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/${txHash}`
   
+  return axios.get(transactionsEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+     return response.data;
+    })
+    .catch(error => {
+      // TODO: FAIL SAFE
+      return;
+    })
 }
 
 /////////////////////////////////////////

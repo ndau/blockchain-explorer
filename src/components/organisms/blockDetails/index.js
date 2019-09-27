@@ -8,8 +8,6 @@ class BlockDetails extends Component {
     super(props);
 
     this.state = { transactionHashes: null }
-
-    this.setTransactionHashes(props.block);
   }
 
   render() {
@@ -34,19 +32,17 @@ class BlockDetails extends Component {
   setTransactionHashes(block) {
     if (block && block.numberOfTransactions > 0) {
       getTransactionHashes(block.height)
-      .then(transactionHashes => {
-        this.setState({ transactionHashes })
-      })
+        .then(transactionHashes => {
+          this.setState({ transactionHashes })
+        })
     }
   }
 
   componentDidUpdate(prevProps) {
     const { block } = this.props;
-    if(block && block.height) {
-      if(!prevProps.block || block.hash !== prevProps.block.hash) {
-        this.setTransactionHashes(block)
-      }
-    } 
+    if(JSON.stringify(block) !== JSON.stringify(prevProps.block)) {
+      this.setTransactionHashes(block)
+    }
   }
 }
 

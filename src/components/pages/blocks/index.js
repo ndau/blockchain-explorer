@@ -143,7 +143,7 @@ class Blocks extends Component {
       return
     }
 
-    this.setState({ loading: true })
+    // this.setState({ loading: true })
 
     getBlocks({before: lastFetchedHeight - 1, filter: hideEmpty})
       .then(({ blocks : previousBlocks, lastFetchedHeight}) => {

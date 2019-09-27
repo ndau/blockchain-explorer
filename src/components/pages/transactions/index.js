@@ -1,53 +1,60 @@
 import React, { Component } from 'react'
 import { 
-  Box, Text, CheckBox
+  Box, Text, DataTable, ResponsiveContext
 } from 'grommet'
 import Main from '../../templates/main'
-import { getNodeStatus, getBlocks, pollForBlocks, getAllTransactions } from '../../../helpers/fetch'
+import ColumnHeader from '../../molecules/columnHeader'
+import TableData from '../../molecules/tableData'
+import Age from '../../atoms/age'
+import Anchor from '../../atoms/anchor'
+import TruncatedText from '../../atoms/truncatedText'
+import { getNodeStatus,  getTransactionsBefore } from '../../../helpers/fetch'
+import { formatTransactions } from '../../../helpers/format'
 import { POLL_INTERVAL } from '../../../constants'
 import './style.css'
 
+const CURRENT_TX_HASH =  "start"
 class Transanctions extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      blocks: [],
-      hideEmpty: false,
-      lastestBlockHeight: null,
-      lastFetchedHeight: null,
+      currentTxHash: CURRENT_TX_HASH,
+      nextTxHash: null,
+      transactions: []
     }
+    
 
-    setTimeout(this.toggleHideEmpty, 100)
+    this.getData()
   }
 
   render() {
-    const { transactions, hideEmpty } = this.state
-    // const transactions = this.getTransactions(blocks)
-    console.log("transactions ", transactions)
+    const { transactions  } = this.state
+    const formattedTransactions = formatTransactions(transactions)
 
     return (
       <Main browserHistory={this.props.history}> 
         <Box margin={{bottom: "20px"}}>
           <Text size="large" weight="bold">
             Transactions{' '}
-            {/* <Text
-              size="xsmall"
-              color="#aaa"
-              weight="normal"
-              style={{float: "right"}}
-            >
-              <CheckBox
-                toggle
-                checked={hideEmpty}
-                label="hide empty blocks"
-                onChange={this.toggleHideEmpty}
-                reverse
-                name="small" 
-              />
-            </Text> */}
           </Text>
         </Box>
+
+        <ResponsiveContext.Consumer>
+          {
+            screenSize => {
+              return (
+                <DataTable
+                  data={formattedTransactions}
+                  columns={this.columns}
+                  onMore={this.loadMoreTransactions}
+                  size="medium"
+                  className="dataTable"
+                />
+              )
+            }
+          }
+        </ResponsiveContext.Consumer>
       </Main>
     )
   }
@@ -64,53 +71,44 @@ class Transanctions extends Component {
   }
 
   getData = () => {
-    const { hideEmpty } = this.state
     getNodeStatus()
       .then(status => {
         if (!status) {
           return null
         }
 
-        const latestBlockHeight = status.latest_block_height;
-        getBlocks({before: latestBlockHeight, filter: hideEmpty, limit: 1})
-          .then(({blocks, lastFetchedHeight}) => {
-            const currentBlock = blocks[0]
-            
-            this.setState({
-              blocks,
-              nodeStatus: status,
-              lastFetchedHeight,
-              latestBlockHeight,
-              hideEmpty
-            }, () => {
-              this.startPolling({
-                after: this.state.latestBlockHeight, 
-                filter: hideEmpty,
-                success: this.resetData
-              })
-            })
-          })
-      })
-  }
+        const { currentTxHash } = this.state
+        getTransactionsBefore(currentTxHash)
+          .then(({Txs, NextTxHash}) => {
+         
+            if(Txs) {
+              const currentTxHash = Txs[0].currentTxHash
 
-  getTransactions = async (blocks) => {
-    const transactions = [] 
-    await getAllTransactions(blocks)
-      .then()
-    return transactions
+              this.setState({
+                transactions: Txs,
+                currentTxHash,
+                nextTxHash: NextTxHash
+              }, () => {
+                // this.startPolling()
+              })
+            }
+            
+          })
+            
+      })
   }
 
   componentWillUnmount() {
     this.endPolling()
   }
 
-  startPolling = ({after, filter, limit, success}) => {
+  startPolling = () => {
     this.endPolling()
 
-    this.pollInterval = window.setInterval(
-      pollForBlocks({after, filter, limit, success}), 
-      POLL_INTERVAL
-    );
+    // this.pollInterval = window.setInterval(
+    //   pollForBlocks({after, filter, limit, success}), 
+    //   POLL_INTERVAL
+    // );
   }
 
   endPolling = () => {
@@ -119,48 +117,88 @@ class Transanctions extends Component {
     }
   }
 
-  toggleHideEmpty = () => {
-    this.setState(({hideEmpty}) => {
-      return { hideEmpty: !hideEmpty }
-    }, () => {
-      this.getData()
-    })
-  }
 
-  loadMoreBlocks = () => {
-    const { lastFetchedHeight, hideEmpty } = this.state
-    if (!lastFetchedHeight || lastFetchedHeight < 2) {
+  loadMoreTransactions = () => {
+    const { transactions, nextTxHash } = this.state
+    if (nextTxHash === "") {
       return
     }
 
-    this.setState({ loading: true })
+    // this.setState({ loading: true })
 
-    getBlocks({before: lastFetchedHeight - 1, filter: hideEmpty})
-      .then(({ blocks : previousBlocks, lastFetchedHeight}) => {
-        if (previousBlocks.length < 1) {
-          return
-        }
-
-        this.setState(({ blocks }) => {
-          return {
-            blocks: [...blocks, ...previousBlocks],
-            lastFetchedHeight,
+    getTransactionsBefore(nextTxHash)
+      .then(({Txs, NextTxHash}) => {
+        // debugger
+        if(Txs) {
+          this.setState({
+            transactions: [ ...transactions, ...Txs ],
+            nextTxHash: NextTxHash,
             loading: false
-          }
-        })
+          })
+        }
       })
   }
 
   resetData = (newBlocks, lastestBlockHeight) => {
-    if (newBlocks && newBlocks.length > 0) {
-      this.setState(({blocks=[]}) => {
-        return {
-          blocks: [...newBlocks, ...blocks],
-          lastestBlockHeight,
-        }
-      })
-    }
+    // if (newBlocks && newBlocks.length > 0) {
+    //   this.setState(({blocks=[]}) => {
+    //     return {
+    //       blocks: [...newBlocks, ...blocks],
+    //       lastestBlockHeight,
+    //     }
+    //   })
+    // }
   }
+
+  columns = [
+    {
+      property: "type",
+      header: <ColumnHeader>type</ColumnHeader>,
+      // align: "center",
+      render: ({type}) => <TableData>{type}</TableData>
+    },
+    {
+      property: "amount",
+      header: <ColumnHeader>amount</ColumnHeader>,
+      // align: "center",
+      render: ({amount}) => <TableData>{amount || "--"}</TableData>
+    },
+    {
+      property: "hash",
+      header: <ColumnHeader>hash</ColumnHeader>,
+      // align: "center",
+      primary: true,
+      render: ({hash}) => {
+        return (
+          <TableData>
+            <Anchor
+              href={`/transaction/${hash}`}
+            >
+            <Text size="small">
+              <TruncatedText value={hash} maxLength="11" size="small" />
+            </Text>
+            
+            </Anchor>
+          </TableData>
+        )
+      }
+    },
+    {
+      property: "added",
+      header: <ColumnHeader>added</ColumnHeader>,
+      // align: "end",
+      render: ({timestamp}) => {
+        return (
+          <TableData>
+            <Text size="small">
+              <Age timestamp={timestamp} suffix="ago" />
+            </Text>
+            
+          </TableData>
+        )
+      }
+    },
+  ]
 }
 
 export default Transanctions;

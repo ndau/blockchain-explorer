@@ -77,7 +77,6 @@ class Page extends Component {
           <Box>
             <Footer />
           </Box>
-          
         </Box>
       </Box>
     );
@@ -89,7 +88,6 @@ class Page extends Component {
 
   componentDidUpdate = (prevProps) => {
     if(this.getURL(prevProps.location) !== this.getURL()) {
-      // debugger
       this.setBookmarkNote()
     }
   }

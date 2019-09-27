@@ -9,24 +9,22 @@ import momentTimezone from 'moment-timezone'
 export const formatBlock = (block) => {
   if(!block || !block.header) {
     return;
-  }
+  } 
 
-  const { header={} } = block;
-  const {
-    height, time, num_txs, last_block_id,
-  } = header;
+  const { block_id={}, header={} } = block;
+  const { height, time, num_txs } = header;
+  
 
   return {
     height: height,
     timestamp: time,
     numberOfTransactions: num_txs,
     added: formatTime(time),
-    hash: last_block_id && last_block_id.hash,
-
+    hash: block_id.hash,
+  
     raw: {
       added: time
     }
-
   };
 }
 
@@ -98,7 +96,8 @@ export const formatTransaction = (transaction) => {
     },
     raw: {
       type,
-      unlocksOn
+      unlocksOn,
+      timestamp,
     }
   }
 }
