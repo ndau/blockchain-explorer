@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Box, Text, Collapsible } from 'grommet'
-import { StatusGood, Radial, Filter } from 'grommet-icons'
-import DateRangePicker from '../../molecules/dateRangePicker'
+import { Filter } from 'grommet-icons'
 import Filters from '../../molecules/filters'
 import { TRANSACTION_TYPES } from '../../../constants'
 import { formatTime } from '../../../helpers/format'
@@ -46,29 +45,6 @@ class TimelineFilter extends Component {
     }
 
     const transanctionTypes = Object.values(TRANSACTION_TYPES)
-    const unselectedTypes = transanctionTypes.filter(filter => !typeFilters.includes(filter))
-    const sortedTransanctionTypes = [...typeFilters, ...unselectedTypes]
-
-    const daterangeFilters = [
-      {
-        label: "Last month", 
-        onClick: () => selectFilterRange(1, "Last month")
-      },
-      {
-        label: "Last 3 months", 
-        onClick: () => selectFilterRange(3, "Last 3 months")
-      },
-      {
-        label: "Last 6 months", 
-        onClick: () => selectFilterRange(6, "Last 6 months")
-      },
-      {
-        label: "Last year", 
-        onClick: () => selectFilterRange(12, "Last year")
-      },
-    ]
-
-
 
     return (
       <Box>
