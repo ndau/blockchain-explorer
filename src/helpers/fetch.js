@@ -8,9 +8,6 @@ import {
   formatAccount,
   formatPriceInfo
 } from './format'
-import { Return } from 'grommet-icons';
-import Transanctions from '../components/pages/transactions/index.js';
-import { transitions } from 'polished';
 
 
 /////////////////////////////////////////
@@ -189,6 +186,9 @@ export const pollForTransactions = ({currentTxHash, success}) => {
 
             success(newTransactions, newCurrentTxHash)
           })
+      })
+      .catch(error => {
+        return
       })
   }
 

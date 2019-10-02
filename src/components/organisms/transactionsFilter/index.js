@@ -56,20 +56,6 @@ class AccountTimeline extends Component {
 
     return (
       <Box>
-        {
-          events.length > 1 &&
-          <Box margin={{bottom: "20px"}}>
-            <TimelineChart 
-              events={[...events, this.initialEvent]}
-              filteredEvents={filteredEvents}
-              balance={balance}
-              selectedEvent={selectedEvent}
-              activeEvent={activeEvent}
-              toggleSelectedEvent={this.toggleSelectedEvent}
-            />
-          </Box>
-        }
-        
         <Box>
           <TimelineFilter 
             events={events}

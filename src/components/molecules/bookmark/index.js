@@ -116,10 +116,10 @@ class Bookmark extends Component {
             width="100%"
             border={{ color: "#999", size: "xsmall" }}
             round="xsmall"
-            // height="xxsmall"
+            height="xxsmall"
           >
             <TextArea 
-              value={noteState} 
+              value={noteState || note} 
               onChange={this.updateNoteState} 
               style={{color: "#000"}}
               resize="vertical"
@@ -127,7 +127,6 @@ class Bookmark extends Component {
               plain
               size="small"
               onSubmit={this.submitNote}
-              
             />
           </Box>
           <Button 
@@ -156,7 +155,7 @@ class Bookmark extends Component {
   }
 
   submitNote = () => {
-    this.setState({ showNoteForm: false })
+    this.setState({ showNoteForm: false, noteState: null })
     this.props.updateNote(
       this.props.label,
       this.state.noteState

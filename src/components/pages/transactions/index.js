@@ -26,7 +26,6 @@ class Transanctions extends Component {
       transactions: []
     }
     
-
     this.getData()
   }
 
@@ -96,6 +95,10 @@ class Transanctions extends Component {
             }
             
           })
+          .catch(error => {
+            console.log(error)
+            return
+          })
             
       })
   }
@@ -133,7 +136,6 @@ class Transanctions extends Component {
 
     getTransactionsBefore(nextTxHash)
       .then(({Txs, NextTxHash}) => {
-        // debugger
         if(Txs) {
           this.setState({
             transactions: [ ...transactions, ...Txs ],

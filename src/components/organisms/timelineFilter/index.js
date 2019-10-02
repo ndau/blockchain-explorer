@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Box, Text, Collapsible } from 'grommet'
 import { StatusGood, Radial, Filter } from 'grommet-icons'
 import DateRangePicker from '../../molecules/dateRangePicker'
+import Filters from '../../molecules/filters'
 import { TRANSACTION_TYPES } from '../../../constants'
 import { formatTime } from '../../../helpers/format'
 
@@ -99,92 +100,16 @@ class TimelineFilter extends Component {
         </Box>
         
         <Collapsible open={showFilters}>
-          <Box 
-            style={{
-              background: "rgba(255,255,255, 0.03)",
-              visibility: showFilters ? "visible":"hidden",
-              transition: "visibilty 0.1s",
-            }} 
-            align="center"
-            width="100%"
-            margin={{bottom: "medium"}}
-            pad={{vertical: "medium"}}
-            round="small"
-          >
-            <Box>
-              <Box 
-                width="100%" 
-                style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
-              >
-                <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
-                  filter by date
-                </Text>
-              </Box>
-
-              <Box pad={{bottom: "medium"}}>
-                <DateRangePicker 
-                  startDate={filterStartDate}
-                  endDate={filterEndDate}
-                  onSetRange={setFilterRange} 
-                />
-              </Box>
-
-              <Box>
-                {
-                  daterangeFilters.map(({label, onClick}, index) => {
-                    const IsSelected = filterRange === label
-
-                    return (
-                      <Box key={index} onClick={onClick} direction="row" justify="between">
-                        <Text style={{lineHeight: "18px", justifySelf: "center"}} >
-                          {
-                            IsSelected ? 
-                            <StatusGood size="18px"/> : 
-                            <Radial color="#ccc" size="18px"/>
-                          }
-                          <Text size="small" margin={{left: "xsmall"}}>
-                            {label}
-                          </Text>
-                        </Text>
-                        
-                      </Box>
-                    )
-                  })
-                }
-
-                <Box margin={{bottom:"15px"}}>
-                  <Box 
-                    width="100%" 
-                    style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
-                  >
-                    <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
-                      filter by type
-                    </Text>
-                  </Box>
-                </Box>
-              
-                {
-                  sortedTransanctionTypes.map((type, index) => {
-                    const IsSelected = typeFilters.includes(type)
-
-                    return (
-                      <Box key={index} onClick={() => toggleFilter(type)} >
-                        <Text>
-                          {
-                            IsSelected ? <StatusGood size="18px"/> : <Radial color="#ccc" size="18px"/>
-                          }
-                          <Text size="small" margin={{left: "xsmall"}}>
-                            {type && type.replace(/([a-z])([A-Z])/g, '$1 $2')}
-                          </Text>
-                        </Text>
-                        
-                      </Box>
-                    )
-                  })
-                }  
-              </Box>
-            </Box>
-          </Box>
+          <Filters 
+            showFilters={showFilters}
+            typeFilters={typeFilters} 
+            filterStartDate={filterStartDate}
+            filterEndDate={filterEndDate}
+            filterRange={filterRange}
+            selectFilterRange={selectFilterRange}
+            setFilterRange={setFilterRange}
+            toggleFilter={toggleFilter}
+          />
         </Collapsible>
       </Box>
     );

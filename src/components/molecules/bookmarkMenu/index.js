@@ -8,6 +8,7 @@ import {
 } from 'grommet-icons'
 import NavbarMenu from '../navbarMenu'
 import Bookmark from '../bookmark'
+import './style.css'
 
 const BOOKMARKS_KEY = "ndau_explorer_bookmarks"
 
@@ -21,7 +22,7 @@ class BookmarkMenu extends Component {
       bookmarkNote: null
     }
 
-    const url =this.getURL()
+    const url = this.getURL()
 
     localforage.getItem(BOOKMARKS_KEY).then((bookmarks={})=> {
       const bookmarksCopy = {...bookmarks}
@@ -38,8 +39,10 @@ class BookmarkMenu extends Component {
   }
 
   render() {
+    
     const { bookmarks } = this.state
     const bookmarked = !!bookmarks[this.getURL()]
+    const pageNote = this.getPageNote()
 
     return (
       <Box>  
@@ -67,13 +70,10 @@ class BookmarkMenu extends Component {
                   <Text size="small">
                     <Button 
                     label="Bookmark this Page"
-                    // icon={<Alert size="small" color="red"/>}
                     reverse
                     style={{ textDecoration: "underline", color: "green", display: "inline-block" }}
                     onClick={this.addBookmark} 
                     round="false"
-                    
-
                     plain
                   />
                     
@@ -101,7 +101,7 @@ class BookmarkMenu extends Component {
                       key={index}
                       label={bookmark} 
                       data={bookmarks[bookmark]}
-                      // closeBookmarks={()=> this.setShowBookmarks(false)}
+                      closeBookmarks={()=> this.setShowBookmarks(false)}
                       deleteBookmark={()=> this.removeBookmark(bookmark)}
                       updateNote={this.updateBookmarkNote}
                     />
@@ -110,6 +110,26 @@ class BookmarkMenu extends Component {
             </Box>
           </Box>
         </NavbarMenu>
+
+        {
+          pageNote  && 
+          <Box 
+            className="bookmarkNote" 
+            background="#fefefe" alignSelf="start" 
+            pad="small" 
+            animation={{
+              "type": "fadeIn",
+              "delay": 0,
+              "duration": 200,
+            }}
+            elevation="medium"
+          >
+            <Text color="#000">
+              <Text weight="bold">Note: </Text>
+              {pageNote}
+            </Text>
+          </Box>
+        }
       </Box>
     )
   }
@@ -119,7 +139,8 @@ class BookmarkMenu extends Component {
 
     localforage.getItem(BOOKMARKS_KEY).then(bookmarkData => {
       const bookmarks = bookmarkData || {}
-      const bookmark = bookmarks[url];
+      const bookmark = bookmarks[url]
+
       if(!bookmark) {
         bookmarks[url] = this.parseURL(url)
         localforage.setItem(BOOKMARKS_KEY, bookmarks).then(()=> {
@@ -187,21 +208,16 @@ class BookmarkMenu extends Component {
     }
   }
 
-  // componentDidUpdate = () => {
-  //   const url =this.getURL()
-
-  //   if(url) {
-  //     localforage.getItem(BOOKMARKS_KEY).then((bookmarks={}) => {
-  //       const bookmarksCopy = {...bookmarks}
-  //       const bookmark = bookmarksCopy[url]
-  //       if(bookmark) {
-  //         const note = bookmark.note 
-    
-  //         this.setState({ pageNote: note })
-  //       }
-  //     })
-  //   }
-  // }
+  getPageNote = ()=> {
+    const pageURL =this.getURL()
+    const { bookmarks } = this.state
+     
+    if(pageURL) {
+      const pageBookmark = bookmarks[pageURL] 
+      return pageBookmark && pageBookmark.note
+    }
+    return null
+  }
 }
 
 export default withRouter(BookmarkMenu);
