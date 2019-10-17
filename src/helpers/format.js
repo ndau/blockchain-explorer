@@ -7,7 +7,7 @@ import momentTimezone from 'moment-timezone'
 /////////////////////////////////////////
 
 export const formatBlock = (block) => {
-  if(!block || !block.header) {
+  if(!block) {
     return;
   } 
 

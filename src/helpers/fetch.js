@@ -19,8 +19,9 @@ export const getBlock = async (blockHeight) => {
   
   return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
+      console.log(response.data)
       const block = response.data.block;
-      return formatBlock(block);
+      return formatBlock(response.data.block_meta);
     })
     .catch(error => {
       console.log(error)
@@ -140,20 +141,21 @@ export const getNewestTransaction = async () => {
   return tx
 }
 
-export const getTransactionsBefore = async (txHash) => {
-  const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/${txHash}`
-  
+export const getTransactionsBefore = async (txHash, typeFilters) => {
+  const query = typeFilters ? `?type=${typeFilters.join(";&type=")}` : ""
+  const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/${txHash}${query}`
+  console.log(transactionsEndpoint)
   return axios.get(transactionsEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
      return response.data;
     })
     .catch(error => {
       // TODO: FAIL SAFE
-      return;
+      return
     })
 }
 
-export const pollForTransactions = ({currentTxHash, success}) => {
+export const pollForTransactions = ({currentTxHash, success, typeFilters}) => {
   const fetchNewTransactions = () => {
     getNodeStatus()
       .then(async status => {
@@ -166,7 +168,7 @@ export const pollForTransactions = ({currentTxHash, success}) => {
           return
         }
 
-        await getTransactionsBefore("start")
+        await getTransactionsBefore("start", typeFilters)
           .then(({Txs}) => {
             const newTransactions = [] 
             let counter = 0

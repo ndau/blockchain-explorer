@@ -15,13 +15,14 @@ class Filters extends Component {
       setFilterRange,
       toggleFilter,
       showFilters,
+      noDateFilter
      } = this.props
 
     const transanctionTypes = Object.values(TRANSACTION_TYPES)
     const unselectedTypes = transanctionTypes.filter(filter => !typeFilters.includes(filter))
     const sortedTransanctionTypes = [...typeFilters, ...unselectedTypes]
 
-    const daterangeFilters = [
+    const daterangeFilters = !noDateFilter && [
       {
         label: "Last month", 
         onClick: () => selectFilterRange(1, "Last month")
@@ -54,26 +55,31 @@ class Filters extends Component {
         round="small"
       >
         <Box>
-          <Box 
-            width="100%" 
-            style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
-          >
-            <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
-              filter by date
-            </Text>
-          </Box>
+          {
+            !noDateFilter && 
+            <Box>
+              <Box 
+                width="100%" 
+                style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
+              >
+                <Text size="xsmall" alignSelf="end" color="rgba(255,255,255, 0.5)">
+                  filter by date
+                </Text>
+              </Box>
 
-          <Box pad={{bottom: "medium"}}>
-            <DateRangePicker 
-              startDate={filterStartDate}
-              endDate={filterEndDate}
-              onSetRange={setFilterRange} 
-            />
-          </Box>
+              <Box pad={{bottom: "medium"}}>
+                <DateRangePicker 
+                  startDate={filterStartDate}
+                  endDate={filterEndDate}
+                  onSetRange={setFilterRange} 
+                />
+              </Box>
+            </Box>
+          }
 
           <Box>
             {
-              daterangeFilters.map(({label, onClick}, index) => {
+              !noDateFilter && daterangeFilters.map(({label, onClick}, index) => {
                 const IsSelected = filterRange === label
 
                 return (
@@ -93,6 +99,7 @@ class Filters extends Component {
                 )
               })
             }
+            
 
             <Box margin={{bottom:"15px"}}>
               <Box 
@@ -130,9 +137,9 @@ class Filters extends Component {
     );
   }
 
-  toggleShowFilters = () => {
-    this.setState(({showFilters}) => ({ showFilters: !showFilters }))
-  }
+  // toggleShowFilters = () => {
+  //   this.setState(({showFilters}) => ({ showFilters: !showFilters }))
+  // }
 }
 
 export default Filters

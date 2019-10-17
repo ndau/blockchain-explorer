@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import moment from 'moment'
 import { 
   Box, Text, DataTable, ResponsiveContext
 } from 'grommet'
@@ -8,6 +9,7 @@ import TableData from '../../molecules/tableData'
 import Age from '../../atoms/age'
 import Anchor from '../../atoms/anchor'
 import TruncatedText from '../../atoms/truncatedText'
+import TransactionFilters from '../../organisms/transactionsFilters'
 import { getNodeStatus,  getTransactionsBefore, pollForTransactions } from '../../../helpers/fetch'
 import { formatTransactions } from '../../../helpers/format'
 // import { POLL_INTERVAL } from '../../../constants'
@@ -23,14 +25,16 @@ class Transanctions extends Component {
     this.state = {
       currentTxHash: CURRENT_TX_HASH,
       nextTxHash: null,
-      transactions: []
+      transactions: [],
+      filteredTransactions: [],
+      typeFilters: null
     }
     
     this.getData()
   }
 
   render() {
-    const { transactions  } = this.state
+    const { transactions } = this.state
     const formattedTransactions = formatTransactions(transactions)
 
     return (
@@ -39,6 +43,13 @@ class Transanctions extends Component {
           <Text size="large" weight="bold">
             Transactions{' '}
           </Text>
+        </Box>
+
+        <Box>
+          <TransactionFilters 
+            transactions={transactions}
+            updateFilters={this.updateFilters} 
+          />
         </Box>
 
         <ResponsiveContext.Consumer>
@@ -71,7 +82,7 @@ class Transanctions extends Component {
     }
   }
 
-  getData = () => {
+  getData = (typeFilters) => {
     getNodeStatus()
       .then(status => {
         if (!status) {
@@ -79,7 +90,7 @@ class Transanctions extends Component {
         }
 
         const { currentTxHash } = this.state
-        getTransactionsBefore(currentTxHash)
+        getTransactionsBefore(currentTxHash, typeFilters)
           .then(({Txs, NextTxHash}) => {
          
             if(Txs) {
@@ -87,6 +98,7 @@ class Transanctions extends Component {
 
               this.setState({
                 transactions: Txs,
+                filteredTransactions: Txs,
                 currentTxHash,
                 nextTxHash: NextTxHash
               }, () => {
@@ -113,6 +125,7 @@ class Transanctions extends Component {
     this.pollInterval = window.setInterval(
       pollForTransactions({
         currentTxHash: this.state.currentTxHash,
+        typeFilters: this.state.typeFilters,
         success: this.resetData
       }), 
       POLL_INTERVAL
@@ -125,36 +138,64 @@ class Transanctions extends Component {
     }
   }
 
-
   loadMoreTransactions = () => {
-    const { transactions, nextTxHash } = this.state
-    if (nextTxHash === "") {
+    const { nextTxHash, typeFilters } = this.state
+
+    console.log(nextTxHash, typeFilters)
+    if (!nextTxHash || nextTxHash.length < 1) {
       return
     }
 
-    // this.setState({ loading: true })
-
-    getTransactionsBefore(nextTxHash)
+    getTransactionsBefore(nextTxHash, typeFilters)
       .then(({Txs, NextTxHash}) => {
         if(Txs) {
-          this.setState({
-            transactions: [ ...transactions, ...Txs ],
-            nextTxHash: NextTxHash,
-            loading: false
-          })
+          this.resetData(Txs, NextTxHash)
         }
       })
   }
 
-  resetData = (newTransactions, currentTxHash) => {
-    if (newTransactions && newTransactions.length > 0) {
-      this.setState(({transactions=[]}) => {
-        return {
-          transactions: [...newTransactions, ...transactions],
-          currentTxHash,
-        }
-      })
+  resetData = (newTransactions, nextTxHash) => {
+    this.setState(({transactions=[]}) => {
+      return {
+        transactions: [...newTransactions, ...transactions],
+        nextTxHash,
+        loading: false,
+      }
+    })
+  }
+
+  updateFilters = (typeFilters) => {
+    // console.log("filter Transactions", typeFilters)
+    // if (typeFilters) {
+    const { transactions } = this.state
+    if (!transactions) {
+      return []
     }
+
+    getTransactionsBefore('start', typeFilters)
+      .then(({Txs, NextTxHash}) => {
+    
+        if(Txs) {
+          const currentTxHash = Txs[0].TxHash
+
+       
+          // console.log(transactions.length, filteredTransactions.length)
+          // console.log(typeFilters, filterStartDate, filterEndDate)
+          this.setState({ 
+            transactions: Txs,
+            nextTxHash: NextTxHash,
+            currentTxHash,
+            typeFilters,
+          }, () => {
+            this.startPolling()
+          })
+        }
+        
+      })
+      .catch(error => {
+        console.log(error)
+        return
+      })
   }
 
   columns = [
