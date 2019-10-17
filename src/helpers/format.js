@@ -253,6 +253,20 @@ export const formatPriceInfo = (priceInfo) => {
 // GENERIC
 /////////////////////////////////////////
 
+// export const convertNapuToNdau = (napuAmount, humanize=true, decimals=8) => {
+//   if(napuAmount === 0 || napuAmount) {
+//     const ndauAmount = napuAmount / 100000000
+//     return humanize ? humanizeNumber(ndauAmount, decimals) : ndauAmount
+//   }
+// }
+
+// export const convertNanocentsToUSD = (nanocents, humanize=true, decimals=8) => {
+//   if(nanocents === 0 || nanocents) {
+//     const dollarAmount = nanocents / 100000000000
+//     return humanize ? humanizeNumber(dollarAmount, decimals) : dollarAmount
+//   }
+// }
+
 export const convertNapuToNdau = (napuAmount, humanize=true, decimals=8) => {
   if(napuAmount === 0 || napuAmount) {
     const ndauAmount = napuAmount / 100000000

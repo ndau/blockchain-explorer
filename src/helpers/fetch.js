@@ -222,7 +222,6 @@ export const getCurrentOrder = async () => {
     .catch(error => console.log(error))
 }
 
-//
 export const validURL = (str) => {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
