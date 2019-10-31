@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import moment from 'moment'
 import { 
   Box, Text, DataTable, ResponsiveContext
 } from 'grommet'

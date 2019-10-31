@@ -9,7 +9,7 @@ class Legends extends Component {
     if (!info) {
       return null;
     }
-  
+
     return (
       <Box>
       {

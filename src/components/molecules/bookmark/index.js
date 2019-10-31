@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Box, Text, Button, Stack, Collapsible, TextArea } from 'grommet'
 import { Notification, Trash, Notes } from 'grommet-icons'
 import Anchor from '../../atoms/anchor'
+// import AppNotification from '../../atoms/notification'
 // import Age from '../../atoms/age'
 import './style.css'
 
@@ -13,6 +14,7 @@ class Bookmark extends Component {
       active: props.isActive,
       showNoteForm: false,
       noteState: props.data && props.data.note,
+      accountUpdates: 0
     }
   }
 
@@ -25,7 +27,7 @@ class Bookmark extends Component {
       }
     } = this.props 
 
-    const { showNoteForm, noteState, active } = this.state
+    const { showNoteForm, noteState, active, accountUpdates } = this.state
 
     return (
       <Box 
@@ -34,7 +36,11 @@ class Bookmark extends Component {
         round="xsmall" 
         onMouseOver={() => this.setActiveState(true)}
         onMouseOut={() => this.setActiveState(false)}
-      >
+      >  
+        {/* {
+          accountUpdates && 
+          <AppNotification />
+        } */}
         <Stack> 
           <Text color="black">
             <Text weight="bold">
@@ -76,16 +82,19 @@ class Bookmark extends Component {
                 type === "account" &&
                 <Text>
                   <Stack anchor="top-right" style={{display: "inline-block"}}>
-                    <Notification size="20px" style={{position: "relative", top: "2px", right: "3px"}}/>
-                    <Box
-                      background="red"
-                      pad={{ horizontal: '5px' }}
-                      margin={{ left: 'small', bottom: 'small' }}
-                      round
-                      style={{opacity: 1}}
-                    >
-                      <Text size="xsmall">1</Text>
-                    </Box>
+                    <Notification size="20px" style={{position: "relative", top: "2px", right: "3px"}} onClick={this.notify}/>
+                    {
+                      accountUpdates > 0 &&
+                      <Box
+                        background="green"
+                        pad='5px'
+                        margin={{ left: 'small', bottom: 'small' }}
+                        round
+                        style={{opacity: "1 !important"}}
+                      >
+                        {/* <Text size="xsmall">{accountUpdates}</Text> */}
+                      </Box>
+                    }
                   </Stack>
                 </Text>
               }
@@ -164,6 +173,12 @@ class Bookmark extends Component {
 
   setActiveState = (bool) => {
     this.setState({ active: bool })
+  }
+
+  notify = () => {
+    this.setState({
+      accountUpdates: 1
+    })
   }
 }
 

@@ -20,7 +20,6 @@ export const getBlock = async (blockHeight) => {
   return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       console.log(response.data)
-      const block = response.data.block;
       return formatBlock(response.data.block_meta);
     })
     .catch(error => {
@@ -74,6 +73,7 @@ export const pollForBlocks = ({after, filter, success}) => {
                   } 
                 })
             })
+            .catch(err => console.log(err))
         }
       })
   }
@@ -144,7 +144,7 @@ export const getNewestTransaction = async () => {
 export const getTransactionsBefore = async (txHash, typeFilters) => {
   const query = typeFilters ? `?type=${typeFilters.join(";&type=")}` : ""
   const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/${txHash}${query}`
-  console.log(transactionsEndpoint)
+
   return axios.get(transactionsEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
      return response.data;
@@ -220,7 +220,7 @@ export const getAccount = async (address) => {
 
 export const getAccountHistory = async (address) => {
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`
-
+  console.log(accountHistoryEndpoint)
   return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       let history = response.data && response.data.Items 
