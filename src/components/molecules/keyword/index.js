@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { Drop, Text, Box, Anchor, ResponsiveContext, } from 'grommet';
-import { Share } from 'grommet-icons'
+import { Share, CircleInformation } from 'grommet-icons'
 import { KEYWORDS } from '../../../keywords'
 
 class Keyword extends Component {
   constructor(props) {
     super(props);
-    const formattedLabel = props.label
-      .replace(/([^A-Z]*)([A-Z]*)([A-Z])([^A-Z]*)/g, '$1 $2 $3$4')
-      .replace(/ +/g, ' ');
+    if (props.label) {
+      const formattedLabel =  props.label
+        .replace(/([^A-Z]*)([A-Z]*)([A-Z])([^A-Z]*)/g, '$1 $2 $3$4')
+        .replace(/ +/g, ' ');
 
-    this.label = formattedLabel[0].toUpperCase() + formattedLabel.slice(1);
+      this.label = formattedLabel[0].toUpperCase() + formattedLabel.slice(1);
+    }
+   
 
     this.keywordDetails = KEYWORDS[props.keyword]
 
@@ -33,22 +36,34 @@ class Keyword extends Component {
 
     return (
       <Box style={{display: "inline-flex"}}>
-        <Box
-          ref={this.ref}
-          onClick={() => this.setState({ showExplanation: true })}
-          style={{borderBottom: "1px #f99d1c dashed"}}
-        >
-          <Text color={showExplanation ? "#ffe7c6" : "#fff"}>
-            {labelText}
-          </Text>
-        </Box>
-
-
+        {
+          this.props.label ?
+          <Box
+            ref={this.ref}
+            onClick={() => this.setState({ showExplanation: true })}
+            style={{ borderBottom: "1px #f99d1c dashed" }}
+          >  
+            <Text color={showExplanation ? "#ffe7c6" : "#fff"}>
+              {labelText}
+            </Text>
+          </Box> :
+          <Box
+            ref={this.ref}
+            onClick={() => this.setState({ showExplanation: true })}
+          >  
+            
+            <Text lmargin={{right: "5px"}}>
+              <CircleInformation 
+                size="small" 
+                color={this.props.iconColor || "white"}
+              />
+            </Text>
+          </Box>
+        }
 
         <ResponsiveContext.Consumer>
           {
             viewPort => (
-              
             this.ref.current && showExplanation && (
               <Drop
                 align={{ top: "bottom" }}

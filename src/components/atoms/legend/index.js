@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Box, Text } from "grommet"
+import Keyword from '../../molecules/keyword'
 import './style.css'
 
 class Legend extends Component {
   render() {
-    const { label, value, inactive } = this.props;  
+    const { label, value, inactive, keyword } = this.props
     return (
       <Box 
         style={{
@@ -15,7 +16,14 @@ class Legend extends Component {
         direction="row"
       >
         <Box className="legendLabel" style={{textAlign: "right", marginRight: "3px", minWidth: "135px"}}>
-          <Text size="small" color="#ffe7c6">{label}:</Text>
+          <Text size="small" color="#ffe7c6">
+
+            { 
+              keyword && 
+              <Text margin={{right: "xxsmall"}}><Keyword keyword={keyword} /></Text>
+            }
+            {label}:
+          </Text>
         </Box>
         <Box className="legendValue">
           <Text size="small" weight="bold">{value}</Text>

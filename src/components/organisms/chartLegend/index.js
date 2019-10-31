@@ -18,7 +18,8 @@ class ChartLegend extends Component {
                 {
                   label: "ndau in circulation",
                   value: humanizeNumber(totalNdau, 0),
-                  inactive: active
+                  inactive: active,
+                  keyword: "ndauInCirculation"
                 },
                 {
                   label: "current market price",
@@ -64,7 +65,8 @@ class ChartLegend extends Component {
                   {
                     label: "ndau in circulation",
                     value: humanizeNumber(totalNdau, 0),
-                    inactive: active
+                    inactive: active,
+                    keyword: "ndauInCirculation"
                   }
                 ]}
               />
@@ -92,4 +94,4 @@ class ChartLegend extends Component {
   }
 }
 
-export default ChartLegend;
+export default ChartLegend
