@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
 import { Box, Text, Button, Stack, Collapsible, TextArea } from 'grommet'
 import { Trash, Notes } from 'grommet-icons'
-import localforage from 'localforage'
 import Anchor from '../../atoms/anchor'
-// import AppNotification from '../../atoms/notification'
-// import Age from '../../atoms/age'
 import './style.css'
-
-const BOOKMARKS_KEY = "ndau_explorer_bookmarks"
 
 class Bookmark extends Component {  
   constructor(props) {
@@ -182,20 +177,6 @@ class Bookmark extends Component {
     this.setState({
       accountUpdates: 1
     })
-  }
-
-  updateBookmarkNote = (url, note) => {
-    if(url && note) {
-      localforage.getItem(BOOKMARKS_KEY).then((bookmarks={}) => {
-        const bookmarksCopy = {...bookmarks}
-        const bookmark = bookmarksCopy[url]
-        bookmark.note = note
-    
-        localforage.setItem(BOOKMARKS_KEY, bookmarksCopy).then(()=> { 
-          this.setState({ bookmarks: bookmarksCopy })
-        })
-      })
-    }
   }
 }
 
