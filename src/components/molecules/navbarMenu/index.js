@@ -1,6 +1,7 @@
 import React, { Component, createRef } from 'react'
 import { Box, Drop } from 'grommet'
-import { Menu } from 'grommet-icons';
+import { Menu } from 'grommet-icons'
+import Container from '../../atoms/container'
 import './style.css'
 
 class NavbarMenu extends Component {
@@ -31,16 +32,20 @@ class NavbarMenu extends Component {
             animation="slideDown"
             stretch
             onEsc={this.toggleOpen}
+            onClickOutside={this.toggleOpen}
             className="menuDrop"
             elevation="medium"
-          >
+            margin={{top: 'medium'}}
+          >  
             <Box
-              pad="small"
+              pad={{vertical: 'medium'}}
               width="100vw"
-              background="#293e63"
-              align="center"
-            >
-              {this.props.children}
+              background="#fff"
+              style={{borderRadius: "0 0 3px 3px"}}
+            >  
+              <Container topPad='0'>
+                {this.props.children}
+              </Container> 
             </Box>
           </Drop>
         )}

@@ -33,4 +33,4 @@ class Legend extends Component {
   }
 }
 
-export default Legend;
+export default Legend

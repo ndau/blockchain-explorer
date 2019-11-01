@@ -97,4 +97,4 @@ class Keyword extends Component {
   }
 }
 
-export default Keyword;
+export default Keyword
