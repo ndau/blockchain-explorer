@@ -12,15 +12,26 @@ class Legend extends Component {
           opacity: inactive ? "0.1" : "1", 
           transition: "opacity 0.3s",
           // width: "100%"
+          height: "25px"
         }}
         direction="row"
-      >
+        justify="around"
+      > 
+        {/* { 
+          keyword && 
+          <Box lclassName="legendLabel" lstyle={{textAlign: "right", lmarginRight: "3px", minWidth: "35px"}}>
+            <Text size="small" color="#ffe7c6">
+              <Text lmargin={{right: "xxsmall"}}><Keyword keyword={keyword} size="small" /></Text>
+            </Text>
+          </Box>
+        } */}
+        
         <Box className="legendLabel" style={{textAlign: "right", marginRight: "3px", minWidth: "135px"}}>
           <Text size="small" color="#ffe7c6">
 
             { 
               keyword && 
-              <Text margin={{right: "xxsmall"}}><Keyword keyword={keyword} /></Text>
+              <Text margin={{right: "xxsmall"}} ><Keyword keyword={keyword} size="small" /></Text>
             }
             {label}:
           </Text>

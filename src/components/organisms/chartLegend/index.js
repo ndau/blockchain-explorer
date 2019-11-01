@@ -23,7 +23,7 @@ class ChartLegend extends Component {
                 },
                 {
                   label: "current market price",
-                  value: `${humanizeNumber(marketPrice, 2, 2)} USD`,
+                  value: `${humanizeNumber(marketPrice, 4, 4)} USD`,
                   inactive: active
                 },
                 {
@@ -37,7 +37,7 @@ class ChartLegend extends Component {
                 },
                 {
                   label: "next issued price", 
-                  value: `${humanizeNumber(nextIssuePrice, 2, 2)} USD`
+                  value: `${humanizeNumber(nextIssuePrice, 4, 4)} USD`
                 }
               ]}
             />
@@ -77,11 +77,11 @@ class ChartLegend extends Component {
                 info={[
                   {
                     label: "next issued price", 
-                    value: `${humanizeNumber(nextIssuePrice, 2, 2)} USD`
+                    value: `${humanizeNumber(nextIssuePrice, 4, 4)} USD`
                   },
                   {
                     label: "current market price",
-                    value: `${humanizeNumber(marketPrice, 2, 2)} USD`,
+                    value: `${humanizeNumber(marketPrice, 4, 4)} USD`,
                     inactive: active
                   },
                 ]}
