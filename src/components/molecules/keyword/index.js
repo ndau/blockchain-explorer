@@ -52,9 +52,9 @@ class Keyword extends Component {
             onClick={() => this.setState({ showExplanation: true })}
           >  
             
-            <Text lmargin={{right: "5px"}}>
+            <Text>
               <CircleInformation 
-                size="small" 
+                size={this.props.iconSize || "small"}
                 color={this.props.iconColor || "white"}
               />
             </Text>

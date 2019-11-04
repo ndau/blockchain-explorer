@@ -21,7 +21,7 @@ class NdauDashboard extends Component {
       blocks: null,
       latestBlockHeight: 1,
       priceInfo: null,
-      hideEmpty: false,
+      hideEmpty: true,
       lastUpdated: new Date()
     }
 

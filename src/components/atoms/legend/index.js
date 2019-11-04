@@ -30,10 +30,12 @@ class Legend extends Component {
           <Text size="small" color="#ffe7c6">
 
             { 
-              keyword && 
-              <Text margin={{right: "xxsmall"}} ><Keyword keyword={keyword} size="small" /></Text>
+              keyword &&
+              <Text margin={{right: "xxsmall"}} >
+                <Keyword keyword={keyword} size="small" />
+              </Text>
             }
-            {label}:
+            {label}
           </Text>
         </Box>
         <Box className="legendValue">
