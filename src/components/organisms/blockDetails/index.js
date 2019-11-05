@@ -14,7 +14,7 @@ class BlockDetails extends Component {
 
   render() {
     const { transactionHashes } = this.state;
-    const { block } = this.props;
+    const { block, active } = this.props;
     if (!block) {
       return null;
     }
@@ -26,7 +26,7 @@ class BlockDetails extends Component {
 
     return (
       <Box background="transparent">
-        <BlockCard block={data} />
+        <BlockCard block={data} active={active}/>
       </Box>
     );
   }

@@ -6,7 +6,7 @@ class TransactionsList extends Component{
   state = { activeTransactionIndex: null }
 
   render() {
-    const { numberOfTransactions, transactionHashes, blockHeight } = this.props;
+    const { numberOfTransactions, transactionHashes, blockHeight, active } = this.props;
     
     if(parseInt(numberOfTransactions) === 0) {
       return (
@@ -35,17 +35,21 @@ class TransactionsList extends Component{
     
     return (
       <Box>
-        <Box>
-          <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
-            <b>transaction{transactionHashes.length > 1 && 's'}:</b>
-          </Text>
-        </Box>
+        {
+          active &&
+          <Box>
+            <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
+              <b>transaction{transactionHashes.length > 1 && 's'}:</b>
+            </Text>
+          </Box>
+        }
+        
 
         <Box 
           style={{
-            margin: "10px 0px 0px 15px",
-            paddingLeft: "11px",
-            borderLeft: "1px solid rgba(255,255, 255, 0.3)"
+            margin: "10px small 0px 15px",
+            // paddingLeft: "11px",
+            // borderLeft: "1px solid rgba(255,255, 255, 0.3)"
           }}
         >
           { 

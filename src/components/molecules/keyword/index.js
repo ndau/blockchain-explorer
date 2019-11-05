@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Drop, Text, Box, Anchor, ResponsiveContext, } from 'grommet';
-import { Share, CircleInformation } from 'grommet-icons'
+import { Share, CircleInformation, FormClose } from 'grommet-icons'
 import { KEYWORDS } from '../../../keywords'
 
 class Keyword extends Component {
@@ -46,10 +46,11 @@ class Keyword extends Component {
             <Text color={showExplanation ? "#ffe7c6" : "#fff"}>
               {labelText}
             </Text>
-          </Box> :
+          </Box> 
+          :
           <Box
             ref={this.ref}
-            onClick={() => this.setState({ showExplanation: true })}
+            onClick={this.openPopup}
           >  
             
             <Text>
@@ -69,7 +70,7 @@ class Keyword extends Component {
                 align={{ top: "bottom" }}
                 target={this.ref.current}
                 plain
-                onClickOutside={() => this.setState({ showExplanation: false })}
+                onClickOutside={this.closePopup}
                 elevation="medium"
               >
                 <Box
@@ -79,6 +80,10 @@ class Keyword extends Component {
                   round="xsmall"
                   elevation="medium"
                 >
+                 <Box align="end" onClick={this.closePopup} >     
+                    <FormClose color="#000" />
+                  </Box>
+                  
                   <Text color="#000">{explanation}</Text>
     
                   <Box pad={{top: "10px"}} align="center">     
@@ -95,6 +100,10 @@ class Keyword extends Component {
       </Box>
     );
   }
+
+  openPopup = () => this.setState({ showExplanation: true })
+
+  closePopup =  () => this.setState({ showExplanation: false })
 }
 
 export default Keyword

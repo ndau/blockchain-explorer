@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Box } from 'grommet'
+import { Text, Box, Collapsible } from 'grommet'
 import TransactionList from '../../organisms/transactionsList'
 import Value from '../../molecules/value'
 import Card from '../../atoms/card'
@@ -7,7 +7,7 @@ import '../detailsCard/style.css'
 
 class BlockCard extends Component {
   render() {
-    const { block } = this.props;
+    const { block, active } = this.props;
     
     if (!block) {
       return <h3>Loading...</h3>;
@@ -20,6 +20,7 @@ class BlockCard extends Component {
     return (
       <Card background="transparent" pad={{horizontal: "0"}}>
         <Box>
+          <Collapsible open={active}>
           {
             Object.keys(blockDetails).map((property, index) => {
               if(notDisplayed.includes(property)) { return null }
@@ -34,12 +35,15 @@ class BlockCard extends Component {
                   </Text>
                 </Box>
             )})
+            
           }
+          </Collapsible>
 
           <TransactionList
             transactionHashes={transactionHashes}
             numberOfTransactions={numberOfTransactions}
             blockHeight={height}
+            active={active}
           />
         </Box>
       </Card>

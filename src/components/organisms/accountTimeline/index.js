@@ -4,7 +4,10 @@ import moment from 'moment'
 import TimelineEvent from '../../molecules/timelineEvent'
 import TimelineChart from '../../molecules/timelineChart'
 import TimelineFilter from '../../molecules/timelineFilter'
-import { getTransaction } from '../../../helpers/fetch'
+import { 
+  getTransaction, 
+  //pollForAccountUpdates 
+} from '../../../helpers/fetch'
 
 const DEFAULT_TYPE_FILTERS = [
   "Transfer",

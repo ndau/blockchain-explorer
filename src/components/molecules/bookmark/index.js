@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import { Box, Text, Button, Stack, Collapsible, TextArea } from 'grommet'
-import { Trash, Notes } from 'grommet-icons'
+import { Trash, Notes, Notification } from 'grommet-icons'
 import Anchor from '../../atoms/anchor'
+import TruncatedText from '../../atoms/truncatedText'
+import { pollForAccountUpdates } from '../../../helpers/fetch'
+import { PRIMARY_LIME } from '../../../constants'
 import './style.css'
+
+const ACCCOUNT_POLL_INTERVAL = 30000 // every 1/2 minute
 
 class Bookmark extends Component {  
   constructor(props) {
@@ -12,7 +17,7 @@ class Bookmark extends Component {
       active: props.isActive,
       showNoteForm: false,
       noteState: props.data && props.data.note,
-      accountUpdates: 0
+      accountUpdated: false
     }
   }
 
@@ -25,7 +30,7 @@ class Bookmark extends Component {
       }
     } = this.props 
 
-    const { showNoteForm, noteState, active } = this.state
+    const { showNoteForm, noteState, active, accountUpdated } = this.state
 
     return (
       <Box 
@@ -34,6 +39,7 @@ class Bookmark extends Component {
         round="xsmall" 
         onMouseOver={() => this.setActiveState(true)}
         onMouseOut={() => this.setActiveState(false)}
+        style={{overflow: "hidden"}}
       >  
         {/* {
           accountUpdates && 
@@ -65,41 +71,43 @@ class Bookmark extends Component {
                     identifier &&
                     <Text>
                       <Text size="large"  color="#f99d1c">/</Text>
-                      <Text style={{fontStyle: "italic"}}>{identifier}</Text>
+                      <Text style={{fontStyle: "italic"}}>
+                        <TruncatedText value={identifier} />
+                      </Text>
                     </Text>
                   }
                 </Text>
               </Anchor>
             </Text>
             
-            <Text style={{float: "right", opacity: active ? 1 : 0.1}}>
+            <Text style={{float: "right"}}>
               {/* <Text as="div" alignSelf="end" size="xsmall">
                 <Age timestamp={added} suffix="ago"/>
               </Text> */}
               {
                 type === "account" &&
-                <Text>
-                  {/* <Stack anchor="top-right" style={{display: "inline-block"}}>
+                <Text style={{opacity: (accountUpdated || active)  ? 1 : 0.1}}>
+                  <Stack anchor="top-right" style={{display: "inline-block"}}>
                     <Notification size="20px" style={{position: "relative", top: "2px", right: "3px"}} onClick={this.notify}/>
                     {
-                      accountUpdates > 0 &&
+                      accountUpdated &&
                       <Box
-                        background="green"
+                        background={PRIMARY_LIME}
                         pad='5px'
                         margin={{ left: 'small', bottom: 'small' }}
                         round
-                        style={{opacity: "1 !important"}}
+                        style={{opacity: "1"}}
                       />
                     }
-                  </Stack> */}
+                  </Stack>
                 </Text>
               }
 
-              <Text margin={{left: "xsmall"}}>
+              <Text margin={{left: "xsmall"}} style={{opacity: active  ? 1 : 0.1}}>
                 <Button icon={<Notes size="20px" />} onClick={this.toggleShowNoteForm} plain/>
               </Text>
 
-              <Text margin={{left: "xsmall"}}>
+              <Text margin={{left: "xsmall"}} style={{opacity: active  ? 1 : 0.1}}>
                 <Button icon={<Trash size="20px" />} onClick={deleteBookmark} plain/>
               </Text>
             </Text>
@@ -147,8 +155,6 @@ class Bookmark extends Component {
     )
   }
 
-  componentWillReceiveProps
-
   toggleShowNoteForm = () => {
     this.setState(({showNoteForm}) => {
       return { showNoteForm: !showNoteForm }
@@ -174,9 +180,38 @@ class Bookmark extends Component {
   }
 
   notify = () => {
-    this.setState({
-      accountUpdates: 1
-    })
+    // TODO: show notification
+  }
+
+  componentDidMount = () => {
+    this.startPolling()
+  }
+  
+  startPolling = () => {
+    this.endPolling()
+
+    const success = (history) => {
+      const latestAccountTxn = history && history[history.length - 1]
+        
+      if (latestAccountTxn) {
+        const { latestAccountTxHash } = this.state
+        if (latestAccountTxHash === latestAccountTxn.TxHash) {
+          this.setState({ accountUpdated: true }, this.notify)
+        }
+       
+      }
+    }
+
+    this.pollInterval = window.setInterval(
+      pollForAccountUpdates({metadata: this.props.data, success}), 
+      ACCCOUNT_POLL_INTERVAL
+    )
+  } 
+
+  endPolling = () => {
+    if (this.pollInterval) {
+      window.clearInterval(this.pollInterval)
+    }
   }
 }
 

@@ -47,7 +47,7 @@ export const getBlocks = async ({before, after, filter, limit}) => {
 
 export const pollForBlocks = ({after, filter, success}) => {
   let pollAfter = after
-  const fetchNewBlocks = () => {
+  return () => {
     getNodeStatus()
       .then(status => {
         if (!status) {
@@ -76,8 +76,6 @@ export const pollForBlocks = ({after, filter, success}) => {
         }
       })
   }
-
-  return fetchNewBlocks
 }
 
 
@@ -158,7 +156,18 @@ export const getAccountHistory = async (address) => {
       return history
     })
 }
-
+ 
+export const pollForAccountUpdates = ({metadata, success}) => {
+  return () => {
+    if (metadata && metadata.type === "account") {
+      getAccountHistory(metadata.identifier)
+        .then(history => {
+          success && success(history)
+        })
+        .catch(error => console.log(error))
+    }
+  }
+}
 
 
 /////////////////////////////////////////
