@@ -19,12 +19,12 @@ export const getBlock = async (blockHeight) => {
   
   return axios.get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      const block = response.data.block;
-      return formatBlock(block);
+      console.log(response.data)
+      return formatBlock(response.data.block_meta);
     })
     .catch(error => {
       console.log(error)
-      return;
+      return
     })
 }
 
@@ -35,12 +35,12 @@ export const getBlocks = async ({before, after, filter, limit}) => {
   return axios.get(blocksEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       const { last_height, block_metas } = response.data
-    
+
       return {
         blocks: formatBlocks(block_metas),
         lastFetchedHeight: last_height,
         latestFetchedHeight: block_metas[0] && block_metas[0].header.height
-      };
+      }
     })
     .catch(error => console.log(error))
 }
@@ -73,6 +73,7 @@ export const pollForBlocks = ({after, filter, success}) => {
                   } 
                 })
             })
+            .catch(err => console.log(err))
         }
       })
   }
@@ -87,14 +88,11 @@ export const pollForBlocks = ({after, filter, success}) => {
 
 export const getTransaction = async (hash) => {
   const transactionHash = window.decodeURIComponent(hash);
-  const transactionEndpoint = `${await getNodeEndpoint()}/transaction/${window.encodeURIComponent(transactionHash)}`;
+  const transactionEndpoint = `${await getNodeEndpoint()}/transaction/detail/${window.encodeURIComponent(transactionHash)}`;
 
   return axios.get(transactionEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      return response.data && formatTransaction(
-        response.data.Tx, 
-        { hash: transactionHash, blockHeight: response.data.BlockHeight}
-      );
+      return response.data && formatTransaction(response.data)
     })
 }
 
@@ -127,6 +125,77 @@ export const getBlockTransactions = (blockHeight) => {
     })
 }
 
+export const getNewestTransaction = async () => {
+  const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/start/?limit=1`
+  let tx 
+  await axios.get(transactionsEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+      const transaction = response.data && response.data.Txs && response.data.Txs[0]
+      tx = formatTransaction(transaction)
+    })
+    .catch(error => {
+      // TODO: FAIL SAFE
+      return;
+    })
+  
+  return tx
+}
+
+export const getTransactionsBefore = async (txHash, typeFilters) => {
+  const query = typeFilters ? `?type=${typeFilters.join(";&type=")}` : ""
+  const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/${txHash}${query}`
+
+  return axios.get(transactionsEndpoint, HTTP_REQUEST_HEADER)
+    .then(response => {
+     return response.data;
+    })
+    .catch(error => {
+      // TODO: FAIL SAFE
+      return
+    })
+}
+
+export const pollForTransactions = ({currentTxHash, success, typeFilters}) => {
+  const fetchNewTransactions = () => {
+    getNodeStatus()
+      .then(async status => {
+        if (!status) {
+          return
+        }
+
+        const newestTx = await getNewestTransaction()
+        if(newestTx.hash === currentTxHash) {
+          return
+        }
+
+        await getTransactionsBefore("start", typeFilters)
+          .then(({Txs}) => {
+            const newTransactions = [] 
+            let counter = 0
+            const newCurrentTxHash = Txs[0].TxHash
+            let hash = newCurrentTxHash
+            
+            
+            while (hash !== currentTxHash) {
+              const transaction = Txs[counter]
+              if (transaction) {
+                newTransactions.push(transaction)
+
+                counter = counter + 1
+                hash = transaction.TxHash
+              }
+            }
+
+            success(newTransactions, newCurrentTxHash)
+          })
+      })
+      .catch(error => {
+        return
+      })
+  }
+
+  return fetchNewTransactions
+}
 
 /////////////////////////////////////////
 // ACCOUNT
@@ -151,7 +220,7 @@ export const getAccount = async (address) => {
 
 export const getAccountHistory = async (address) => {
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`
-
+  console.log(accountHistoryEndpoint)
   return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
       let history = response.data && response.data.Items 
@@ -198,8 +267,9 @@ export const getNodeEndpoint = async (node) => {
     await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER)
       .then(response => {
         const { networks } = response.data
-        const nodes = networks[nodeName] && networks[nodeName]["nodes"]
-        const randomNodeIndex = Math.floor(Math.random() * Object.keys(nodes).length)
+        const nodeKey = networks[nodeName] ? nodeName : DEFUALT_NODE_NAME
+        const nodes = networks[nodeKey] && networks[nodeKey]["nodes"]
+        const randomNodeIndex = nodes && Math.floor(Math.random() * Object.keys(nodes).length)
         const randomNode = Object.values(nodes)[randomNodeIndex]
         nodeEndpoint = randomNode && randomNode.api
       })

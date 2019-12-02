@@ -19,7 +19,7 @@ class TruncatedText extends Component {
   }
 
   render() {
-    const  { value, className } = this.props
+    const  { value, className, size="medium" } = this.props
     const { showFullWord } = this.state
     
     return (
@@ -39,6 +39,7 @@ class TruncatedText extends Component {
                   className={className} 
                   style={{display: "inline"}} 
                   color={showFullWord ? "#ffe7c6" : ""}
+                  size={size}
                 >
                   {this.truncatedWord}
                 </Text>
@@ -88,7 +89,7 @@ class TruncatedText extends Component {
                 )}
               </Box>
               : 
-              <Text className={className} style={{wordWrap: "break-word"}}>
+              <Text className={className} style={{wordWrap: "break-word"}} size={size}>
                 {value}
               </Text>
             )
@@ -117,11 +118,11 @@ class TruncatedText extends Component {
   }
 
   truncateWord = () => {
-    const { value } = this.props
-    if (typeof value !== "string" || value.length <= 19 || (value.indexOf(" ") !== -1) || (!isNaN(new Date(value).getDate()))) {
+    const { value, maxLength } = this.props
+    if (typeof value !== "string" || (value.indexOf(" ") !== -1) || (!isNaN(new Date(value).getDate()))) {
       return null
     }
-    return truncate(value)
+    return truncate(value, maxLength)
   }
 }
 

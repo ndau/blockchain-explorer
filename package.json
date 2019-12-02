@@ -7,6 +7,7 @@
     "d3": "^5.7.0",
     "grommet": "^2.7.0",
     "grommet-icons": "^4.2.0",
+    "localforage": "^1.7.3",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.25",
@@ -20,6 +21,7 @@
     "react-internationalization": "^1.1.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
+    "react-web-notification": "^0.7.0",
     "styled-components": "^4.1.2"
   },
   "scripts": {

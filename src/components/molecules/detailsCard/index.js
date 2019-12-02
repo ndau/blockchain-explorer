@@ -26,7 +26,7 @@ class DetailsCard extends Component {
                 <Box key={index} className="detailField" round="xsmall">
                   <Text 
                     as="section"  
-                    margin={{bottom: "10px"}}
+                    margin={{bottom: "5px"}}
                   >
                     <Text>
                       <Keyword label={item} keyword={KEYWORD_MAP[item]} />

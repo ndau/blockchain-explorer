@@ -16,12 +16,12 @@ class Block extends Component {
       latestBlockHeight: null,
     }
 
-    this.getData();
+    this.getData()
   }
 
   render() {
-    const { block, latestBlockHeight } = this.state;
-    const blockHeight = block && block.height;
+    const { block, latestBlockHeight } = this.state
+    const blockHeight = block && block.height
 
     return (
       <Details
@@ -67,9 +67,9 @@ class Block extends Component {
     )
   }
 
-  getData = () => {
+  getData = async () => {
     const { blockHeight } = this.props.match.params;
-    getBlock(blockHeight)
+    await getBlock(blockHeight)
       .then(block => this.setState({ block }))
     getNodeStatus()
       .then(status => {
@@ -85,7 +85,7 @@ class Block extends Component {
     }
 
     if (getURL(this.props.location) !== getURL(prevProps.location)) {
-      this.getData();
+      this.getData()
     }
   }
 }

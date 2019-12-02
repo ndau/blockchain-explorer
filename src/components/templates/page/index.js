@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Box, Text } from 'grommet'
 import Container from '../../atoms/container'
 import Navbar from '../../organisms/navbar'
 import Footer from '../../atoms/footer'
 import Anchor from '../../atoms/anchor'
+import './style.css'
 
 class Page extends Component {
   render() {
-    const { children, browserHistory, notFound } = this.props;
+    const { children, browserHistory, notFound } = this.props
   
     return(
       <Box as="main">
@@ -49,11 +51,10 @@ class Page extends Component {
           <Box>
             <Footer />
           </Box>
-          
         </Box>
       </Box>
     );
   }
 }
 
-export default Page;
+export default withRouter(Page)

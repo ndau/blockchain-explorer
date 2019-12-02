@@ -3,7 +3,7 @@ import { Box } from 'grommet'
 import moment from 'moment'
 import TimelineEvent from '../../molecules/timelineEvent'
 import TimelineChart from '../../molecules/timelineChart'
-import TimelineFilter from '../../molecules/timelineFilter'
+import TimelineFilter from '../../organisms/timelineFilter'
 import { getTransaction } from '../../../helpers/fetch'
 
 const DEFAULT_TYPE_FILTERS = [

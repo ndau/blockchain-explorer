@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Box, Text } from 'grommet';
 import Anchor from '../../atoms/anchor'
 import Details from '../../templates/details'
-import TransactionDetails from '../../organisms/transactionDetails'
+import DetailsCard from '../../molecules/detailsCard'
 import { getTransaction } from '../../../helpers/fetch'
 
 class Transaction extends Component {
@@ -18,7 +18,9 @@ class Transaction extends Component {
   }
 
   render() {
-    const { transaction, blockHeight } = this.state;
+    const { transaction } = this.state;
+    const blockHeight = transaction && transaction.blockHeight
+    
     if (!transaction) {
       return (
         <Details browserHistory={this.props.history} notFound/>
@@ -45,7 +47,7 @@ class Transaction extends Component {
           </Text>
         </Box>
         
-        <TransactionDetails transaction={transaction} />
+        <DetailsCard data={transaction} />
       </Details>
     )
   }

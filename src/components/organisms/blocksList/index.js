@@ -26,7 +26,7 @@ class BlockList extends Component {
         elevation="small"
       >
         {
-          blocks.map((block, index) =>  {
+          blocks.map((block, index) => {
             return (
               <Box key={index} animation={["slideDown", "fadeIn"]}>
                 <BlockListItem 
@@ -48,4 +48,4 @@ class BlockList extends Component {
   }
 }
 
-export default BlockList;
+export default BlockList

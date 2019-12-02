@@ -44,7 +44,7 @@ class BlockchainSearch extends Component {
         border
         width="large"
         direction="row"
-        align="center" 
+        // align="end" 
         style={{
           borderColor: invalidEntry ? "rgba(255,0,0,0.5)" : "rgba(255,255,255,0.15)",
           background: invalidEntry ? "rgba(255,0,0,0.05)" : "transparent"
@@ -108,8 +108,7 @@ class BlockchainSearch extends Component {
             }
           />
         </Box>
-        {/* } */}
-
+      
         <Box 
           onClick={this.onSearch} 
           pad={{right: "20px", left: "small"}}

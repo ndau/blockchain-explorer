@@ -94,7 +94,7 @@ class Account extends Component {
   }
 
   getData = () => {
-    const { address } = this.props.match.params;
+    const { accountAddress: address } = this.props.match.params;
     getAccount(address)
       .then(account => {
         this.setState({ account })
