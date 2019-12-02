@@ -218,17 +218,38 @@ export const getAccount = async (address) => {
     })
 }
 
-export const getAccountHistory = async (address) => {
+export const getAccountHistory = async address => {
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`
-  console.log(accountHistoryEndpoint)
-  return axios.get(accountHistoryEndpoint, HTTP_REQUEST_HEADER)
-    .then(response => {
-      let history = response.data && response.data.Items 
-      return history
-    })
+  let allItems = []
+  let offset = 0
+  while (true) {
+    const url = offset
+      ? `${accountHistoryEndpoint}?after=${offset}`
+      : accountHistoryEndpoint
+    const response = await axios.get(url, HTTP_REQUEST_HEADER)
+    let history = response.data && response.data.Items
+
+    if (response.data && response.data.Next === '') {
+      allItems = allItems.concat(history) // accumulate
+      break
+    }
+
+    if (response.data && response.data.Next) {
+      // assert this format in the Next field since it's not a useable address by itself
+      if (!response.data.Next.match(/account\/history\/\?after=\d*/)) {
+        throw new Error(
+          `Expected /account/history?after=N, got ${response.data.Next}`
+        )
+      }
+      allItems = allItems.concat(history) // accumulate
+
+      // remove everything but the numbers from the url
+      offset = response.data.Next.replace(/[^\d]/g, '')
+    }
+  }
+
+  return allItems
 }
-
-
 
 /////////////////////////////////////////
 // NODE
