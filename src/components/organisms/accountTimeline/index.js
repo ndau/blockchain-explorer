@@ -5,17 +5,10 @@ import TimelineEvent from '../../molecules/timelineEvent'
 import TimelineChart from '../../molecules/timelineChart'
 import TimelineFilter from '../../organisms/timelineFilter'
 import { getTransaction } from '../../../helpers/fetch'
+import { TRANSACTION_TYPES } from '../../../constants'
 
-const DEFAULT_TYPE_FILTERS = [
-  "Transfer",
-	"ChangeValidation",
-  "ChangeRecoursePeriod",
-  "Delegate",
-	"Lock",
-	"Notify",
-	"SetRewardsDestination",
-	"SetValidation",
-]
+// Default to show all transaction types
+const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES)
 
 class AccountTimeline extends Component {
   constructor(props) {
