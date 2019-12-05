@@ -9,6 +9,10 @@ class BlockDetails extends Component {
     this.state = { transactionHashes: null, firstFetch: true }
   }
 
+  componentDidMount () {
+    this.setTransactionHashes(this.props.block)
+  }
+
   render () {
     const { transactionHashes } = this.state
     const { block, active } = this.props
