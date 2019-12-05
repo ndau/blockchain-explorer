@@ -11,48 +11,47 @@ import { TRANSACTION_TYPES } from '../../../constants'
 const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES)
 
 class AccountTimeline extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
-     
-    const { filterStartDate, filterEndDate } =  this.getDateRange(3)
-    this.state = { 
+
+    const { filterStartDate, filterEndDate } = this.getDateRange(3)
+    this.state = {
       events: props.events,
       typeFilters: DEFAULT_TYPE_FILTERS,
       filterStartDate,
       filterEndDate,
-      filterRange: "Last 3 months",
+      filterRange: 'Last 3 months',
       selectedEvent: null,
       activeEvent: null
     }
 
     this.filteredEvents = props.events
   }
-  
-  render() {
-    const { events, balance } = this.props;
-    if(!events) {
+
+  render () {
+    const { events, balance } = this.props
+    if (!events) {
       return null
     }
-    
-    const { 
+
+    const {
       typeFilters,
       filterStartDate,
       filterEndDate,
       filterRange,
       selectedEvent,
       activeEvent
-     } = this.state
+    } = this.state
 
     const filteredEvents = this.filterEvents() || events
     const displayedEvents = selectedEvent ? [selectedEvent] : filteredEvents
-    const borderStyle = "1px dashed rgba(255,255,255,0.1)"
+    const borderStyle = '1px dashed rgba(255,255,255,0.1)'
 
     return (
       <Box>
-        {
-          events.length > 1 &&
-          <Box margin={{bottom: "20px"}}>
-            <TimelineChart 
+        {events.length > 1 && (
+          <Box margin={{ bottom: '20px' }}>
+            <TimelineChart
               events={[...events, this.initialEvent]}
               filteredEvents={filteredEvents}
               balance={balance}
@@ -61,10 +60,10 @@ class AccountTimeline extends Component {
               toggleSelectedEvent={this.toggleSelectedEvent}
             />
           </Box>
-        }
-        
+        )}
+
         <Box>
-          <TimelineFilter 
+          <TimelineFilter
             events={events}
             filterStartDate={filterStartDate}
             filterEndDate={filterEndDate}
@@ -77,58 +76,64 @@ class AccountTimeline extends Component {
             selectedEvent={selectedEvent}
           />
         </Box>
-        
+
         <Box onMouseLeave={this.clearActiveEvent}>
-          {
-            displayedEvents.map((event, index) => {
-              const { activeEvent, selectedEvent } = this.state
-              const isActive = activeEvent && ( activeEvent.TxHash === event.TxHash )
-              const isSelected = selectedEvent && ( selectedEvent.TxHash === event.TxHash )
+          {displayedEvents.map((event, index) => {
+            const { activeEvent, selectedEvent } = this.state
+            const isActive = activeEvent && activeEvent.TxHash === event.TxHash
+            const isSelected =
+              selectedEvent && selectedEvent.TxHash === event.TxHash
 
-              return (
-                <Box key={index} onMouseEnter={() => this.setActiveEvent(event)} >
-                  <Box 
-                    round="xsmall"
-                    style={{border: isActive ? "1px dashed rgba(255,255,255,0.3)" : borderStyle}}
-                    background="rgba(255,255,255,0.05)"
-                  > 
-                    <TimelineEvent 
-                      event={event}
-                      previousEvent={this.getPreviousEvent(event)}
-                      index={index}
-                      selected={isSelected}
-                    />
-                  </Box>
-
-                  {
-                    index !== events.length -1 &&
-                    <Box 
-                      alignSelf="center" 
-                      border="right" 
-                      height="20px" 
-                      width="0"
-                      style={{borderRight: borderStyle}}
-                    />
-                  } 
+            return (
+              <Box key={index} onMouseEnter={() => this.setActiveEvent(event)}>
+                <Box
+                  round='xsmall'
+                  style={{
+                    border: isActive
+                      ? '1px dashed rgba(255,255,255,0.3)'
+                      : borderStyle
+                  }}
+                  background='rgba(255,255,255,0.05)'
+                >
+                  <TimelineEvent
+                    event={event}
+                    previousEvent={this.getPreviousEvent(event)}
+                    index={index}
+                    selected={isSelected}
+                  />
                 </Box>
-              )
-            })
-          }
+
+                {index !== events.length - 1 && (
+                  <Box
+                    alignSelf='center'
+                    border='right'
+                    height='20px'
+                    width='0'
+                    style={{ borderRight: borderStyle }}
+                  />
+                )}
+              </Box>
+            )
+          })}
         </Box>
       </Box>
-    );
+    )
   }
 
-  componentDidUpdate = async (prevProps) => {
+  componentDidUpdate = async prevProps => {
     const { events } = this.props
-    if((!prevProps.events && this.props.events) || JSON.stringify(events) !== JSON.stringify(prevProps.events)) {
+    if (
+      (!prevProps.events && this.props.events) ||
+      JSON.stringify(events) !== JSON.stringify(prevProps.events)
+    ) {
       await this.getEventTransactions()
     }
   }
 
-  getPreviousEvent = (currentEvent) => {
+  getPreviousEvent = currentEvent => {
     const { events } = this.props
-    const isFirstEvent = JSON.stringify(currentEvent) === JSON.stringify(events[events.length-1])
+    const isFirstEvent =
+      JSON.stringify(currentEvent) === JSON.stringify(events[events.length - 1])
 
     return isFirstEvent ? this.initialEvent : events[currentEvent.index + 1]
   }
@@ -138,13 +143,15 @@ class AccountTimeline extends Component {
     if (!events) {
       return []
     }
-    
+
     const { filterStartDate, filterEndDate } = this.state
     this.filteredEvents = events.filter(event => {
       const eventDate = moment(event.Timestamp)
-      const isWithinFilterRange = eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate)
+      const isWithinFilterRange =
+        eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate)
       const transactionType = event.transaction && event.transaction.raw.type
-      const isSelected = transactionType && typeFilters.includes(transactionType)
+      const isSelected =
+        transactionType && typeFilters.includes(transactionType)
 
       return isWithinFilterRange && isSelected
     })
@@ -152,23 +159,23 @@ class AccountTimeline extends Component {
     return this.filteredEvents
   }
 
-  getDateRange = (numberOfMonths) => {
+  getDateRange = numberOfMonths => {
     return {
       filterStartDate: moment(new Date()).subtract(numberOfMonths, 'months'),
-      filterEndDate: moment(new Date()),
+      filterEndDate: moment(new Date())
     }
   }
 
   selectFilterRange = (numberOfMonths, filterRange) => {
     const { filterStartDate, filterEndDate } = this.getDateRange(numberOfMonths)
-    this.setState({ 
-      filterStartDate, 
+    this.setState({
+      filterStartDate,
       filterEndDate,
-      filterRange,
-     })
+      filterRange
+    })
   }
 
-  setFilterRange = ({startDate, endDate}) => {
+  setFilterRange = ({ startDate, endDate }) => {
     this.setState({
       filterStartDate: moment(startDate),
       filterEndDate: moment(endDate)
@@ -176,31 +183,30 @@ class AccountTimeline extends Component {
   }
 
   getTransactionEvent = (event, index) => {
-    return getTransaction(event.TxHash)
-      .then(transaction => {
-        event.transaction = transaction
-        event.index= index
-        
-        return event
-      })
+    return getTransaction(event.TxHash).then(transaction => {
+      event.transaction = transaction
+      event.index = index
+
+      return event
+    })
   }
 
   getEventTransactions = async () => {
     const { events } = this.props
 
-    await Promise.all(events.map((event, index) => this.getTransactionEvent(event, index)))
-      .then(results => {
-        this.setState({ events: results })
-      }) 
+    await Promise.all(
+      events.map((event, index) => this.getTransactionEvent(event, index))
+    ).then(results => {
+      this.setState({ events: results })
+    })
   }
 
-  toggleFilter = (type) => {
-    const {typeFilters} = this.state
-    let newTypeFilters = typeFilters;
+  toggleFilter = type => {
+    const { typeFilters } = this.state
+    let newTypeFilters = typeFilters
     if (!typeFilters.includes(type)) {
       newTypeFilters = [...typeFilters, type]
-    }
-    else {
+    } else {
       newTypeFilters = [...typeFilters].filter(filter => filter !== type)
     }
 
@@ -209,28 +215,28 @@ class AccountTimeline extends Component {
     })
   }
 
-  toggleSelectedEvent = (event) => {
+  toggleSelectedEvent = event => {
     if (!event) {
       return
     }
 
-    this.setState(({selectedEvent}) => {
-      const newSelectedEvent =  (selectedEvent && selectedEvent.TxHash === event.TxHash) ? null : event
-      return { 
+    this.setState(({ selectedEvent }) => {
+      const newSelectedEvent =
+        selectedEvent && selectedEvent.TxHash === event.TxHash ? null : event
+      return {
         selectedEvent: newSelectedEvent,
         activeEvent: newSelectedEvent
-      } 
+      }
     })
   }
 
-  setActiveEvent = (event) => {
+  setActiveEvent = event => {
     this.setState({ activeEvent: event })
   }
 
   clearActiveEvent = () => {
     this.setState({ activeEvent: null })
   }
-
 
   initialEvent = {
     Balance: 0

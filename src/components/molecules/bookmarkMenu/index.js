@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import localforage from 'localforage'
 import qs from 'query-string'
 import { Box, Button, Text } from 'grommet'
-import { 
+import {
  Bookmark as BookmarkIcon, // More as MoreVertical, Alert
 } from 'grommet-icons'
 import NavbarMenu from '../navbarMenu'
@@ -12,9 +12,9 @@ import './style.css'
 
 const BOOKMARKS_KEY = "ndau_explorer_bookmarks"
 
-class BookmarkMenu extends Component {  
+class BookmarkMenu extends Component {
   constructor(props) {
-    super(props) 
+    super(props)
     this.state = {
       bookmarks: {},
       showBookmarks: false,
@@ -27,9 +27,9 @@ class BookmarkMenu extends Component {
     localforage.getItem(BOOKMARKS_KEY).then((bookmarks={})=> {
       const bookmarksCopy = {...bookmarks}
       const bookmark = bookmarksCopy[url]
-      if(bookmark) {
-        const note = bookmark.note 
 
+      if(bookmark) {
+        const note = bookmark.note
         this.setState({ bookmarks: bookmarksCopy, pageNote: note })
       }
       else {
@@ -38,19 +38,20 @@ class BookmarkMenu extends Component {
     })
   }
 
+
   render() {
-    
     const { bookmarks } = this.state
-    const bookmarked = !!bookmarks[this.getURL()]
+    const bookmarked = Boolean(bookmarks[this.getURL()])
     const pageNote = this.getPageNote()
+    // console.log(pageNote, this.getURL())
 
     return (
-      <Box>  
+      <Box>
         <NavbarMenu
           icon={
             <Text>
               <Text>
-                <BookmarkIcon 
+                <BookmarkIcon
                   size="20px"
                   color={bookmarked ? "#f99d1c" : "rgba(255,255,255,0.2)"}
                 />
@@ -60,7 +61,7 @@ class BookmarkMenu extends Component {
         >
           <Box>
             <Box>
-              <Text color="black" alignSelf="center">Bookmarks</Text>
+              <Text color="black" size="20px" alignSelf="center">Bookmarks</Text>
             </Box>
 
             <Box margin={{bottom: "small"}} alignSelf="end">
@@ -68,55 +69,55 @@ class BookmarkMenu extends Component {
                 {
                   !bookmarked &&
                   <Text size="small">
-                    <Button 
+                    <Button
                     label="Bookmark this Page"
                     reverse
                     style={{ textDecoration: "underline", color: "green", display: "inline-block" }}
-                    onClick={this.addBookmark} 
+                    onClick={this.addBookmark}
                     round="false"
                     plain
                   />
-                    
+
                   </Text>
                 }
                 <Text size="small" margin={{left: "small"}}>
-                <Button 
+                <Button
                   label="Delete All Bookmarks"
                   // icon={<Alert size="small" color="red"/>}
                   reverse
                   style={{ textDecoration: "underline", color: "red", display: "inline-block" }}
-                  onClick={this.clearBookmarks} 
+                  onClick={this.clearBookmarks}
                   round="false"
                   plain
                 />
                 </Text>
               </Text>
             </Box>
-  
+
             <Box>
               {
-                Object.keys(bookmarks).reverse().map((bookmark, index) => {
+                Object.keys(bookmarks).reverse().map((bookmark) => {
                   return (
-                    <Bookmark 
-                      key={index}
-                      label={bookmark} 
+                    <Bookmark
+                      key={bookmark}
+                      label={bookmark}
                       data={bookmarks[bookmark]}
                       closeBookmarks={()=> this.setShowBookmarks(false)}
                       deleteBookmark={()=> this.removeBookmark(bookmark)}
                       updateNote={this.updateBookmarkNote}
                     />
-                )}) 
+                )})
               }
             </Box>
           </Box>
         </NavbarMenu>
 
         {
-          pageNote  && 
-          <Box 
-            className="bookmarkNote" 
-            background="#fefefe" alignSelf="start" 
-            pad="small" 
+          pageNote  &&
+          <Box
+            className="bookmarkNote"
+            background="#fefefe" alignSelf="start"
+            pad="small"
             animation={{
               "type": "fadeIn",
               "delay": 0,
@@ -138,7 +139,7 @@ class BookmarkMenu extends Component {
     const url = this.getURL()
 
     localforage.getItem(BOOKMARKS_KEY).then(bookmarkData => {
-      const bookmarks = bookmarkData || {}
+      const bookmarks = {...bookmarkData} || {}
       const bookmark = bookmarks[url]
 
       if(!bookmark) {
@@ -155,8 +156,8 @@ class BookmarkMenu extends Component {
       localforage.getItem(BOOKMARKS_KEY).then((bookmarks={}) => {
         const bookmarksCopy = {...bookmarks}
         bookmarksCopy[url].note = note
-    
-        localforage.setItem(BOOKMARKS_KEY, bookmarksCopy).then(()=> { 
+
+        localforage.setItem(BOOKMARKS_KEY, bookmarksCopy).then(()=> {
           this.setState({ bookmarks: bookmarksCopy })
         })
       })
@@ -168,7 +169,7 @@ class BookmarkMenu extends Component {
       const bookmarksCopy = {...bookmarks}
       delete bookmarksCopy[url]
 
-      localforage.setItem(BOOKMARKS_KEY, bookmarksCopy).then(()=> { 
+      localforage.setItem(BOOKMARKS_KEY, bookmarksCopy).then(()=> {
         this.setState({ bookmarks: bookmarksCopy })
       })
     })
@@ -179,7 +180,7 @@ class BookmarkMenu extends Component {
       this.setState({ bookmarks: {} })
     })
   }
-  
+
   getURL = () => {
     const { pathname, search } = this.props.location
     const path = pathname + search
@@ -188,8 +189,8 @@ class BookmarkMenu extends Component {
 
   parseURL = () => {
     const {
-      location: { search, pathname }, 
-      match: { params } 
+      location: { search, pathname },
+      match: { params }
     } = this.props
 
     const url = pathname
@@ -198,22 +199,22 @@ class BookmarkMenu extends Component {
     let node = query.node
     const key = params && Object.keys(params)[0]
     const identifier = key && params[key]
-    
-    return { 
-      node, 
-      type, 
-      identifier, 
-      added: new Date(), 
-      url 
+
+    return {
+      node,
+      type,
+      identifier,
+      added: new Date(),
+      url
     }
   }
 
   getPageNote = ()=> {
     const pageURL =this.getURL()
     const { bookmarks } = this.state
-     
+
     if(pageURL) {
-      const pageBookmark = bookmarks[pageURL] 
+      const pageBookmark = bookmarks[pageURL]
       return pageBookmark && pageBookmark.note
     }
     return null

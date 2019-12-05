@@ -11,16 +11,23 @@ class Legend extends Component {
         style={{
           opacity: inactive ? "0.1" : "1", 
           transition: "opacity 0.3s",
-          // width: "100%"
+          height: "25px"
         }}
         direction="row"
-      >
+      > 
         <Box className="legendLabel" style={{textAlign: "right", marginRight: "3px", minWidth: "135px"}}>
           <Text size="small" color="#ffe7c6">
 
             { 
+<<<<<<< HEAD
               keyword && 
               <Text margin={{right: "xxsmall"}}><Keyword keyword={keyword} /></Text>
+=======
+              keyword &&
+              <Text margin={{right: "xxsmall"}} >
+                <Keyword keyword={keyword} size="small" />
+              </Text>
+>>>>>>> d3d810314f8a5e0f84864526aa2494b2794e6307
             }
             {label}:
           </Text>
@@ -33,4 +40,4 @@ class Legend extends Component {
   }
 }
 
-export default Legend;
+export default Legend

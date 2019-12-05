@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Box, Collapsible } from "grommet"
+import { Text, Box } from "grommet"
 import Anchor from '../../atoms/anchor'
 import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card'
@@ -8,12 +8,12 @@ import BlockDetails from '../../organisms/blockDetails'
 
 class BlockListItem extends Component {
   render() {
-    const {block, active } = this.props;
+    const { block, active } = this.props;
     if (!block) {
       return <div></div>;
     }
   
-    const {height, numberOfTransactions, timestamp} = block;
+    const {height, timestamp} = block;
     return (
       <Card
         header={(
@@ -41,16 +41,6 @@ class BlockListItem extends Component {
                 <i><Age timestamp={timestamp} suffix="ago"/></i>
               </Text>
             </Text>
-
-            {
-              !active &&
-              <Box animation="fadeIn">
-                <Text size="small">
-                  { numberOfTransactions ? `${numberOfTransactions} ` : 'No '}
-                  transaction{numberOfTransactions !== 1 && 's'}
-                </Text>
-              </Box>
-            }
           </header>
         )}
         onClick={this.toggleActiveState}
@@ -59,18 +49,11 @@ class BlockListItem extends Component {
         background={active ? "#0d2342" : "#0f2748"}
         margin="xsmall"
       >
-        <Collapsible open={active}>
-          <Box 
-            margin={{top: "10px"}}
-            animation={active ? "fadeIn" : {
-              "type": "fadeOut",
-              "delay": 0,
-              "duration": 100,
-            }}
-          >
-            <BlockDetails block={block} />
-          </Box>
-        </Collapsible>
+        <Box 
+          margin={{top: "10px"}}
+        >
+          <BlockDetails block={block} active={active} />
+        </Box>
       </Card>
     );
   }
