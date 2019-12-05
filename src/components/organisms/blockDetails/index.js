@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
 import { Box } from 'grommet'
-import  BlockCard from '../../molecules/blockCard'
-import { getTransactionHashes } from '../../../helpers/fetch';
+import BlockCard from '../../molecules/blockCard'
+import { getTransactionHashes } from '../../../helpers/fetch'
 
 class BlockDetails extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { transactionHashes: null }
+  constructor (props) {
+    super(props)
+    this.state = { transactionHashes: null, firstFetch: true }
   }
 
-  render() {
-    const { transactionHashes } = this.state;
-    const { block, active } = this.props;
+  render () {
+    const { transactionHashes } = this.state
+    const { block, active } = this.props
     if (!block) {
-      return null;
+      return null
     }
 
     const data = {
@@ -23,27 +22,26 @@ class BlockDetails extends Component {
     }
 
     return (
-      <Box background="transparent">
-        <BlockCard block={data} active={active}/>
+      <Box background='transparent'>
+        <BlockCard block={data} active={active} />
       </Box>
-    );
+    )
   }
 
-  setTransactionHashes(block) {
+  setTransactionHashes (block) {
     if (block && block.numberOfTransactions > 0) {
-      getTransactionHashes(block.height)
-        .then(transactionHashes => {
-          this.setState({ transactionHashes })
-        })
+      getTransactionHashes(block.height).then(transactionHashes => {
+        this.setState({ transactionHashes })
+      })
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const { block } = this.props;
-    if(JSON.stringify(block) !== JSON.stringify(prevProps.block)) {
+  componentDidUpdate (prevProps) {
+    const { block } = this.props
+    if (JSON.stringify(block) !== JSON.stringify(prevProps.block)) {
       this.setTransactionHashes(block)
     }
   }
 }
 
-export default BlockDetails;
+export default BlockDetails
