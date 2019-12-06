@@ -9,10 +9,10 @@ class TransactionsList extends Component {
     const {
       numberOfTransactions,
       transactionHashes,
+      loading,
       blockHeight,
       active
     } = this.props
-    console.log('TRANSACTION_HASHES', transactionHashes)
     if (parseInt(numberOfTransactions) === 0) {
       return (
         <Text size='medium' weight='bold'>
@@ -21,27 +21,7 @@ class TransactionsList extends Component {
       )
     }
 
-    if (!transactionHashes) {
-      return (
-        <Box>
-          <Text onClick={this.toggleShowTransactions} as='span' color='#fff'>
-            <b>transactions:</b>
-          </Text>
-
-          <Box
-            pad={{ horizontal: 'xlarge', vertical: '33px' }}
-            animation='pulse'
-          >
-            <Text alignSelf='center' size='xsmall'>
-              Loading transactions...
-            </Text>
-          </Box>
-        </Box>
-      )
-    }
-
     const gap = 'small'
-
     return (
       <Box>
         {active && (
@@ -55,10 +35,19 @@ class TransactionsList extends Component {
         <Box
           style={{
             margin: '10px small 0px 15px'
-            // paddingLeft: "11px",
-            // borderLeft: "1px solid rgba(255,255, 255, 0.3)"
           }}
         >
+          {loading && (
+            <Box
+              pad={{ horizontal: 'xlarge', vertical: '10px' }}
+              animation='pulse'
+            >
+              <Text alignSelf='center' size='xsmall'>
+                Loading transactions...
+              </Text>
+            </Box>
+          )}
+
           {transactionHashes.map((hash, index) => (
             <Box
               key={index}

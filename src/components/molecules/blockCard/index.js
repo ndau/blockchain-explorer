@@ -6,49 +6,53 @@ import Card from '../../atoms/card'
 import '../detailsCard/style.css'
 
 class BlockCard extends Component {
-  render() {
-    const { block, active } = this.props;
-    
+  render () {
+    const { block, active, txLoading } = this.props
+
     if (!block) {
-      return <h3>Loading...</h3>;
+      return <h3>Loading...</h3>
     }
 
-    const {raw, ...blockDetails} = block
-    
-    const { transactionHashes, height, numberOfTransactions } = blockDetails;
-    const notDisplayed = ["transactions", "numberOfTransactions", "transactionHashes", "timestamp"];
+    const { raw, ...blockDetails } = block
+
+    const { transactionHashes, height, numberOfTransactions } = blockDetails
+
+    const notDisplayed = [
+      'transactions',
+      'numberOfTransactions',
+      'transactionHashes',
+      'timestamp'
+    ]
     return (
-      <Card background="transparent" pad={{horizontal: "0"}}>
+      <Card background='transparent' pad={{ horizontal: '0' }}>
         <Box>
           <Collapsible open={active}>
-          {
-            Object.keys(blockDetails).map((property, index) => {
-              if(notDisplayed.includes(property)) { return null }
-              const value = blockDetails[property];
+            {Object.keys(blockDetails).map((property, index) => {
+              if (notDisplayed.includes(property)) {
+                return null
+              }
+              const value = blockDetails[property]
               return (
-                <Box key={index} className="detailField" round="xsmall">
+                <Box key={index} className='detailField' round='xsmall'>
                   <Text key={index}>
                     <b>{property}: </b>
-                    {
-                      <Value value={value} rawValue={raw[property]} />
-                    }
+                    {<Value value={value} rawValue={raw[property]} />}
                   </Text>
                 </Box>
-            )})
-            
-          }
+              )
+            })}
           </Collapsible>
-
           <TransactionList
             transactionHashes={transactionHashes}
             numberOfTransactions={numberOfTransactions}
             blockHeight={height}
             active={active}
+            loading={txLoading}
           />
         </Box>
       </Card>
     )
   }
-} 
+}
 
-export default BlockCard;
+export default BlockCard
