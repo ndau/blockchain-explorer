@@ -19,27 +19,39 @@ class BlockList extends Component {
     }
 
     return (
-      <Box
-        background="#293e63"
-        pad="7px"
-        round="xsmall"
-        elevation="small"
-      >
-        {
-          blocks.map((block, index) => {
-            return (
-              <Box key={index} animation={["slideDown", "fadeIn"]}>
-                <BlockListItem 
-                  block={block}
-                  setAsActiveBlock={()=> this.setActiveBlock(block)}
-                  unsetAsActiveBlock={()=> this.setActiveBlock(null)}
-                  active={block.height === activeBlockHeight}
-                />
-              </Box> 
-            )
-          })
-        }
+      <Box>
+        <Text
+          size="xsmall"
+          alignSelf="start"
+          color="#999"
+          style={{fontStyle: "italic"}}
+          margin={{bottom: "4px"}}
+        >
+          * showing blocks containing at least one transaction.
+        </Text>
+        <Box
+          background="#293e63"
+          pad="7px"
+          round="xsmall"
+          elevation="small"
+        >
+          {
+            blocks.map((block, index) =>  {
+              return (
+                <Box key={index} animation={["slideDown", "fadeIn"]}>
+                  <BlockListItem
+                    block={block}
+                    setAsActiveBlock={()=> this.setActiveBlock(block)}
+                    unsetAsActiveBlock={()=> this.setActiveBlock(null)}
+                    active={block.height === activeBlockHeight}
+                  />
+                </Box>
+              )
+            })
+          }
+        </Box>
       </Box>
+
     );
   }
 

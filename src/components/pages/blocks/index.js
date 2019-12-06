@@ -33,7 +33,7 @@ class Blocks extends Component {
         <Box margin={{bottom: "20px"}}>
           <Text size="large" weight="bold">
             Blocks{' '}
-            {/* hide empty toggle is not fully functional */}
+            {/* hide empty blocks toggle */}
             <Text
               size="xsmall"
               color="#aaa"

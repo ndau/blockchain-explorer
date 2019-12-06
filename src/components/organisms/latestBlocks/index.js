@@ -9,7 +9,7 @@ class LatestBlocks extends Component {
 
     return (
       <Box>
-        <Box margin={{ bottom: "small" }}>
+        <Box margin={{ bottom: "xsmall" }}>
           <Text>
             <Text weight="bold">Latest Blocks</Text>
             <Text style={{float: "right"}}>
@@ -20,7 +20,7 @@ class LatestBlocks extends Component {
             </Text>
           </Text>
         </Box>
-
+         
         <BlocksList blocks={blocks} />
       </Box>
     );
