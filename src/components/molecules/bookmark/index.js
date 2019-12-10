@@ -94,11 +94,6 @@ class Bookmark extends Component {
               {type === 'account' && (
                 <Text>
                   <Stack anchor='top-right' style={{ display: 'inline-block' }}>
-                    <Notification
-                      size='20px'
-                      style={{ position: 'relative', top: '2px', right: '3px' }}
-                      onClick={this.notify}
-                    />
                     {accountUpdates > 0 && (
                       <Box
                         background={PRIMARY_LIME}
