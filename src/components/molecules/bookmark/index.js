@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Box, Text, Button, Stack, Collapsible, TextArea } from 'grommet'
-import { Notification, Trash, Notes } from 'grommet-icons'
+import { Trash, Notes } from 'grommet-icons'
 import Anchor from '../../atoms/anchor'
 // import AppNotification from '../../atoms/notification'
 // import Age from '../../atoms/age'
