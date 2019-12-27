@@ -7,7 +7,7 @@ import { humanizeNumber } from '../../../helpers/format'
 import Anchor from '../../atoms/anchor'
 
 const isAddress = (addr = '') => {
-  if (addr.length === 48 && addr.substring(0, 2) == 'nd') {
+  if (addr.length === 48 && addr.substring(0, 2) === 'nd') {
     return true
   }
   return false
