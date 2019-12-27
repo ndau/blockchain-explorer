@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
-import { Box, Chart, Stack, Text } from 'grommet'
+import { Box, Text } from 'grommet'
 import Age from '../../atoms/age'
 import ChartLegend from '../chartLegend'
 import { humanizeNumber, formatTime } from '../../../helpers/format'
 import { price_at_unit } from '../../../helpers/ndauMath'
-import { PRIMARY_LIME } from '../../../constants'
 
-const X_AXIS_HEIGHT = '20px'
-
-class PriceCurve extends Component {
+export default class PriceCurve extends Component {
   constructor (props) {
     super(props)
 
@@ -41,24 +38,10 @@ class PriceCurve extends Component {
       )
     }
 
-    const {
-      priceCurveData,
-      yAxis,
-      xAxis,
-      trackerAreaPoints,
-      activeXValue,
-      activeYValue,
-      ndauIssued,
-      currentPrice
-    } = this.state
+    const { activeXValue, activeYValue, ndauIssued, currentPrice } = this.state
 
     const { priceInfo, lastUpdated } = this.props
     const { marketPrice, totalNdau, sib } = priceInfo || {}
-
-    const chartProps = {
-      size: { width: 'xlarge', height: 'small' },
-      values: priceCurveData
-    }
 
     const active = activeXValue || activeXValue === 0
     const totalNdauIssued = active ? activeXValue : ndauIssued
@@ -165,5 +148,3 @@ class PriceCurve extends Component {
     })
   }
 }
-
-export default PriceCurve
