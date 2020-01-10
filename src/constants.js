@@ -118,9 +118,5 @@ export const NDAU_EPOCH = '2000-01-01T00:00:00Z'
 // MISC
 /////////////////////////////////////////
 export const additionalText = {
-	ndauInCirculation: `ndau in circulation is the amount of ndau held by 
-	purchasers. This includes all ndau issued by the foundation, 
-	plus those earned from ecosystem alignment incentives, minus any ndau 
-	burned as a result of stability mechanisms applied during market pressure. 
-	The number of ndau in circulation should exceed the number of ndau issued.`
+  ndauInCirculation: `ndau in circulation is the amount of ndau held by purchasers. This includes all ndau issued by the foundation, plus those earned from ecosystem alignment incentives, minus any ndau burned as a result of stability mechanisms applied during market pressure. The number of ndau in circulation will exceed the number of ndau issued if there have been more ndau earned than burned. The maximum number of ndau that may be issued is 30 million and the maximum limit to ndau in circulation is 40 million.`
 }
