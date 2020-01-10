@@ -73,12 +73,9 @@ export const KEYWORDS = {
   },
 
   ndauInCirculation: {
-    endpoint: 'https://ndau.io/knowledge-base/why-is-ndau-in-circulation-greater-than-ndau-issued/',
-    explanation: `ndau in circulation is the amount of ndau held by 
-    purchasers. This includes all ndau issued by the foundation, 
-    plus those earned from ecosystem alignment incentives, minus any ndau 
-    burned as a result of stability mechanisms applied during market pressure. 
-    The number of ndau in circulation should exceed the number of ndau issued.`
+    endpoint:
+      'https://ndau.io/knowledge-base/why-is-ndau-in-circulation-greater-than-ndau-issued/',
+    explanation: `ndau in circulation is the amount of ndau held by purchasers. This includes all ndau issued by the foundation, plus those earned from ecosystem alignment incentives, minus any ndau burned as a result of stability mechanisms applied during market pressure. The number of ndau in circulation will exceed the number of ndau issued if there have been more ndau earned than burned. The maximum number of ndau that may be issued is 30 million and the maximum limit to ndau in circulation is 40 million.`
   }
 }
 
