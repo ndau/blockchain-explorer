@@ -19,7 +19,14 @@ class Legend extends Component {
           className='legendLabel'
           style={{ textAlign: 'right', marginRight: '3px', minWidth: '135px' }}
         >
-          <Text size='small' color='#ffe7c6'>
+          <Text
+            size='small'
+            color='#ffe7c6'
+            style={{
+              marginTop: keyword && -3,
+              marginLeft: keyword && 10
+            }}
+          >
             {keyword && (
               <Text margin={{ right: 'xxsmall' }}>
                 <Keyword keyword={keyword} size='small' />

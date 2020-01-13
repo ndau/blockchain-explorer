@@ -49,6 +49,7 @@ class Keyword extends Component {
           <Box ref={this.ref} onClick={this.openPopup}>
             <Text>
               <CircleInformation
+                style={{ cursor: 'pointer' }}
                 size={this.props.iconSize || 'small'}
                 color={this.props.iconColor || 'white'}
               />
