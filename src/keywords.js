@@ -76,9 +76,13 @@ export const KEYWORDS = {
     endpoint:
       'https://ndau.io/knowledge-base/why-is-ndau-in-circulation-greater-than-ndau-issued/',
     explanation: `ndau in circulation is the amount of ndau held by purchasers. This includes all ndau issued by the foundation, plus those earned from ecosystem alignment incentives, minus any ndau burned as a result of stability mechanisms applied during market pressure. The number of ndau in circulation will exceed the number of ndau issued if there have been more ndau earned than burned. The maximum number of ndau that may be issued is 30 million and the maximum limit to ndau in circulation is 40 million.`
+  },
+  currentMarketPrice: {
+    endpoint:
+      'https://ndau.io/knowledge-base/what-is-market-price-and-how-is-it-recorded-on-the-ndau-blockchain/',
+    explanation: `Market Price is recorded on the ndau blockchain to provide input to ndau’s Monetary Policies and determine SIB rates. As a specific Long-Term Store of Value, the Market Price used by the ndau blockchain for the above purposes must not be easy to deliberately manipulate, nor allow for intraday volatility to effect ndau’s Monetary Policies. The Market Price recorded on the ndau blockchain reflects the demand for ndau from holders who seek to use ndau for it’s designed purpose. Therefore, the Market Price of ndau is recorded as the highest executed price on an exchange every 24 hours (5pm NYC – 5pm NYC)`
   }
 }
-
 
 // Term: Address
 // https://ndaucollective.org/knowledge-base/addresses/
