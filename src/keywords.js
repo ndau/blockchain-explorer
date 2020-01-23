@@ -80,7 +80,7 @@ export const KEYWORDS = {
   currentMarketPrice: {
     endpoint:
       'https://ndau.io/knowledge-base/what-is-market-price-and-how-is-it-recorded-on-the-ndau-blockchain/',
-    explanation: `Market Price is recorded on the ndau blockchain to provide input to ndau’s Monetary Policies and determine SIB rates. As a specific Long-Term Store of Value, the Market Price used by the ndau blockchain for the above purposes must not be easy to deliberately manipulate, nor allow for intraday volatility to effect ndau’s Monetary Policies. The Market Price recorded on the ndau blockchain reflects the demand for ndau from holders who seek to use ndau for it’s designed purpose. Therefore, the Market Price of ndau is recorded as the highest executed price on an exchange every 24 hours (5pm NYC – 5pm NYC)`
+    explanation: `Market Price is recorded on the ndau blockchain to provide input to ndau’s Monetary Policies and determine SIB rates. As a specific Long-Term Store of Value, the Market Price used by the ndau blockchain for the above purposes must not be easy to deliberately manipulate, nor allow for intraday volatility to effect ndau’s Monetary Policies. The current methodology for achieving this objective is to record Market Price as the highest executed price on an exchange every 24 hours (5pm NYC – 5pm NYC)`
   }
 }
 
