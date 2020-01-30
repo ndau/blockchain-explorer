@@ -35,7 +35,7 @@ class ChartLegend extends Component {
                   },
                   {
                     label: 'SIB in effect',
-                    value: sib === 0 || sib ? `${sib}%` : '--',
+                    value: sib === 0 || sib ? `${humanizeNumber(sib*10, 2, 2)}%` : '--',
                     inactive: active
                   },
                   {
@@ -56,7 +56,7 @@ class ChartLegend extends Component {
                   info={[
                     {
                       label: 'SIB in effect',
-                      value: sib === 0 || sib ? `${sib}%` : '--',
+                      value: sib === 0 || sib ? `${humanizeNumber(sib*10, 2, 2)}%` : '--',
                       inactive: active
                     }
                   ]}
