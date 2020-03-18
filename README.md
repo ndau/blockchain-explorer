@@ -2,7 +2,7 @@
 
 ## About the application
 
-This application is used to see information about the Epistemology Chain.
+This application is used to see information about the ndau blockchain.
 
 ## Starting the app locally
 
