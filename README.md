@@ -13,7 +13,7 @@ Node installation:
 brew install node
 ```
 
-Yarn intallation (Facebook's packing tool to be used with React):
+Yarn installation (Facebook's packing tool to be used with React):
 ```
 npm install -g yarn
 ```
