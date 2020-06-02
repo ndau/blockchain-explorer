@@ -2,7 +2,7 @@
 
 ## About the application
 
-This application is used to see information about the Epistemology Chain.
+This application is used to see information about the ndau blockchain.
 
 ## Starting the app locally
 
@@ -13,7 +13,7 @@ Node installation:
 brew install node
 ```
 
-Yarn intallation (Facebook's packing tool to be used with React):
+Yarn installation (Facebook's packing tool to be used with React):
 ```
 npm install -g yarn
 ```
