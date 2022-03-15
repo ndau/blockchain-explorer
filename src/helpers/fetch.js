@@ -299,7 +299,49 @@ export const getNodeStatus = async endpoint => {
     .catch(error => console.log(error))
 }
 
+export const getNodeHealth = async nodeEndpoint => {
+  const healthEndpoint = `${nodeEndpoint}/health`
+  axios.defaults.timeout = 2000
+  const source = axios.CancelToken.source()
+  const timeout = setTimeout(() => {
+    source.cancel()
+    axios.defaults.timeout = 0
+    return 'Offline'
+  }, 2000)
+
+  return axios
+    .get(healthEndpoint, HTTP_REQUEST_HEADER, {cancelToken: source.token })
+    .then(response => {
+      clearTimeout(timeout)
+      axios.defaults.timeout = 0
+      return response.data
+    })
+    .catch(error =>  {
+      axios.defaults.timeout = 0
+      console.log(error)
+    })
+}
+
 export const getNodeEndpoint = async node => {
+  var nodeEndpoint, health
+//  var catchingUp
+  while (true) {
+    nodeEndpoint = await tryNodeEndpoint(node)
+    health = await getNodeHealth(nodeEndpoint)
+    if (health === 'OK') {
+//      catchingUp = await getNodeStatus(node)
+//      if (catchingUp.catching_up) {
+//        console.log(nodeEndpoint + ' is catching up')
+//        continue
+//      }
+      return nodeEndpoint
+    } else {
+      console.log(nodeEndpoint + ' not responding')
+    }
+  }
+}
+
+export const tryNodeEndpoint = async node => {
   const { location, history } = window
   let query = qs.parse(location.search)
   let nodeName = node || query.node
@@ -315,17 +357,16 @@ export const getNodeEndpoint = async node => {
       const validURL = `${location.origin}${location.pathname}${newSearch}`
       history.replaceState({}, '', validURL)
     }
-
     await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER).then(response => {
       const { networks } = response.data
       const nodeKey = networks[nodeName] ? nodeName : DEFUALT_NODE_NAME
       const nodes = networks[nodeKey] && networks[nodeKey]['nodes']
       const randomNodeIndex =
-        nodes && Math.floor(Math.random() * Object.keys(nodes).length)
+        Math.floor(Math.random() * Object.keys(nodes).length)
       const randomNode = Object.values(nodes)[randomNodeIndex]
       nodeEndpoint = randomNode && randomNode.api
     })
-
+    console.log('Found node ' + nodeEndpoint)
     return 'https://' + nodeEndpoint
   }
 }
