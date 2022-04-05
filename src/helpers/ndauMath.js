@@ -104,9 +104,9 @@ export const unlocked_rates = [
 export const lock_bonus = [
   { starting_days: 90, annual_pctg_rate: 1 },
   { starting_days: 180, annual_pctg_rate: 2 },
-  { starting_days: 365, annual_pctg_rate: 3 },
-  { starting_days: 730, annual_pctg_rate: 4 },
-  { starting_days: 1095, annual_pctg_rate: 5 }
+  { starting_days: 365, annual_pctg_rate: 5 },
+  { starting_days: 730, annual_pctg_rate: 10 },
+  { starting_days: 1095, annual_pctg_rate: 15 }
 ];
 
 export const lookup_value = (table, days) => {
