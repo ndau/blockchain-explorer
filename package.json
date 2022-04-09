@@ -9,7 +9,7 @@
     "grommet-icons": "^4.2.0",
     "localforage": "^1.7.3",
     "lodash": "^4.17.11",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.25",
     "msgpack-lite": "^0.1.26",
     "normalize.css": "^8.0.1",
