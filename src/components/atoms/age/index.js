@@ -71,6 +71,8 @@ class Age extends Component {
       age = recent || age
     }
 
+    age = age.toUpperCase();
+
     return age
   }
 

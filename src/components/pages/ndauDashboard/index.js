@@ -8,20 +8,42 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Box } from 'grommet'
-import Dashboard from '../../templates/dashboard'
-import LatestBlocks from '../../organisms/latestBlocks'
-import PriceCurve from '../../organisms/priceCurve'
+import React, { Component } from "react";
+import { Box, Heading, Text, Grid } from "grommet";
+import Age from "../../atoms/age";
+import Dashboard from "../../templates/dashboard";
+import BlockchainSearch from "../../molecules/blockchainSearch";
+import LatestBlocks from "../../organisms/latestBlocks";
+import PriceCurve from "../../organisms/priceCurve";
 import {
   getNodeStatus,
   getCurrentOrder,
   getBlocks,
   pollForBlocks,
-} from '../../../helpers/fetch'
-import { POLL_INTERVAL } from '../../../constants'
+} from "../../../helpers/fetch";
+import { formatTime } from "../../../helpers/format";
+import { POLL_INTERVAL } from "../../../constants";
 
 const BLOCK_LIST_LENGTH = 5;
+
+const LastUpdated = (props) => {
+  const lastUpdated = props.lastUpdated;
+
+  return (
+    <Box align="center" margin={{ bottom: "large" }}>
+      <Text
+        color="#343E49"
+        size="xsmall"
+        margin={{ left: "small" }}
+        style={{ fontStyle: "italic" }}
+      >
+        {"LAST UPDATED "}
+        <Age timestamp={lastUpdated} recent="JUST NOW" suffix="AGO" />,{" "}
+        {formatTime(lastUpdated)}
+      </Text>
+    </Box>
+  );
+};
 
 class NdauDashboard extends Component {
   constructor(props) {
@@ -32,33 +54,55 @@ class NdauDashboard extends Component {
       latestBlockHeight: 1,
       priceInfo: null,
       hideEmpty: true,
-      lastUpdated: new Date()
-    }
+      lastUpdated: new Date(),
+    };
 
     this.getData();
   }
 
   render() {
-    const { blocks, priceInfo={}, lastUpdated } = this.state
+    const { blocks, priceInfo = {}, lastUpdated } = this.state;
     return (
-      <Dashboard
-        browserHistory={this.props.history}
-        selectNode
-      >
-        <Box margin={{bottom: "large"}}>
-         <PriceCurve priceInfo={priceInfo} lastUpdated={lastUpdated} />
+      <Dashboard browserHistory={this.props.history} selectNode>
+        <Box margin={{ bottom: "large" }}>
+          <Heading alignSelf="center" size="small" textAlign="center">
+            The Ndau Blockchain Explorer
+          </Heading>
+
+          <Box align="center" margin={{ bottom: "xsmall" }}>
+            <BlockchainSearch />
+          </Box>
+
+          <LastUpdated lastUpdated={lastUpdated} />
+
+          <PriceCurve priceInfo={priceInfo} />
         </Box>
-        
-        <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />        
+        <Grid
+          rows={["large"]}
+          columns={[["xsmall","large"], ["xsmall","large"]]}
+          gap="medium"
+          areas={[
+            { name: "latestBlocks", start: [0, 0], end: [0, 0] },
+            { name: "latestTransactions", start: [1, 0], end: [1, 0] },
+          ]}
+        >
+          <Box gridArea="latestBlocks">
+            <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />
+          </Box>
+
+          <Box gridArea="latestTransactions">
+            <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />
+          </Box>
+        </Grid>
       </Dashboard>
-    )
+    );
   }
 
   componentDidUpdate(prevProps) {
-    const getURL = (location={}) => {
-      const {pathname, search} = location
-      return `${pathname}${search}`
-    }
+    const getURL = (location = {}) => {
+      const { pathname, search } = location;
+      return `${pathname}${search}`;
+    };
 
     if (getURL(this.props.location) !== getURL(prevProps.location)) {
       this.getData();
@@ -66,77 +110,79 @@ class NdauDashboard extends Component {
   }
 
   getData = () => {
-    getNodeStatus()
-      .then(status => {
-        getCurrentOrder()
-          .then(priceInfo =>  {
-            if (!status) {
-              this.setState({ priceInfo })
-              return null
+    getNodeStatus().then((status) => {
+      getCurrentOrder().then((priceInfo) => {
+        if (!status) {
+          this.setState({ priceInfo });
+          return null;
+        }
+
+        const latestBlockHeight = status.latest_block_height;
+        const limit = BLOCK_LIST_LENGTH;
+        const hideEmpty = this.state.hideEmpty;
+
+        getBlocks({ before: latestBlockHeight, filter: hideEmpty, limit }).then(
+          ({ blocks }) => {
+            if (!blocks) {
+              return null;
             }
-    
-            const latestBlockHeight = status.latest_block_height;
-            const limit = BLOCK_LIST_LENGTH;
-            const hideEmpty = this.state.hideEmpty;
-     
-            getBlocks({before: latestBlockHeight, filter: hideEmpty, limit})
-              .then(({blocks}) => {
-                if(!blocks) {
-                  return null;
-                }
-        
-                this.setState({ 
-                  blocks,
-                  latestBlockHeight,
-                  priceInfo
-                }, ()=> {
-                  this.startPolling({
-                    after: this.state.latestBlockHeight, 
-                    filter: hideEmpty,
-                    success: this.resetData
-                  })
-                })
-              }) 
-          })
-        return status
-      })
-  }
+
+            this.setState(
+              {
+                blocks,
+                latestBlockHeight,
+                priceInfo,
+              },
+              () => {
+                this.startPolling({
+                  after: this.state.latestBlockHeight,
+                  filter: hideEmpty,
+                  success: this.resetData,
+                });
+              }
+            );
+          }
+        );
+      });
+      return status;
+    });
+  };
 
   componentWillUnmount() {
-    this.endPolling()
+    this.endPolling();
   }
 
-  startPolling = ({after, filter, success}) => {
-    this.endPolling()
+  startPolling = ({ after, filter, success }) => {
+    this.endPolling();
 
     this.pollInterval = window.setInterval(
-      pollForBlocks({after, filter, success}), 
+      pollForBlocks({ after, filter, success }),
       POLL_INTERVAL
     );
-  }
+  };
 
   endPolling = () => {
     if (this.pollInterval) {
-      window.clearInterval(this.pollInterval)
+      window.clearInterval(this.pollInterval);
     }
-  }
+  };
 
   resetData = (newBlocks, latestBlockHeight, newPriceInfo) => {
     if (newBlocks && newBlocks.length > 0) {
-      const { blocks=[] } = this.state;
+      const { blocks = [] } = this.state;
 
-      const latestBlocks = [...newBlocks, ...blocks].slice(0, 5)
+      const latestBlocks = [...newBlocks, ...blocks].slice(0, 5);
 
-      this.setState(({priceInfo}) => {
+      this.setState(({ priceInfo }) => {
         return {
           blocks: latestBlocks,
           latestBlockHeight,
           priceInfo: newPriceInfo || priceInfo,
-          lastUpdated: new Date()
-        }
-      })
+          lastUpdated: new Date(),
+        };
+      });
     }
-  }
+  };
 }
 
 export default NdauDashboard;
