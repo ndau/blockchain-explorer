@@ -12,7 +12,7 @@ import React, { Component } from "react";
 import { Box, Text, Heading } from "grommet";
 import Age from "../../atoms/age";
 import ChartLegend from "../chartLegend";
-import StatisticsPanel from "./StatisticsBox/StatisticsBox";
+import StatisticsPanel from "./StatisticsPanel/StatisticsPanel";
 import { humanizeNumber, formatTime } from "../../../helpers/format";
 import { price_at_unit } from "../../../helpers/ndauMath";
 

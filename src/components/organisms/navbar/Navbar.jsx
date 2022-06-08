@@ -20,12 +20,11 @@ import {
 import Container from "../../atoms/container";
 
 import LogoImg from "../../../img/ndau_orange_logo.png";
-import BlockchainSearch from "../../molecules/blockchainSearch";
-import BookmarkMenu from "../../molecules/bookmarkMenu";
 import { AppsRounded } from "grommet-icons";
 
 import { NAVBAR_COLOR } from "../../../constants";
 import React, { useState } from "react";
+
 
 import "./style.css";
 
@@ -113,6 +112,10 @@ const Navbar = (props) => {
 
             <NavbarLink>Blockchain</NavbarLink>
             <NavbarLink>Sign in</NavbarLink>
+            {/* <Button onClick={() => getLatestTransactions()}>
+              {" "}
+              console(latestBlockHeight)
+            </Button> */}
           </Box>
 
           <Collapsible open={navbarDrawerState}>

@@ -1,7 +1,6 @@
 import { Grid, Box, Text, ResponsiveContext } from "grommet";
-import { humanizeNumber } from "../../../../helpers/format";
-import useScript from "../../../../helpers/hooks/useScript";
-import "./StasticsBox.css";
+import { humanizeNumber } from "../../../../../helpers/format";
+import "./EconomicsStatBox.css";
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
@@ -57,8 +56,7 @@ const bigScreenColumns = ["200px", "200px", "280px"];
 
 const smallScreenColumns = ["small", "small"];
 
-const StatisticsPanel = (props) => {
-  useScript("https://widget.nomics.com/embed.js");
+const EconomicsStatBox = (props) => {
 
   const {
     totalNdau,
@@ -79,7 +77,7 @@ const StatisticsPanel = (props) => {
             columns={
               screenSize === "small" ? smallScreenColumns : bigScreenColumns
             }
-            gap="xxsmall"
+            gap="xsmall"
             areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
           >
             <StatBox gridArea="ndauIssued">
@@ -108,18 +106,11 @@ const StatisticsPanel = (props) => {
             </StatBox>
           </Grid>
 
-          <div className="widget">
-          <div
-            className="nomics-ticker-widget"
-            data-name="Ndau"
-            data-base="XND"
-            data-quote="USD"
-          />
-          </div>
+     
         </>
       )}
     </ResponsiveContext.Consumer>
   );
 };
 
-export default StatisticsPanel;
+export default EconomicsStatBox;

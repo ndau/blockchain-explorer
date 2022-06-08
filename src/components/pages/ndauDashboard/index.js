@@ -9,18 +9,22 @@
  */
 
 import React, { Component } from "react";
+import axios from "axios";
 import { Box, Heading, Text, Grid } from "grommet";
 import Age from "../../atoms/age";
 import Dashboard from "../../templates/dashboard";
 import BlockchainSearch from "../../molecules/blockchainSearch";
 import LatestBlocks from "../../organisms/latestBlocks";
+import TransactionsList from "../../organisms/transactionsList";
 import PriceCurve from "../../organisms/priceCurve";
 import {
   getNodeStatus,
   getCurrentOrder,
   getBlocks,
   pollForBlocks,
+  getNodeEndpoint,
 } from "../../../helpers/fetch";
+import getLatestTransactions from "../../../helpers/getLatestTransaction";
 import { formatTime } from "../../../helpers/format";
 import { POLL_INTERVAL } from "../../../constants";
 
@@ -55,6 +59,7 @@ class NdauDashboard extends Component {
       priceInfo: null,
       hideEmpty: true,
       lastUpdated: new Date(),
+      latestFiveTransactions: [],
     };
 
     this.getData();
@@ -79,7 +84,10 @@ class NdauDashboard extends Component {
         </Box>
         <Grid
           rows={["large"]}
-          columns={[["xsmall","large"], ["xsmall","large"]]}
+          columns={[
+            ["xsmall", "large"],
+            ["xsmall", "large"],
+          ]}
           gap="medium"
           areas={[
             { name: "latestBlocks", start: [0, 0], end: [0, 0] },
@@ -91,7 +99,11 @@ class NdauDashboard extends Component {
           </Box>
 
           <Box gridArea="latestTransactions">
-            <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />
+            <TransactionsList
+              transactionHashes={this.state.latestFiveTransactions} //used
+              numberOfTransactions={5} //used
+              loading={this.state.latestFiveTransactions.length < 5} //used
+            />
           </Box>
         </Grid>
       </Dashboard>
@@ -122,16 +134,37 @@ class NdauDashboard extends Component {
         const hideEmpty = this.state.hideEmpty;
 
         getBlocks({ before: latestBlockHeight, filter: hideEmpty, limit }).then(
-          ({ blocks }) => {
+          async ({ blocks }) => {
             if (!blocks) {
               return null;
             }
+
+            let latestFiveTransactions = [];
+            let i = 0;
+            while (latestFiveTransactions.length < 5) {
+              try {
+                let blockHeight = blocks[i].height;
+                const nodeEndpoint = await getNodeEndpoint();
+                const blockEndpoint = `${nodeEndpoint}/block/transactions/${blockHeight}`;
+                let result = await axios.get(blockEndpoint);
+                for (let j = 0; j < result.data.length; j++) {
+                  latestFiveTransactions.push(result.data[j]);
+                }
+                i++;
+              } catch (e) {
+                console.error(e);
+                break;
+              }
+              // }
+            }
+            console.log(latestFiveTransactions, "latest5Tx");
 
             this.setState(
               {
                 blocks,
                 latestBlockHeight,
                 priceInfo,
+                latestFiveTransactions,
               },
               () => {
                 this.startPolling({

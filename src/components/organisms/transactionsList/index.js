@@ -67,7 +67,6 @@ class TransactionsList extends Component {
             >
               <TransactionCard
                 transactionHash={hash}
-                blockHeight={blockHeight}
                 open={index === this.state.activeTransactionIndex}
                 index={index}
                 setActiveTransaction={this.setActiveTransactionIndex}

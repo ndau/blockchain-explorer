@@ -10,7 +10,7 @@
 
 import React, { Component } from 'react'
 import { Text, Box, Collapsible } from 'grommet'
-import TransactionList from '../../organisms/transactionsList'
+import TransactionsList from '../../organisms/transactionsList'
 import Value from '../../molecules/value'
 import Card from '../../atoms/card'
 import '../detailsCard/style.css'
@@ -52,7 +52,7 @@ class BlockCard extends Component {
               )
             })}
           </Collapsible>
-          <TransactionList
+          <TransactionsList
             transactionHashes={transactionHashes}
             numberOfTransactions={numberOfTransactions}
             blockHeight={height}

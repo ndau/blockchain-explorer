@@ -14,7 +14,7 @@ import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card'
 import Age from '../../atoms/age'
 import Anchor from '../../atoms/anchor'
-import TransactionList from '../../organisms/transactionsList'
+import TransactionsList from '../../organisms/transactionsList'
 import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
 
 class TimelineEvent extends Component {
@@ -124,7 +124,7 @@ class TimelineEvent extends Component {
               </Text>
               <Text>
                 {/* transaction:  */}
-                <TransactionList
+                <TransactionsList
                   transactionHashes={[transactionHash]}
                   blockHeight={blockHeight}
                 />

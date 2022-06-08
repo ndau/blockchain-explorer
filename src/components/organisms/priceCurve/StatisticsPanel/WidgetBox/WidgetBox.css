@@ -1,0 +1,15 @@
+.widget {
+height: 100%;
+width: 100%;
+}
+
+.nomics-ticker-widget-embedded.nomics-ticker-widget-size-responsive.nomics-ticker-widget-bg-light {
+  background-color: #44B !important;
+  color: wheat;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.nomics-asset-widget a.asset-link {
+  color:yellow !important;
+}
