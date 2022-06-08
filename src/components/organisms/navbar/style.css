@@ -7,7 +7,7 @@
   vertical-align: top;
   background-color: #0f2748;
   clip-path: polygon(0 0%, 100% 0, 65% 100%, 35% 100%);
-  z-index: 1;
+  z-index: 11;
 }
 
 .sidebar {
@@ -16,4 +16,5 @@
   width: 50vw;
   height: 90vh;
   right: 0;
+  z-index: 12;
 }

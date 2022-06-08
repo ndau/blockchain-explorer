@@ -35,7 +35,7 @@ class BlockList extends Component {
           alignSelf="start"
           color="#999"
           style={{fontStyle: "italic"}}
-          margin={{bottom: "4px"}}
+          margin={{bottom: "10px"}}
         >
           * showing blocks containing at least one transaction.
         </Text>

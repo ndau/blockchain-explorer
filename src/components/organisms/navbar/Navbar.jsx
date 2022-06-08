@@ -112,10 +112,6 @@ const Navbar = (props) => {
 
             <NavbarLink>Blockchain</NavbarLink>
             <NavbarLink>Sign in</NavbarLink>
-            {/* <Button onClick={() => getLatestTransactions()}>
-              {" "}
-              console(latestBlockHeight)
-            </Button> */}
           </Box>
 
           <Collapsible open={navbarDrawerState}>

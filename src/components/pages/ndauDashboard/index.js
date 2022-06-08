@@ -10,13 +10,16 @@
 
 import React, { Component } from "react";
 import axios from "axios";
-import { Box, Heading, Text, Grid } from "grommet";
+import { Box, Heading, Text, Grid, ResponsiveContext } from "grommet";
 import Age from "../../atoms/age";
 import Dashboard from "../../templates/dashboard";
 import BlockchainSearch from "../../molecules/blockchainSearch";
 import LatestBlocks from "../../organisms/latestBlocks";
 import TransactionsList from "../../organisms/transactionsList";
+import LatestTransations from "../../organisms/LatestTransactions/LatestTransactions";
 import PriceCurve from "../../organisms/priceCurve";
+import { formatTime } from "../../../helpers/format";
+import { POLL_INTERVAL } from "../../../constants";
 import {
   getNodeStatus,
   getCurrentOrder,
@@ -24,9 +27,6 @@ import {
   pollForBlocks,
   getNodeEndpoint,
 } from "../../../helpers/fetch";
-import getLatestTransactions from "../../../helpers/getLatestTransaction";
-import { formatTime } from "../../../helpers/format";
-import { POLL_INTERVAL } from "../../../constants";
 
 const BLOCK_LIST_LENGTH = 5;
 
@@ -49,6 +49,22 @@ const LastUpdated = (props) => {
   );
 };
 
+const bigScreenGrid = [
+  { name: "latestBlocks", start: [0, 0], end: [0, 0] },
+  { name: "latestTransactions", start: [1, 0], end: [1, 0] },
+];
+
+const smallScreenGrid = [
+  { name: "latestBlocks", start: [0, 0], end: [0, 0] },
+  { name: "latestTransactions", start: [0, 1], end: [0, 1] },
+];
+
+const bigScreenRows = ["large"];
+const smallScreenRows = ["large", "large"];
+
+const bigScreenColumns = ["35vw", "35vw"];
+const smallScreenColumns = ["90vw"];
+
 class NdauDashboard extends Component {
   constructor(props) {
     super(props);
@@ -68,45 +84,48 @@ class NdauDashboard extends Component {
   render() {
     const { blocks, priceInfo = {}, lastUpdated } = this.state;
     return (
-      <Dashboard browserHistory={this.props.history} selectNode>
-        <Box margin={{ bottom: "large" }}>
-          <Heading alignSelf="center" size="small" textAlign="center">
-            The Ndau Blockchain Explorer
-          </Heading>
+      <ResponsiveContext.Consumer>
+        {(screenSize) => (
+          <Dashboard browserHistory={this.props.history} selectNode>
+            <Box margin={{ bottom: "large" }}>
+              <Heading alignSelf="center" size="small" textAlign="center">
+                The Ndau Blockchain Explorer
+              </Heading>
 
-          <Box align="center" margin={{ bottom: "xsmall" }}>
-            <BlockchainSearch />
-          </Box>
+              <Box align="center" margin={{ bottom: "xsmall" }}>
+                <BlockchainSearch />
+              </Box>
 
-          <LastUpdated lastUpdated={lastUpdated} />
+              <LastUpdated lastUpdated={lastUpdated} />
 
-          <PriceCurve priceInfo={priceInfo} />
-        </Box>
-        <Grid
-          rows={["large"]}
-          columns={[
-            ["xsmall", "large"],
-            ["xsmall", "large"],
-          ]}
-          gap="medium"
-          areas={[
-            { name: "latestBlocks", start: [0, 0], end: [0, 0] },
-            { name: "latestTransactions", start: [1, 0], end: [1, 0] },
-          ]}
-        >
-          <Box gridArea="latestBlocks">
-            <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />
-          </Box>
+              <PriceCurve priceInfo={priceInfo} />
+            </Box>
 
-          <Box gridArea="latestTransactions">
-            <TransactionsList
-              transactionHashes={this.state.latestFiveTransactions} //used
-              numberOfTransactions={5} //used
-              loading={this.state.latestFiveTransactions.length < 5} //used
-            />
-          </Box>
-        </Grid>
-      </Dashboard>
+            <Grid
+            justifyContent="center"
+              rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
+              columns={
+                screenSize === "small" ? smallScreenColumns : bigScreenColumns
+              }
+              gap="medium"
+              areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
+
+            >
+              <Box gridArea="latestBlocks">
+                <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />
+              </Box>
+
+              <Box gridArea="latestTransactions">
+                <LatestTransations
+                  transactionHashes={this.state.latestFiveTransactions} //used
+                  numberOfTransactions={5} //used
+                  loading={this.state.latestFiveTransactions.length < 5} //used
+                />
+              </Box>
+            </Grid>
+          </Dashboard>
+        )}
+      </ResponsiveContext.Consumer>
     );
   }
 

@@ -98,9 +98,11 @@ class TransactionCard extends Component {
         background='#0b1f3a'
         opacity='0.3'
         pad='15px'
+        
       >
-        <Collapsible open={open}>
+        <Collapsible open={open} >
           <Box
+          height="xlarge"
             margin={{ top: '10px' }}
             animation={
               open
@@ -136,7 +138,7 @@ class TransactionCard extends Component {
   toggleActiveState = event => {
     event.stopPropagation()
     const { open, index, setActiveTransaction } = this.props
-
+    
     return open ? setActiveTransaction(null) : setActiveTransaction(index)
   }
 }

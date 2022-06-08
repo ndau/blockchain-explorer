@@ -8,11 +8,7 @@ import TransactionsStatBox from "./TransactionsStatBox/TransactionsStatBox";
 const StatBox = (props) => {
   let gridArea = props.gridArea;
   return (
-    <Box
-      justify="center"
-      align="center"
-      gridArea={gridArea}
-    >
+    <Box justify="center" align="center" gridArea={gridArea}>
       {props.children}
     </Box>
   );
@@ -74,16 +70,17 @@ const StatisticsPanel = (props) => {
           columns={
             screenSize === "small" ? smallScreenColumns : bigScreenColumns
           }
-
           areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
         >
           <StatBox gridArea="EconomicsStat">
-            <EconomicsStatBox  totalNdau={totalNdau}
-        marketPrice={marketPrice}
-        sib={sib}
-        active={active}
-        totalNdauIssued={totalNdauIssued}
-        nextIssuePrice={nextIssuePrice}/>
+            <EconomicsStatBox
+              totalNdau={totalNdau}
+              marketPrice={marketPrice}
+              sib={sib}
+              active={active}
+              totalNdauIssued={totalNdauIssued}
+              nextIssuePrice={nextIssuePrice}
+            />
           </StatBox>
 
           <StatBox gridArea="Graph">
@@ -93,7 +90,6 @@ const StatisticsPanel = (props) => {
           <StatBox gridArea="TransactionsStat">
             <TransactionsStatBox />
           </StatBox>
-
         </Grid>
       )}
     </ResponsiveContext.Consumer>
