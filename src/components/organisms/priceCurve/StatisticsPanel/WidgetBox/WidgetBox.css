@@ -4,12 +4,7 @@ width: 100%;
 }
 
 .nomics-ticker-widget-embedded.nomics-ticker-widget-size-responsive.nomics-ticker-widget-bg-light {
-  background-color: #33A !important;
-  color: wheat;
+  background-color: #446 !important;
   width: 100% !important;
   height: 100% !important;
-}
-
-.nomics-asset-widget a.asset-link {
-  color:yellow !important;
 }

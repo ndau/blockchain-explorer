@@ -16,21 +16,23 @@ const LatestTransations = (props) => {
   let transactionHashes = props.transactionHashes;
   let numberOfTransactions = props.numberOfTransactions;
   return (
-    <>
-      <Box margin={{ bottom: "large" }}>
-        <Text>
-          <Text weight="bold">Latest Transactions</Text>
-          <Text style={{ float: "right" }}>
-            <Anchor href="blocks/" label="View all transactions" />
-          </Text>
-        </Text>
+    <div style={{ borderLeft: "2px solid #F9972C", paddingLeft: "5%" }}>
+      <Box round={{size:"xsmall",corner:"top"}} pad="5px" background="#093D60" justify="center">
+        <Anchor
+          color="white"
+          href="/"
+          label="LATEST TRANSACTIONS"
+          alignSelf="center"
+        />
       </Box>
 
       {numberOfTransactions &&
         transactionHashes.map((hash, index) => (
-          <Box
-            key={index}
-            margin={{ vertical: "20px" }}
+          <div
+            style={{
+              backgroundColor: "#132A47",
+              padding: "10px",
+            }}
           >
             <TransactionCard
               transactionHash={hash}
@@ -38,9 +40,9 @@ const LatestTransations = (props) => {
               index={index}
               setActiveTransaction={setActiveTransactionIndex}
             />
-          </Box>
+          </div>
         ))}
-    </>
+    </div>
   );
 };
 
