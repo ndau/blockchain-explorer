@@ -38,13 +38,12 @@ const bigScreenGrid = [
 
 const smallScreenGrid = [
   { name: "EconomicsStat", start: [0, 0], end: [0, 0] },
-  { name: "Graph", start: [0, 1], end: [0, 1] },
-  { name: "TransactionsStat", start: [0, 2], end: [0, 2] },
+  { name: "TransactionsStat", start: [0, 1], end: [0, 1] },
 ];
 
 const bigScreenRows = ["small", "medium"];
 
-const smallScreenRows = ["xsmall", "xsmall", "xxsmall"];
+const smallScreenRows = ["small", "xsmall"];
 
 const bigScreenColumns = ["medium", "small"];
 
@@ -83,9 +82,11 @@ const StatisticsPanel = (props) => {
             />
           </StatBox>
 
-          <StatBox gridArea="Graph">
-            <WidgetBox />
-          </StatBox>
+          {screenSize !== "small" && (
+            <StatBox gridArea="Graph">
+              <WidgetBox />
+            </StatBox>
+          )}
 
           <StatBox gridArea="TransactionsStat">
             <TransactionsStatBox />

@@ -37,9 +37,7 @@ class BlockDetails extends Component {
     }
 
     return (
-      <Box background='transparent'>
         <BlockCard block={data} active={active} txLoading={txLoading} />
-      </Box>
     )
   }
 

@@ -8,8 +8,8 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from "react"; 
-import { Text, Collapsible, Box } from "grommet";
+import React, { Component } from "react";
+import { Text, Collapsible, Box, Avatar } from "grommet";
 import Anchor from "../../atoms/anchor";
 import { Expand, Contract } from "grommet-icons";
 import Card from "../../atoms/card";
@@ -33,7 +33,7 @@ class TransactionCard extends Component {
 
   render() {
     const { transaction } = this.state;
-    const { open } = this.props;
+    const { open,border } = this.props;
 
     if (!transaction) {
       return (
@@ -54,12 +54,22 @@ class TransactionCard extends Component {
       <Card
         header={
           <header>
-            <Box>
+            <Box direction="row" width="medium" justify="center" align="center" >
+              <Box
+                background="#012D5A"
+                width="30px"
+                height="30px"
+                margin={{ right: "auto" }}
+                justify="center"
+                align="center"
+              >
+                <Text color="#8096AD">TX</Text>
+              </Box>
               <Text truncate as="article">
                 <Text style={{ float: "right" }}>
                   {open ? (
                     <Contract
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", marginLeft: "15px" }}
                       size="12px"
                       color="#777"
                       onClick={this.toggleActiveState}
@@ -68,40 +78,35 @@ class TransactionCard extends Component {
                     <Expand
                       size="12px"
                       color="#777"
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", marginLeft: "15px" }}
                       onClick={this.toggleActiveState}
                     />
                   )}
                 </Text>
-                <Text weight="bold" header>
-                  Transaction
-                  <Text>
+                <Box>
+                  {/* <Text size="small"> */}
                     {hash && (
                       <Anchor
                         href={`/transaction/${window.encodeURIComponent(hash)}`}
                       >
                         {` `}
-                        <TruncatedText value={hash} className="txHash" />
+                        <TruncatedText value={hash} size="small" weight="lighter"/>
                       </Anchor>
                     )}
-                  </Text>
-                </Text>
-              </Text>
-              {!open && type && (
-                <Box lanimation="fadeIn">
-                  <Text size="xsmall">{type} Transaction</Text>
+                  {/* </Text> */}
                 </Box>
-              )}
+              </Text>
             </Box>
           </header>
         }
-        background="#0b1f3a"
+        background="#132A47"
         opacity="0.3"
         pad="15px"
+        round="none"
+        border={border}
       >
         <Collapsible open={open}>
           <Box
-            height="full"
             margin={{ top: "10px" }}
             animation={
               open
@@ -116,6 +121,11 @@ class TransactionCard extends Component {
             <DetailsCard data={transaction} />
           </Box>
         </Collapsible>
+        {!open && type && (
+          <Box lanimation="fadeIn" align="end" justify="end" margin={{right:"medium"}}>
+            <Text size="xsmall">{type} Transaction</Text>
+          </Box>
+        )}
       </Card>
     );
   }

@@ -16,7 +16,7 @@ import Dashboard from "../../templates/dashboard";
 import BlockchainSearch from "../../molecules/blockchainSearch";
 import LatestBlocks from "../../organisms/latestBlocks";
 import TransactionsList from "../../organisms/transactionsList";
-import LatestTransations from "../../organisms/LatestTransactions/LatestTransactions";
+import LatestTransactions from "../../organisms/LatestTransactions/LatestTransactions";
 import PriceCurve from "../../organisms/priceCurve";
 import { formatTime } from "../../../helpers/format";
 import { POLL_INTERVAL } from "../../../constants";
@@ -116,7 +116,7 @@ class NdauDashboard extends Component {
               </Box>
 
               <Box gridArea="latestTransactions">
-                <LatestTransations
+                <LatestTransactions
                   transactionHashes={this.state.latestFiveTransactions} //used
                   numberOfTransactions={5} //used
                   loading={this.state.latestFiveTransactions.length < 5} //used

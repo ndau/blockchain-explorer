@@ -8,79 +8,106 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Text, Box } from 'grommet'
-import Anchor from '../../atoms/anchor'
-import { Expand, Contract } from 'grommet-icons'
-import Card from '../../atoms/card'
-import Age from '../../atoms/age'
-import BlockDetails from '../../organisms/blockDetails'
+import React, { Component } from "react";
+import { Text, Box } from "grommet";
+import Anchor from "../../atoms/anchor";
+import Card from "../../atoms/card";
+import Age from "../../atoms/age";
+import BlockDetails from "../../organisms/blockDetails";
 
 class BlockListItem extends Component {
-  render () {
-    const { block, active } = this.props
+  constructor(props) {
+    super(props);
+    const { raw, ...blockDetails } = props.block;
+    this.state = { numberOfTransactions: blockDetails.numberOfTransactions };
+  }
+  render() {
+    const { block, active, border } = this.props;
+
     if (!block) {
-      return <div></div>
+      return <div></div>;
     }
 
-    const { height, timestamp } = block
+    const { height, timestamp } = block;
+
     return (
       <Card
         header={
           <header>
-            <Text>
-              <Text style={{ float: 'right' }}>
-                {active ? (
-                  <Contract
-                    style={{ cursor: 'pointer' }}
-                    onClick={this.toggleActiveState}
-                    size='12px'
-                    color='#777'
-                  />
-                ) : (
-                  <Expand
-                    style={{ cursor: 'pointer' }}
-                    onClick={this.toggleActiveState}
-                    size='12px'
-                    color='#777'
-                  />
-                )}
-              </Text>
+            <Box direction="row">
+              <Box
+                background="#012D5A"
+                width="30px"
+                height="30px"
+                margin={{ right: "small" }}
+                justify="center"
+                align="center"
+              >
+                <Text color="#8096AD">BK</Text>
+              </Box>
 
-              <Text size='medium'>
-                <b>Block </b>
-                <Anchor
-                  href={`/block/${height}`}
-                  label={`#${height}`}
-                  onClick={event => event.stopPropagation()}
-                />
-              </Text>
+              <Box direction="column">
+                <Text size="small">
+                  <Anchor
+                    href={`/block/${height}`}
+                    label={`${height}`}
+                    onClick={(event) => event.stopPropagation()}
+                  />
+                </Text>
 
-              <Text size='xsmall' margin={{ left: 'medium' }} color='#aaa'>
-                <i>
-                  <Age timestamp={timestamp} suffix='ago' />
-                </i>
+                <Text size="xsmall" color="#aaa">
+                  <i>
+                    <Age timestamp={timestamp} suffix="ago" />
+                  </i>
+
+                  <Text
+                    size="xsmall"
+                    color="#F89D1C"
+                    textAlign="center"
+                    margin={{ left: "large" }}
+                  >
+                    {this.state.numberOfTransactions} txn
+                    {this.state.numberOfTransactions > 1 ? "s" : ""}
+                  </Text>
+                </Text>
+              </Box>
+
+              <Text>
+                {/* {active ? (
+                    <Contract
+                      style={{ cursor: "pointer" }}
+                      onClick={this.toggleActiveState}
+                      size="12px"
+                      color="#777"
+                    />
+                  ) : (
+                    <Expand
+                      style={{ cursor: "pointer" }}
+                      onClick={this.toggleActiveState}
+                      size="12px"
+                      color="#777"
+                    />
+                  )} */}
               </Text>
-            </Text>
+            </Box>
           </header>
         }
-        pad='15px'
-        // background={active ? "#0b1f3a" : "#0f2748"}
-        background={active ? '#0d2342' : '#0f2748'}
-        margin='xsmall'
+        background="#132A47"
+        opacity="0.3"
+        pad="medium"
+        round="none"
+        border={border}
       >
-        <Box margin={{ top: '10px' }}>
-          <BlockDetails block={block} active={active} />
-        </Box>
+        <BlockDetails block={block} active={active} />
       </Card>
-    )
+    );
   }
 
-  toggleActiveState = event => {
-    event.stopPropagation()
-    const { active, setAsActiveBlock, unsetAsActiveBlock } = this.props
-    return active ? unsetAsActiveBlock() : setAsActiveBlock()
-  }
+  toggleActiveState = (event) => {
+    event.stopPropagation();
+    const { active, setAsActiveBlock, unsetAsActiveBlock } = this.props;
+    return active ? unsetAsActiveBlock() : setAsActiveBlock();
+  };
 }
 
-export default BlockListItem
+export default BlockListItem;

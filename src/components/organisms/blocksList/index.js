@@ -8,66 +8,64 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Box, Text } from 'grommet'
-import BlockListItem from '../../molecules/blockListItem'
+import React, { Component } from "react";
+import { Box, Text, Anchor } from "grommet";
+import BlockListItem from "../../molecules/blockListItem";
 
 class BlockList extends Component {
-  state = { activeBlock: null }
+  state = { activeBlock: null };
 
   render() {
-    const { blocks } = this.props
-    const activeBlock = this.state.activeBlock
-    const activeBlockHeight = activeBlock && activeBlock.height
+    const { blocks } = this.props;
+    const activeBlock = this.state.activeBlock;
+    const activeBlockHeight = activeBlock && activeBlock.height;
 
-    if(!blocks || blocks.length === 0) {
+    if (!blocks || blocks.length === 0) {
       return (
         <Box pad="xlarge" animation="pulse">
-          <Text alignSelf="center" size="xsmall">Loading blocks...</Text>
+          <Text alignSelf="center" size="xsmall">
+            Loading blocks...
+          </Text>
         </Box>
-      )
+      );
     }
 
     return (
-      <Box>
-        <Text
-          size="xsmall"
-          alignSelf="start"
-          color="#999"
-          style={{fontStyle: "italic"}}
-          margin={{bottom: "10px"}}
-        >
-          * showing blocks containing at least one transaction.
-        </Text>
+      <div>
         <Box
-          background="#293e63"
-          pad="7px"
-          round="xsmall"
-          elevation="small"
+          round={{ size: "xsmall", corner: "top" }}
+          pad="5px"
+          background="#093D60"
+          justify="center"
         >
-          {
-            blocks.map((block, index) =>  {
-              return (
-                <Box key={index} animation={["slideDown", "fadeIn"]}>
-                  <BlockListItem
-                    block={block}
-                    setAsActiveBlock={()=> this.setActiveBlock(block)}
-                    unsetAsActiveBlock={()=> this.setActiveBlock(null)}
-                    active={block.height === activeBlockHeight}
-                  />
-                </Box>
-              )
-            })
-          }
+          <Anchor
+            color="white"
+            href="/blocks/"
+            label="LATEST BLOCKS"
+            alignSelf="center"
+          />
         </Box>
-      </Box>
 
+        {blocks.map((block, index) => {
+          return (
+            <Box key={index} animation={["slideDown", "fadeIn"]}>
+              <BlockListItem
+                block={block}
+                setAsActiveBlock={() => this.setActiveBlock(block)}
+                unsetAsActiveBlock={() => this.setActiveBlock(null)}
+                active={block.height === activeBlockHeight}
+                border="bottom"
+              />
+            </Box>
+          );
+        })}
+      </div>
     );
   }
 
   setActiveBlock = (activeBlock) => {
-    this.setState({ activeBlock })
-  }
+    this.setState({ activeBlock });
+  };
 }
 
-export default BlockList
+export default BlockList;

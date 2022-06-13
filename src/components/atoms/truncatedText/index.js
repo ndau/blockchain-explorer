@@ -29,7 +29,7 @@ class TruncatedText extends Component {
   }
 
   render() {
-    const  { value, className, size="medium" } = this.props
+    const  { value, className, size="medium",weight } = this.props
     const { showFullWord } = this.state
     
     return (
@@ -99,8 +99,8 @@ class TruncatedText extends Component {
                 )}
               </Box>
               : 
-              <Text className={className} style={{wordWrap: "break-word"}} size={size}>
-                {value}
+              <Text className={className} style={{wordWrap: "break-word"}} weight={weight}>
+                {value.toUpperCase()}
               </Text>
             )
           }
