@@ -1,15 +1,18 @@
 import { Grid, Box, Text, ResponsiveContext } from "grommet";
 import { humanizeNumber } from "../../../../../helpers/format";
+import globeImg from "../../../../../img/globe.png";
 import "./EconomicsStatBox.css";
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
+  let background = props.background;
   return (
     <Box
       justify="center"
       align="center"
       gridArea={gridArea}
-      background="#132A47"
+      background={background || "#132A47"}
+      border={true}
     >
       {props.children}
     </Box>
@@ -25,6 +28,8 @@ const StatText = (props) => {
 };
 
 const LabelText = (props) => {
+  const screenSize = props.screenSize === "small";
+
   return (
     <Text weight="lighter" size="small" color="#7B8898">
       {props.children}
@@ -50,14 +55,13 @@ const smallScreenGrid = [
 
 const bigScreenRows = ["xsmall", "xsmall"];
 
-const smallScreenRows = ["xxsmall", "xxsmall", "xxsmall"];
+const smallScreenRows = ["xxsmall", "xxsmall", "xsmall"];
 
-const bigScreenColumns = ["200px", "200px", "280px"];
+const bigScreenColumns = ["280px", "280px", "380px"];
 
-const smallScreenColumns = ["small", "small"];
+const smallScreenColumns = ["xsmall", "small"];
 
 const EconomicsStatBox = (props) => {
-
   const {
     totalNdau,
     marketPrice,
@@ -77,36 +81,44 @@ const EconomicsStatBox = (props) => {
             columns={
               screenSize === "small" ? smallScreenColumns : bigScreenColumns
             }
-            gap="xsmall"
+
             areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
+            back
           >
             <StatBox gridArea="ndauIssued">
               <LabelText>Ndau Issued: </LabelText>
               <StatText>{humanizeNumber(totalNdauIssued, 0)}</StatText>
             </StatBox>
 
-            <StatBox gridArea="nextIssuedPrice" background="#132A47">
+            <StatBox gridArea="nextIssuedPrice">
               <LabelText>Next Issued Price:</LabelText>
               <StatText>{humanizeNumber(nextIssuePrice, 4, 4)} $</StatText>
             </StatBox>
 
-            <StatBox gridArea="sibInEffect" background="#132A47">
+            <StatBox gridArea="sibInEffect">
               <LabelText>SIB IN EFFECT: </LabelText>
               <StatText>{humanizeNumber(sib * 10, 2, 2)} %</StatText>
             </StatBox>
 
-            <StatBox gridArea="ndauInCirculation" background="#132A47">
+            <StatBox gridArea="ndauInCirculation">
               <LabelText>NDAU IN CIRCULATION: </LabelText>
               <StatText>{humanizeNumber(totalNdau, 0)}</StatText>
             </StatBox>
 
-            <StatBox gridArea="currentMarketPrice" background="#132A47">
-              <LabelText>CURRENT MARKET PRICE:</LabelText>
-              <StatText>{humanizeNumber(marketPrice, 4, 4)} $</StatText>
+            <StatBox
+              gridArea="currentMarketPrice"
+              background={{size:screenSize ==="small" ? "50%":"70%",position: "center", color: "#132A47", image: `url(${globeImg})` }}
+            >
+              <Box
+                margin={{ top: screenSize === "small" ? "15%" : "30%" }}
+                justify="center"
+                align="center"
+              >
+                <LabelText>CURRENT MARKET PRICE:</LabelText>
+                <StatText>{humanizeNumber(marketPrice, 4, 4)} $</StatText>
+              </Box>
             </StatBox>
           </Grid>
-
-     
         </>
       )}
     </ResponsiveContext.Consumer>

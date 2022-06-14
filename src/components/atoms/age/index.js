@@ -8,81 +8,95 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import moment from 'moment';
+import React, { Component } from "react";
+import moment from "moment";
 
-const AGE_UPDATE_INTERVAL = 10000
+const AGE_UPDATE_INTERVAL = 10000;
 
-moment.updateLocale('en', {
+moment.updateLocale("en", {
   relativeTime: {
-    future: 'in %s',
-    past: '%s',
-    s:  '1 sec',
-    ss: '%s secs',
-    m:  '1 min',
-    mm: '%d mins',
-    h:  '1 hr',
-    hh: '%d hrs',
-    d:  '1 day',
-    dd: '%d days',
-    M:  '1 month',
-    MM: '%d months',
-    y:  '1 yr',
-    yy: '%d yrs'
-  }
+    future: "in %s",
+    past: "%s",
+    s: "1 sec",
+    ss: "%s secs",
+    m: "1 min",
+    mm: "%d mins",
+    h: "1 hr",
+    hh: "%d hrs",
+    d: "1 day",
+    dd: "%d days",
+    M: "1 month",
+    MM: "%d months",
+    y: "1 yr",
+    yy: "%d yrs",
+  },
 });
 
 class Age extends Component {
   constructor(props) {
-    super(props)
-    this.state= {
+    super(props);
+    this.state = {
       age: this.age(),
-    }
+    };
 
-    this.ageUpdateInterval = window.setInterval(this.updateAge, AGE_UPDATE_INTERVAL)
+    this.ageUpdateInterval = window.setInterval(
+      this.updateAge,
+      AGE_UPDATE_INTERVAL
+    );
   }
 
   render() {
-    const { age } = this.state
-    const {suffix, recent} = this.props
+    const { age } = this.state;
+    const { suffix, recent } = this.props;
     return (
-      <span>{age} {age !== recent && suffix}</span>
+      <span>
+        {age} {age !== recent && suffix}
+      </span>
     );
   }
 
   componentWillUnmount() {
-    window.clearInterval(this.ageUpdateInterval)
+    window.clearInterval(this.ageUpdateInterval);
   }
 
   updateAge = () => {
-    this.setState(({age}) => {
+    this.setState(({ age }) => {
       const newAge = this.age();
-      if(newAge !== age) {
-        return { age: newAge }
+      if (newAge !== age) {
+        return { age: newAge };
       }
-    })
-  }
+    });
+  };
 
   age = () => {
     const { timestamp, recent } = this.props;
     let age = moment(timestamp).fromNow();
 
-    if(age === "1 sec") {
-      age = recent || age
+    if (age === "1 sec") {
+      age = recent || age;
     }
 
-    age = age.toUpperCase();
+    age = toTitleCase(age);
 
-    return age
-  }
+    return age;
+
+    function toTitleCase(str) {
+      return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+    }
+  };
 
   componentDidUpdate() {
-    this.updateAge()
+    this.updateAge();
 
-    if(this.ageUpdateInterval) {
-      window.clearInterval(this.ageUpdateInterval)
+    if (this.ageUpdateInterval) {
+      window.clearInterval(this.ageUpdateInterval);
     }
-    this.ageUpdateInterval = window.setInterval(this.updateAge, AGE_UPDATE_INTERVAL)
+    this.ageUpdateInterval = window.setInterval(
+      this.updateAge,
+      AGE_UPDATE_INTERVAL
+    );
   }
 }
 

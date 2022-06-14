@@ -50,6 +50,7 @@ class BlockList extends Component {
           return (
             <Box key={index} animation={["slideDown", "fadeIn"]}>
               <BlockListItem
+                exclude={true}
                 block={block}
                 setAsActiveBlock={() => this.setActiveBlock(block)}
                 unsetAsActiveBlock={() => this.setActiveBlock(null)}

@@ -22,7 +22,7 @@ class BlockListItem extends Component {
     this.state = { numberOfTransactions: blockDetails.numberOfTransactions };
   }
   render() {
-    const { block, active, border } = this.props;
+    const { block, active, border,exclude } = this.props;
 
     if (!block) {
       return <div></div>;
@@ -57,10 +57,15 @@ class BlockListItem extends Component {
 
                 <Text size="xsmall" color="#aaa">
                   <i>
+                    {console.info({timestamp},"block timestamp")}
                     <Age timestamp={timestamp} suffix="ago" />
                   </i>
 
-                  <Text
+                </Text>
+              </Box>
+
+              
+              <Text
                     size="xsmall"
                     color="#F89D1C"
                     textAlign="center"
@@ -69,8 +74,6 @@ class BlockListItem extends Component {
                     {this.state.numberOfTransactions} txn
                     {this.state.numberOfTransactions > 1 ? "s" : ""}
                   </Text>
-                </Text>
-              </Box>
 
               <Text>
                 {/* {active ? (
@@ -94,11 +97,12 @@ class BlockListItem extends Component {
         }
         background="#132A47"
         opacity="0.3"
+        height="80px"
         pad="medium"
         round="none"
         border={border}
       >
-        <BlockDetails block={block} active={active} />
+        <BlockDetails exclude={exclude} block={block} active={active} />
       </Card>
     );
   }

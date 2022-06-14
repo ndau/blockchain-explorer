@@ -30,7 +30,7 @@ const LatestTransations = (props) => {
           <div
             style={{
               borderLeft: screenSize === "small" ? "" : "2px solid #F9972C",
-              paddingLeft: screenSize === "small" ? "" :"5%",
+              paddingLeft: screenSize === "small" ? "" : "5%",
             }}
           >
             <Box
@@ -49,20 +49,13 @@ const LatestTransations = (props) => {
 
             {numberOfTransactions &&
               transactionHashes.map((hash, index) => (
-                <div
-                  style={{
-                    backgroundColor: "#132A47",
-                    padding: "5px",
-                  }}
-                >
-                  <TransactionCard
-                    transactionHash={hash}
-                    open={index === activeTransactionIndexState}
-                    index={index}
-                    setActiveTransaction={setActiveTransactionIndex}
-                    border="bottom"
-                  />
-                </div>
+                <TransactionCard
+                  transactionHash={hash}
+                  open={index === activeTransactionIndexState}
+                  index={index}
+                  setActiveTransaction={setActiveTransactionIndex}
+                  border="bottom"
+                />
               ))}
           </div>
         )

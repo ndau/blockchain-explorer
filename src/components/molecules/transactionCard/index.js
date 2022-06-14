@@ -13,11 +13,11 @@ import { Text, Collapsible, Box, Avatar } from "grommet";
 import Anchor from "../../atoms/anchor";
 import { Expand, Contract } from "grommet-icons";
 import Card from "../../atoms/card";
-// import TransactionDetails from '../../organisms/transactionDetails'
-// import TransactionDetails from '../../organisms/txDetails'
 import DetailsCard from "../../molecules/detailsCard";
 import TruncatedText from "../../atoms/truncatedText";
+import Age from "../../atoms/age";
 import { getTransaction } from "../../../helpers/fetch";
+import moment from "moment";
 import "./style.css";
 
 class TransactionCard extends Component {
@@ -33,7 +33,7 @@ class TransactionCard extends Component {
 
   render() {
     const { transaction } = this.state;
-    const { open,border } = this.props;
+    const { open, border } = this.props;
 
     if (!transaction) {
       return (
@@ -43,89 +43,73 @@ class TransactionCard extends Component {
               <Text>No transaction data was retrieved.</Text>
             </header>
           }
-          pad="15px"
+          pad="small"
         />
       );
     }
 
-    const { hash, type } = transaction;
+    const { hash, type, timestamp } = transaction;
 
     return (
       <Card
         header={
           <header>
-            <Box direction="row" width="medium" justify="center" align="center" >
+            <Box direction="row" width="large" justify="between" align="center">
               <Box
                 background="#012D5A"
                 width="30px"
                 height="30px"
-                margin={{ right: "auto" }}
                 justify="center"
                 align="center"
               >
                 <Text color="#8096AD">TX</Text>
               </Box>
-              <Text truncate as="article">
-                <Text style={{ float: "right" }}>
-                  {open ? (
-                    <Contract
-                      style={{ cursor: "pointer", marginLeft: "15px" }}
-                      size="12px"
-                      color="#777"
-                      onClick={this.toggleActiveState}
-                    />
-                  ) : (
-                    <Expand
-                      size="12px"
-                      color="#777"
-                      style={{ cursor: "pointer", marginLeft: "15px" }}
-                      onClick={this.toggleActiveState}
-                    />
-                  )}
-                </Text>
-                <Box>
-                  {/* <Text size="small"> */}
-                    {hash && (
-                      <Anchor
-                        href={`/transaction/${window.encodeURIComponent(hash)}`}
-                      >
-                        {` `}
-                        <TruncatedText value={hash} size="small" weight="lighter"/>
-                      </Anchor>
-                    )}
-                  {/* </Text> */}
-                </Box>
+
+              <Box size="small">
+                {hash && (
+                  <>
+                    <Anchor
+                      href={`/transaction/${window.encodeURIComponent(hash)}`}
+                    >
+                      <Box width="xsmall">
+                        <Text weight="lighter" size="small" truncate={true}>
+                          {hash.toUpperCase()}
+                        </Text>
+                      </Box>
+                    </Anchor>
+
+                    {/* <TruncatedText value={hash} size="small" weight="lighter" /> */}
+                  </>
+                )}
+              </Box>
+
+              <Text size="xsmall" color="#aaa">
+                {type} Transaction
               </Text>
+              {timestamp && (
+                <Text size="10px" color="#aaa">
+                  <i>
+                    <Age
+                      timestamp={moment(
+                        timestamp,
+                        "DD MMM YYYY. HH:mm zz"
+                      ).valueOf()}
+                      suffix="ago"
+                    />
+                  </i>
+                </Text>
+              )}
             </Box>
           </header>
         }
         background="#132A47"
         opacity="0.3"
-        pad="15px"
+        height="80px"
+        pad="medium"
         round="none"
         border={border}
       >
-        <Collapsible open={open}>
-          <Box
-            margin={{ top: "10px" }}
-            animation={
-              open
-                ? "fadeIn"
-                : {
-                    type: "fadeOut",
-                    delay: 0,
-                    duration: 100,
-                  }
-            }
-          >
-            <DetailsCard data={transaction} />
-          </Box>
-        </Collapsible>
-        {!open && type && (
-          <Box lanimation="fadeIn" align="end" justify="end" margin={{right:"medium"}}>
-            <Text size="xsmall">{type} Transaction</Text>
-          </Box>
-        )}
+    
       </Card>
     );
   }

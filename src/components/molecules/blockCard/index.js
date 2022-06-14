@@ -10,6 +10,7 @@
 
 import React, { Component } from "react";
 import { Text, Box, Collapsible } from "grommet";
+
 import TransactionsList from "../../organisms/transactionsList";
 import Value from "../../molecules/value";
 import Card from "../../atoms/card";
@@ -17,11 +18,12 @@ import "../detailsCard/style.css";
 
 class BlockCard extends Component {
   render() {
-    const { block, active, txLoading } = this.props;
+    const { block, active, txLoading,exclude } = this.props;
 
     if (!block) {
       return <h3>Loading...</h3>;
     }
+
 
     const { raw, ...blockDetails } = block;
 
@@ -35,7 +37,7 @@ class BlockCard extends Component {
     ];
     return (
       <div>
-        <Collapsible open={active}>
+        <Collapsible open={!exclude}>
           <>
             {Object.keys(blockDetails).map((property, index) => {
               if (notDisplayed.includes(property)) {
@@ -53,15 +55,16 @@ class BlockCard extends Component {
             })}
           </>
         </Collapsible>
-{/* 
 
-        {/* <TransactionsList
+
+         {!exclude && <TransactionsList
           transactionHashes={transactionHashes}
           numberOfTransactions={numberOfTransactions}
           blockHeight={height}
           active={active}
           loading={txLoading}
-        /> */}
+        />
+  }
       </div>
     );
   }

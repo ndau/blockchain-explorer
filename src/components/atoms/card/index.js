@@ -24,7 +24,8 @@ class Card extends Component {
       animation, 
       margin, 
       elevation,
-      border
+      border,
+      height,
     } = this.props;
 
     return (
@@ -38,6 +39,7 @@ class Card extends Component {
         elevation={elevation}
         animation={animation}
         border={border}
+        height={height}
       >
         {header}
         {children}

@@ -22,6 +22,7 @@ class TransactionsList extends Component {
       loading,
       blockHeight,
       active,
+      exclude
     } = this.props;
     if (parseInt(numberOfTransactions) === 0) {
       return (

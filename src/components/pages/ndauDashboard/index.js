@@ -60,9 +60,9 @@ const smallScreenGrid = [
 ];
 
 const bigScreenRows = ["large"];
-const smallScreenRows = ["large", "large"];
+const smallScreenRows = ["500px", "medium"];
 
-const bigScreenColumns = ["35vw", "35vw"];
+const bigScreenColumns = ["40vw", "40vw"];
 const smallScreenColumns = ["90vw"];
 
 class NdauDashboard extends Component {
@@ -87,12 +87,12 @@ class NdauDashboard extends Component {
       <ResponsiveContext.Consumer>
         {(screenSize) => (
           <Dashboard browserHistory={this.props.history} selectNode>
-            <Box margin={{ bottom: "large" }}>
-              <Heading alignSelf="center" size="small" textAlign="center">
+            <Box margin={{ bottom: "large",top: screenSize==="small" ? "4%":"" }} >
+              <Heading alignSelf="left" size="small" textAlign="left">
                 The Ndau Blockchain Explorer
               </Heading>
 
-              <Box align="center" margin={{ bottom: "xsmall" }}>
+              <Box align="left" margin={{ bottom: "xsmall" }}>
                 <BlockchainSearch />
               </Box>
 
