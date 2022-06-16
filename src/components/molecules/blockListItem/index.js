@@ -57,7 +57,6 @@ class BlockListItem extends Component {
 
                 <Text size="xsmall" color="#aaa">
                   <i>
-                    {console.info({timestamp},"block timestamp")}
                     <Age timestamp={timestamp} suffix="ago" />
                   </i>
 

@@ -154,6 +154,8 @@ class NdauDashboard extends Component {
 
         getBlocks({ before: latestBlockHeight, filter: hideEmpty, limit }).then(
           async ({ blocks }) => {
+            console.log(blocks,"blocks in dashboard");
+            
             if (!blocks) {
               return null;
             }
@@ -176,7 +178,6 @@ class NdauDashboard extends Component {
               }
               // }
             }
-            console.log(latestFiveTransactions, "latest5Tx");
 
             this.setState(
               {

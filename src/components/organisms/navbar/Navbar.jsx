@@ -12,23 +12,22 @@ import {
   Box,
   Anchor,
   ResponsiveContext,
-  Collapsible,
   Sidebar,
   Nav,
   Button,
+  Layer,
 } from "grommet";
-import Container from "../../atoms/container";
 
 import LogoImg from "../../../img/ndau_orange_logo.png";
 import { AppsRounded } from "grommet-icons";
 
 import { NAVBAR_COLOR } from "../../../constants";
-import React, { useState } from "react";
-
+import React, { useRef, useState } from "react";
 
 import "./style.css";
 
 const NavbarLink = (props) => {
+  const sideRef = useRef()
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) =>
@@ -114,9 +113,20 @@ const Navbar = (props) => {
             <NavbarLink>Sign in</NavbarLink>
           </Box>
 
-          <Collapsible open={navbarDrawerState}>
-            <SideBar />
-          </Collapsible>
+          {navbarDrawerState && (
+            // <Box>
+              <Layer
+                onEsc={() => setNavbarDrawerState(false)}
+                onClick={() => setNavbarDrawerState(false)}
+                background="red"
+              >
+                <SideBar></SideBar>
+              </Layer>
+            // </Box>
+          )}
+          {/* <Collapsible open={navbarDrawerState}>              
+                
+          </Collapsible> */}
         </Box>
       )}
     </ResponsiveContext.Consumer>

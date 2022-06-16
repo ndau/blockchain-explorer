@@ -3,51 +3,43 @@ import { humanizeNumber } from "../../../../helpers/format";
 
 import EconomicsStatBox from "./EconomicsStatBox/EconomicsStatBox";
 import WidgetBox from "./WidgetBox/WidgetBox";
-import TransactionsStatBox from "./TransactionsStatBox/TransactionsStatBox";
+import KeyMetricsBox from "./KeyMetricsBox/KeyMetricsBox";
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
+  let justify = props.justify;
+  let align = props.align;
   return (
-    <Box justify="center" align="center" gridArea={gridArea}>
+    <Box
+      justify={justify ?? "center"}
+      align={align ?? "center"}
+      gridArea={gridArea}
+    >
       {props.children}
     </Box>
   );
 };
 
-const StatText = (props) => {
-  return (
-    <Text weight="bold" size="medium" color="#FFF">
-      {props.children}
-    </Text>
-  );
-};
-
-const LabelText = (props) => {
-  return (
-    <Text weight="lighter" size="small" color="#7B8898">
-      {props.children}
-    </Text>
-  );
-};
-
 const bigScreenGrid = [
   { name: "EconomicsStat", start: [0, 0], end: [1, 0] },
-  { name: "Graph", start: [0, 1], end: [0, 1] },
-  { name: "TransactionsStat", start: [1, 1], end: [1, 1] },
+  { name: "Graph", start: [0, 1], end: [0, 2] },
+  { name: "staked", start: [1, 1], end: [1, 1] },
+  { name: "numOfAccounts", start: [1, 2], end: [1, 2] },
 ];
 
 const smallScreenGrid = [
-  { name: "EconomicsStat", start: [0, 0], end: [0, 0] },
-  { name: "TransactionsStat", start: [0, 1], end: [0, 1] },
+  { name: "EconomicsStat", start: [0, 0], end: [1, 0] },
+  { name: "staked", start: [0, 1], end: [0, 1] },
+  { name: "numOfAccounts", start: [1, 1], end: [1, 1] },
 ];
 
-const bigScreenRows = ["small", "medium"];
+const bigScreenRows = ["small", "small", "small"];
 
 const smallScreenRows = ["small", "xsmall"];
 
-const bigScreenColumns = ["medium", "small"];
+const bigScreenColumns = ["large", "small"];
 
-const smallScreenColumns = ["medium"];
+const smallScreenColumns = ["small", "small"];
 
 const StatisticsPanel = (props) => {
   const {
@@ -63,7 +55,6 @@ const StatisticsPanel = (props) => {
     <ResponsiveContext.Consumer>
       {(screenSize) => (
         <Grid
-          justifyContent="center"
           gap="small"
           rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
           columns={
@@ -71,7 +62,7 @@ const StatisticsPanel = (props) => {
           }
           areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
         >
-          <StatBox gridArea="EconomicsStat">
+          <StatBox justify="start" align="start" gridArea="EconomicsStat">
             <EconomicsStatBox
               totalNdau={totalNdau}
               marketPrice={marketPrice}
@@ -88,9 +79,9 @@ const StatisticsPanel = (props) => {
             </StatBox>
           )}
 
-          <StatBox gridArea="TransactionsStat">
-            <TransactionsStatBox />
-          </StatBox>
+          <StatBox gridArea="staked">Staked</StatBox>
+
+          <StatBox gridArea="numOfAccounts">numOfAccounts</StatBox>
         </Grid>
       )}
     </ResponsiveContext.Consumer>

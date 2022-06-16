@@ -76,7 +76,6 @@ const EconomicsStatBox = (props) => {
       {(screenSize) => (
         <>
           <Grid
-            justifyContent="center"
             rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
             columns={
               screenSize === "small" ? smallScreenColumns : bigScreenColumns

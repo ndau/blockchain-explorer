@@ -3,14 +3,14 @@ import { Grid, Box, Text, ResponsiveContext } from "grommet";
 const StatBox = (props) => {
   let gridArea = props.gridArea;
   return (
-    <Box gridArea={gridArea} background="#132A47">
+    <Box height="100%" width="100%" gridArea={gridArea} background="#132A47">
       {props.children}
     </Box>
   );
 };
 
-const TransactionsStatBox = () => {
-  const bigScreenRows = ["xsmall", "xsmall"];
+const KeyMetricsBox = () => {
+  const bigScreenRows = ["small", "medium"];
 
   const smallScreenRows = ["xsmall"];
 
@@ -20,41 +20,36 @@ const TransactionsStatBox = () => {
 
   const bigScreenGrid = [
     {
-      name: "txPerSec",
+      name: "ndauStaked",
       start: [0, 0],
       end: [0, 0],
     },
-    { name: "blockTime", start: [0, 1], end: [0, 1] },
+    { name: "numberAccounts", start: [0, 1], end: [0, 1] },
   ];
 
   const smallScreenGrid = [
-    { name: "txPerSec", start: [0, 0], end: [0, 0] },
-    { name: "blockTime", start: [1, 0], end: [1, 0] },
+    { name: "ndauStaked", start: [0, 0], end: [0, 0] },
+    { name: "numberAccounts", start: [1, 0], end: [1, 0] },
   ];
 
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (
         <Grid
-          justifyContent="center"
-          gap="small"
+          justify="end"
+          align="end"
           rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
           columns={
             screenSize === "small" ? smallScreenColumns : bigScreenColumns
           }
           areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
         >
-          <StatBox gridArea="txPerSec">
-            <Text>Transactions Per Second</Text>
-            {screenSize !== "small" && (
-              <Text size="small">
-                Number Of Transactions Processed in a Second
-              </Text>
-            )}
+          <StatBox gridArea="ndauStaked">
+            <Text textAlign="center"> Ndau Staked</Text>
           </StatBox>
 
-          <StatBox gridArea="blockTime">
-            <Text>blockTime</Text>
+          <StatBox gridArea="numberAccounts">
+            <Text textAlign="center"> Number of Accounts</Text>
           </StatBox>
         </Grid>
       )}
@@ -62,4 +57,4 @@ const TransactionsStatBox = () => {
   );
 };
 
-export default TransactionsStatBox;
+export default KeyMetricsBox;

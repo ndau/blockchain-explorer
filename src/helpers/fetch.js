@@ -33,7 +33,7 @@ export const getBlock = async blockHeight => {
   return axios
     .get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then(response => {
-      console.log(response.data)
+      console.log(response.data," The getBlock response")
       return formatBlock(response.data.block_meta)
     })
     .catch(error => {
