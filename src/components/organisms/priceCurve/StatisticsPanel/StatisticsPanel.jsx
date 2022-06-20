@@ -39,7 +39,7 @@ const smallScreenRows = ["small", "xsmall"];
 
 const bigScreenColumns = ["large", "small"];
 
-const smallScreenColumns = ["140px", "140px"];
+const smallScreenColumns = ["small", "small"];
 
 const StatisticsPanel = (props) => {
   const {
@@ -55,16 +55,14 @@ const StatisticsPanel = (props) => {
     <ResponsiveContext.Consumer>
       {(screenSize) => (
         <Grid
-          justifyContent="center"
-          alignContent="center"
-          gap={screenSize === "small" ? "xsmall" : "small"}
+          gap="small"
           rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
           columns={
             screenSize === "small" ? smallScreenColumns : bigScreenColumns
           }
           areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
         >
-          <StatBox gridArea="EconomicsStat">
+          <StatBox justify="start" align="start" gridArea="EconomicsStat">
             <EconomicsStatBox
               totalNdau={totalNdau}
               marketPrice={marketPrice}

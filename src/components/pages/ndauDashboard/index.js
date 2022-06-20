@@ -34,7 +34,7 @@ const LastUpdated = (props) => {
   const lastUpdated = props.lastUpdated;
 
   return (
-    <Box margin={{ bottom: "large" }}>
+    <Box align="center" margin={{ bottom: "large" }}>
       <Text
         color="#343E49"
         size="xsmall"
@@ -87,31 +87,29 @@ class NdauDashboard extends Component {
       <ResponsiveContext.Consumer>
         {(screenSize) => (
           <Dashboard browserHistory={this.props.history} selectNode>
-            <Box
-              align="left"
-              margin={{
-                bottom: "xsmall",
-                top: screenSize === "small" ? "4%" : "",
-              }}
-            >
+            <Box margin={{ bottom: "large",top: screenSize==="small" ? "4%":"" }} >
               <Heading alignSelf="left" size="small" textAlign="left">
                 The Ndau Blockchain Explorer
               </Heading>
 
-              <BlockchainSearch />
+              <Box align="left" margin={{ bottom: "xsmall" }}>
+                <BlockchainSearch />
+              </Box>
+
               <LastUpdated lastUpdated={lastUpdated} />
+
+              <PriceCurve priceInfo={priceInfo} />
             </Box>
 
-            <PriceCurve priceInfo={priceInfo} />
-
             <Grid
-              justifyContent="center"
+            justifyContent="center"
               rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
               columns={
                 screenSize === "small" ? smallScreenColumns : bigScreenColumns
               }
               gap="medium"
               areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
+
             >
               <Box gridArea="latestBlocks">
                 <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />
@@ -156,8 +154,8 @@ class NdauDashboard extends Component {
 
         getBlocks({ before: latestBlockHeight, filter: hideEmpty, limit }).then(
           async ({ blocks }) => {
-            console.log(blocks, "blocks in dashboard");
-
+            console.log(blocks,"blocks in dashboard");
+            
             if (!blocks) {
               return null;
             }
