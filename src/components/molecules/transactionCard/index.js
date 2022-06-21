@@ -73,7 +73,7 @@ class TransactionCard extends Component {
                     >
                       <Box width="xsmall">
                         <Text weight="lighter" size="small" truncate={true}>
-                          {hash.toUpperCase()}
+                          {hash}
                         </Text>
                       </Box>
                     </Anchor>

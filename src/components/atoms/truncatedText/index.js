@@ -109,7 +109,7 @@ class TruncatedText extends Component {
               style={{ wordWrap: "break-word" }}
               weight={weight}
             >
-              {value.toUpperCase()}
+              {value}
             </Text>
           )
         }
