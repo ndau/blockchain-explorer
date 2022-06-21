@@ -33,7 +33,7 @@ export const getBlock = async (blockHeight) => {
   return axios
     .get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then((response) => {
-      console.log(response.data, " The getBlock response");
+      console.log(response.data);
       return formatBlock(response.data.block_meta);
     })
     .catch((error) => {
@@ -218,23 +218,53 @@ export const pollForTransactions = ({
 export const getAccount = async (address) => {
   const accountStateEndpoint = `${await getNodeEndpoint()}/account/account/${address}`;
 
-  return axios
-    .get(accountStateEndpoint, HTTP_REQUEST_HEADER)
-    .then((response) => {
-      const account = {
+  let accountStateEndpointResponse = await axios.get(
+    accountStateEndpoint,
+    HTTP_REQUEST_HEADER
+  );
+
+  const account = {
+    address,
+    ...accountStateEndpointResponse.data[address],
+  };
+
+  let formattedAccount = formatAccount(account);
+
+  const weightedAverageAge = account.weightedAverageAge;
+  
+  const systemEAIRateEndpoint = `${await getNodeEndpoint()}/system/eai/rate`;
+
+  //hitting System EAI rate
+  const systemEAIRateEndpointResponse = await axios.post(
+    systemEAIRateEndpoint,
+    [
+      {
         address,
-        ...response.data[address],
-      };
+        weightedAverageAge,
+      },
+    ]
+  );
 
-      if (response.status === 200) {
-        console.log(response.data, "response.data");
-        return formatAccount(account);
-      }
+  const EAIRate = systemEAIRateEndpointResponse.data[0].eairate;
+  console.log(EAIRate);
 
-      return response.data[address] && formatAccount(account);
-    })
-    .catch((error) => {});
+  return {...formattedAccount,EAIRate};
 };
+
+// .then((response) => {
+//   const account = {
+//     address,
+//     ...response.data[address],
+//   };
+
+//   console.log(
+//     response.data[address] && formatAccount(account),
+//     "response.data[address] && formatAccount(account)"
+//   );
+// return response.data[address] && formatAccount(account);
+// })
+//     .catch((error) => {});
+// };
 
 export const getAccountHistory = async (address) => {
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`;
