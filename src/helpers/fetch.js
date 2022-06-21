@@ -218,37 +218,41 @@ export const pollForTransactions = ({
 export const getAccount = async (address) => {
   const accountStateEndpoint = `${await getNodeEndpoint()}/account/account/${address}`;
 
-  let accountStateEndpointResponse = await axios.get(
-    accountStateEndpoint,
-    HTTP_REQUEST_HEADER
-  );
+  try {
+    let accountStateEndpointResponse = await axios.get(
+      accountStateEndpoint,
+      HTTP_REQUEST_HEADER
+    );
 
-  const account = {
-    address,
-    ...accountStateEndpointResponse.data[address],
-  };
+    const account = {
+      address,
+      ...accountStateEndpointResponse.data[address],
+    };
 
-  let formattedAccount = formatAccount(account);
+    let formattedAccount = formatAccount(account);
 
-  const weightedAverageAge = account.weightedAverageAge;
-  
-  const systemEAIRateEndpoint = `${await getNodeEndpoint()}/system/eai/rate`;
+    const weightedAverageAge = account.weightedAverageAge;
 
-  //hitting System EAI rate
-  const systemEAIRateEndpointResponse = await axios.post(
-    systemEAIRateEndpoint,
-    [
-      {
-        address,
-        weightedAverageAge,
-      },
-    ]
-  );
+    const systemEAIRateEndpoint = `${await getNodeEndpoint()}/system/eai/rate`;
 
-  const EAIRate = systemEAIRateEndpointResponse.data[0].eairate;
-  console.log(EAIRate);
+    //hitting System EAI rate
+    const systemEAIRateEndpointResponse = await axios.post(
+      systemEAIRateEndpoint,
+      [
+        {
+          address,
+          weightedAverageAge,
+        },
+      ]
+    );
 
-  return {...formattedAccount,EAIRate};
+    const EAIRate = systemEAIRateEndpointResponse.data[0].eairate;
+
+    return { ...formattedAccount, EAIRate };
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 };
 
 // .then((response) => {

@@ -151,8 +151,7 @@ class AccountTimeline extends Component {
 
   filterEvents = () => {
     const { events, typeFilters } = this.state;
-    console.log(events, "events");
-    console.log(events.length === 0, " events.length === 0");
+
     if (!events || events.length === 0 || events[0]===null) {
       console.log("return not events");
       return [];

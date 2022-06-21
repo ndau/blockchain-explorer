@@ -9,13 +9,14 @@
  */
 
 import React, { Component } from "react";
-import { Box, Text, Collapsible, CheckBox } from "grommet";
+import { Box, Text, Collapsible, CheckBox, Spinner } from "grommet";
 import Details from "../../templates/details";
 import DetailsCard from "../../molecules/detailsCard";
 import AccountTimeline from "../../organisms/accountTimeline";
 import { getAccount, getAccountHistory } from "../../../helpers/fetch";
 
 class Account extends Component {
+  displaystring;
   constructor(props) {
     super(props);
 
@@ -23,6 +24,8 @@ class Account extends Component {
       account: {},
       history: null,
       hideDetails: false,
+      valid: false,
+      loading: true,
     };
 
     this.getData();
@@ -34,50 +37,55 @@ class Account extends Component {
 
     return (
       <Details browserHistory={this.props.history} notFound={!account}>
-        <Box margin={{ bottom: "20px" }}>
-          <Text size="large">
-            {/* hide empty toggle is not fully functional */}
-            <Text
-              size="xsmall"
-              color="#aaa"
-              weight="normal"
-              style={{ float: "right" }}
-            >
-              <CheckBox
-                toggle
-                checked={hideDetails}
-                label="hide details"
-                onChange={this.toggleShowDetails}
-                reverse
-                name="small"
-              />
-            </Text>
-            <Text size="large">
-              Account{" "}
-              <Text weight="bold" as="em" style={{ wordWrap: "break-word" }}>
-                {account && account.address}
-              </Text>
-            </Text>
-          </Text>
-        </Box>
         {this.state.history ? (
           <>
-        <Collapsible open={showDetails}>
-          <Box
-            animation={
-              showDetails
-                ? "fadeIn"
-                : {
-                    type: "fadeOut",
-                    delay: 0,
-                    duration: 100,
-                  }
-            }
-          >
-            {/* ACCOUNT DETAILS */}
-            <DetailsCard data={account} keywordMap={this.keywordMap} />
-          </Box>
-        </Collapsible>
+            <Box margin={{ bottom: "20px" }}>
+              <Text size="large">
+                {/* hide empty toggle is not fully functional */}
+                <Text
+                  size="xsmall"
+                  color="#aaa"
+                  weight="normal"
+                  style={{ float: "right" }}
+                >
+                  <CheckBox
+                    toggle
+                    checked={hideDetails}
+                    label="hide details"
+                    onChange={this.toggleShowDetails}
+                    reverse
+                    name="small"
+                  />
+                </Text>
+                <Text size="large">
+                  Account{" "}
+                  <Text
+                    weight="bold"
+                    as="em"
+                    style={{ wordWrap: "break-word" }}
+                  >
+                    {account && account.address}
+                  </Text>
+                </Text>
+              </Text>
+            </Box>
+
+            <Collapsible open={showDetails}>
+              <Box
+                animation={
+                  showDetails
+                    ? "fadeIn"
+                    : {
+                        type: "fadeOut",
+                        delay: 0,
+                        duration: 100,
+                      }
+                }
+              >
+                {/* ACCOUNT DETAILS */}
+                <DetailsCard data={account} keywordMap={this.keywordMap} />
+              </Box>
+            </Collapsible>
 
             <Box animation="fadeIn">
               <Text>
@@ -102,13 +110,11 @@ class Account extends Component {
               />
             </Box>
           </>
+        ) : this.state.valid ? (
+          "This account currently has no transactions on the blockchain."
         ) : (
-          <Box animation="fadeIn" align="center" margin="small">
-            <Text>
-              <b>
-                This account currently has no transactions on the blockchain
-              </b>
-            </Text>
+          <Box align="center">
+            <Spinner size="medium" />
           </Box>
         )}
       </Details>
@@ -116,6 +122,8 @@ class Account extends Component {
   }
 
   getData = () => {
+    this.setState({ loading: true });
+
     const { accountAddress: address } = this.props.match.params;
     getAccount(address)
       .then((account) => {
@@ -125,18 +133,22 @@ class Account extends Component {
       })
       .then((address) => {
         if (!address) {
+          this.setState({ loading: false });
           return;
         }
-        getAccountHistory(address).then((history) => {
-          console.log(history, "fetched history");
 
-          if (!history || history.length === 0 || history[0] === null) {
-            console.log("Setting History to null");
-            this.setState({ history: null });
+        getAccountHistory(address).then((history) => {
+          if ((history && history.length === 0) || history[0] === null) {
+            this.setState({
+              history: null,
+              valid: true,
+            });
+            this.setState({ loading: false });
             return;
           }
 
           this.setState({ history });
+          this.setState({ loading: false });
         });
       });
   };
