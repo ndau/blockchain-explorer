@@ -3,7 +3,7 @@ import { humanizeNumber } from "../../../../helpers/format";
 
 import EconomicsStatBox from "./EconomicsStatBox/EconomicsStatBox";
 import WidgetBox from "./WidgetBox/WidgetBox";
-import KeyMetricsBox from "./KeyMetricsBox/KeyMetricsBox";
+
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
@@ -39,7 +39,7 @@ const smallScreenRows = ["small", "xsmall"];
 
 const bigScreenColumns = ["large", "small"];
 
-const smallScreenColumns = ["small", "small"];
+const smallScreenColumns = ["40vw", "40vw"];
 
 const StatisticsPanel = (props) => {
   const {
@@ -55,14 +55,18 @@ const StatisticsPanel = (props) => {
     <ResponsiveContext.Consumer>
       {(screenSize) => (
         <Grid
-          gap="small"
+          gap=" small"
           rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
           columns={
             screenSize === "small" ? smallScreenColumns : bigScreenColumns
           }
           areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
         >
-          <StatBox justify="start" align="start" gridArea="EconomicsStat">
+          <StatBox
+            justify={screenSize === "small" ? "center" : "start"}
+            align={screenSize === "small" ? "center" : "start"}
+            gridArea="EconomicsStat"
+          >
             <EconomicsStatBox
               totalNdau={totalNdau}
               marketPrice={marketPrice}

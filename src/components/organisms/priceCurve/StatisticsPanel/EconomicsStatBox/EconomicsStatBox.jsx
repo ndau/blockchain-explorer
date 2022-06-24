@@ -59,7 +59,7 @@ const smallScreenRows = ["xxsmall", "xxsmall", "xsmall"];
 
 const bigScreenColumns = ["280px", "280px", "380px"];
 
-const smallScreenColumns = ["xsmall", "small"];
+const smallScreenColumns = ["30vw", "50vw"];
 
 const EconomicsStatBox = (props) => {
   const {
@@ -80,7 +80,6 @@ const EconomicsStatBox = (props) => {
             columns={
               screenSize === "small" ? smallScreenColumns : bigScreenColumns
             }
-
             areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
             back
           >
@@ -106,10 +105,15 @@ const EconomicsStatBox = (props) => {
 
             <StatBox
               gridArea="currentMarketPrice"
-              background={{size:screenSize ==="small" ? "50%":"70%",position: "center", color: "#132A47", image: `url(${globeImg})` }}
+              background={{
+                size: screenSize === "small" ? "30vh" : "70%",
+                position: screenSize === "small" ? "50% 0vh" : "center",
+                color: "#132A47",
+                image: `url(${globeImg})`,
+              }}
             >
               <Box
-                margin={{ top: screenSize === "small" ? "15%" : "30%" }}
+                margin={{ top: screenSize === "small" ? "10vh" : "30%" }}
                 justify="center"
                 align="center"
               >

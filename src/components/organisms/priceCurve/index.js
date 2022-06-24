@@ -36,7 +36,7 @@ export default class PriceCurve extends Component {
     if (!this.state.priceCurveData) {
       return (
         <Box
-          pad="xlarge"
+          pad="large"
           animation="pulse"
           height="small"
           direction="row"

@@ -22,25 +22,25 @@ import LogoImg from "../../../img/ndau_orange_logo.png";
 import { AppsRounded } from "grommet-icons";
 
 import { NAVBAR_COLOR } from "../../../constants";
+import { Link } from "react-router-dom";
 import React, { useRef, useState } from "react";
 
 import "./style.css";
 
 const NavbarLink = (props) => {
-  const sideRef = useRef()
   return (
-    <ResponsiveContext.Consumer>
-      {(screenSize) =>
-        screenSize !== "small" && (
-          <Anchor
-            size="small"
-            margin={{ vertical: "medium", horizontal: "medium" }}
-          >
-            {props.children}
-          </Anchor>
-        )
-      }
-    </ResponsiveContext.Consumer>
+    <>
+      {!props.small && (
+        <Anchor
+          as={Link}
+          to={props.to}
+          size="small"
+          margin={{ vertical: "medium", horizontal: "medium" }}
+        >
+          {props.children}
+        </Anchor>
+      )}
+    </>
   );
 };
 
@@ -67,10 +67,19 @@ const SideBar = (props) => {
           <img src={LogoImg} style={{ width: "60%" }} alt="ndau-logo" />
         </Box>
 
-        <Anchor margin="small">Home</Anchor>
-        <Anchor margin="small">About</Anchor>
-        <Anchor margin="small">Blockchain</Anchor>
-        <Anchor margin="small">Sign In</Anchor>
+        <NavbarLink margin="small" to="/">
+          Home
+        </NavbarLink>
+
+        <NavbarLink margin="small" to="/about">
+          About
+        </NavbarLink>
+        <NavbarLink margin="small" to="/blockchain">
+          Blockchain
+        </NavbarLink>
+        <NavbarLink margin="small" to="/signin">
+          Sign In
+        </NavbarLink>
       </Nav>
     </Sidebar>
   );
@@ -91,8 +100,12 @@ const Navbar = (props) => {
             align={screenSize === "small" ? "center" : ""}
             direction={screenSize === "small" ? "column" : "row"}
           >
-            <NavbarLink>Home</NavbarLink>
-            <NavbarLink>About</NavbarLink>
+            <NavbarLink to="/" small={screenSize === "small"}>
+              Home
+            </NavbarLink>
+            <NavbarLink to="/about" small={screenSize === "small"}>
+              About
+            </NavbarLink>
 
             <Box
               style={{ marginRight: screenSize === "small" ? "100px" : "0px" }}
@@ -109,19 +122,26 @@ const Navbar = (props) => {
               />
             )}
 
-            <NavbarLink>Blockchain</NavbarLink>
-            <NavbarLink>Sign in</NavbarLink>
+            <NavbarLink to="/blocks" small={screenSize === "small"}>
+              Blockchain
+            </NavbarLink>
+            <NavbarLink to="/signin" small={screenSize === "small"}>
+              Sign in
+            </NavbarLink>
           </Box>
 
           {navbarDrawerState && (
             // <Box>
-              <Layer
-                onEsc={() => setNavbarDrawerState(false)}
-                onClick={() => setNavbarDrawerState(false)}
-                background="red"
-              >
-                <SideBar></SideBar>
-              </Layer>
+            <Layer
+              onEsc={() => setNavbarDrawerState(false)}
+              onClick={() => setNavbarDrawerState(false)}
+              background={{
+                color: "black",
+                opacity: "medium",
+              }}
+            >
+              <SideBar></SideBar>
+            </Layer>
             // </Box>
           )}
           {/* <Collapsible open={navbarDrawerState}>              
