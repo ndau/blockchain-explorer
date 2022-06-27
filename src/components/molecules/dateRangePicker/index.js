@@ -8,71 +8,113 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Calendar } from "grommet"
+import React, { Component } from "react";
+import { Calendar } from "grommet";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import { addDays } from "date-fns";
+import { DateRangePicker as ReactDateRangePicker } from "react-date-range";
 
 class DateRangePicker extends Component {
   constructor(props) {
     super(props);
-    const { startDate, endDate } = this.props
+    const { startDate, endDate } = this.props;
     this.state = {
-      date: new Date().toISOString(), 
+      date: new Date().toISOString(),
       dates: null,
-      open: null, 
+      open: null,
       startDate,
-      endDate
-    }
+      endDate,
+      rangeState: [
+        {
+          startDate: new Date(),
+          endDate: addDays(new Date(), 7),
+          key: "selection",
+        },
+      ],
+    };
   }
 
   render() {
-    const { date, dates, startDate, endDate } = this.state
-    const range = startDate && endDate ? [[startDate.toISOString(), endDate.toISOString()]] : dates
+    const { date, dates, startDate, endDate, key, rangeState } = this.state;
+    // const range = rangeState
+    //   ? rangeState
+    //   : //   // ? [[startDate.toISOString(), endDate.toISOString()]]
+    //     [
+    //       {
+    //         startDate: new Date(),
+    //         endDate: addDays(new Date(), 7),
+    //         key: "selection",
+    //       },
+    //     ];
+    // : dates;
     // console.log(startDate.toISOString(), endDate.toISOString())
 
     return (
-      <Calendar
-        range
-        date={date}   
-        dates={range}
-        onSelect={this.onSelect} 
-        lstyle={{lbackground: "#fafafa", border: "1px solid #aaa"}}
-        size="small"
-        bounds={["2019-01-01", new Date().toISOString()]}
-      />
-    )
+      <>
+        <h1>Hello</h1>
+        <ReactDateRangePicker
+          onChange={(item) => {
+            this.onSelect(item.selection);
+            // console.log(item,"item");
+            // console.log(item.selection,"item.selection")
+          }}
+          showSelectionPreview={true}
+          moveRangeOnFirstSelection={false}
+          months={1}
+          ranges={this.state.rangeState}
+          direction="horizontal"
+          preventSnapRefocus={true}
+          calendarFocus="backwards"
+        />
+        ;
+      </>
+    );
   }
 
   componentDidUpdate(prevProps) {
-    const { startDate, endDate } = this.props
+    const { startDate, endDate } = this.props;
     if (startDate !== prevProps.startDate || endDate !== prevProps.endDate) {
       this.setState({
-        startDate, endDate
-      })
+        startDate,
+        endDate,
+      });
     }
   }
 
-  onSelect = arg => {
-    if (Array.isArray(arg)) {
-      this.setState({ 
-        dates: arg, date: null 
-      }, () => {
-        this.props.onSetRange({
-          startDate: arg[0][0],
-          endDate: arg[0][1],
-        })
-      })
-    } else {
-      this.setState({ 
-        dates: null, date: arg 
-      }, () => {
-        this.props.onSetRange({
-          startDate: arg,
-          endDate: arg,
-        })
-      })
-    }
-  }; 
+  onSelect = (arg) => {
+    this.setState({ rangeState: [arg] });
+    console.log(arg.startDate, "arg.startDate");
+    this.props.onSetRange({ startDate: arg.startDate, endDate: arg.endDate });
+
+    // if (Array.isArray(arg)) {
+    //   this.setState(
+    //     {
+    //       dates: arg,
+    //       date: null,
+    //     },
+    //     () => {
+    //       this.props.onSetRange({
+    //         startDate: arg[0][0],
+    //         endDate: arg[0][1],
+    //       });
+    //     }
+    //   );
+    // } else {
+    //   this.setState(
+    //     {
+    //       dates: null,
+    //       date: arg,
+    //     },
+    //     () => {
+    //       this.props.onSetRange({
+    //         startDate: arg,
+    //         endDate: arg,
+    //       });
+    //     }
+    //   );
+    // }
+  };
 }
 
 export default DateRangePicker;
-        
