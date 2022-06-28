@@ -1,0 +1,85 @@
+.rdrCalendarWrapper {
+  background-color: #0a1724;
+}
+
+.rdrMonthAndYearPickers select {
+  color: #f89d1c;
+  background: #0f2748;
+}
+
+.rdrMonthAndYearPickers select:hover {
+  color: #f89d1c;
+  background: #172e4e;
+}
+
+.rdrNextButton i {
+  border-color: transparent transparent transparent #f89d1c;
+}
+
+.rdrNextPrevButton {
+  background-color: #0b2140;
+}
+
+.rdrNextPrevButton:hover {
+  background: #172e4e;
+}
+
+/* rdrDateDisplayItem rdrDateDisplayItemActive */
+
+.rdrDateInput {
+  background-color: #172e4e;
+}
+
+.rdrPprevButton i {
+  border-color: transparent #f89d1c transparent transparent;
+}
+
+.rdrDayNumber span {
+  color: #ababab;
+}
+
+.rdrDateDisplayWrapper {
+  background-color: #0a1724;
+}
+
+.rdrDefinedRangesWrapper {
+  background-color: #0a1724;
+}
+
+.rdrStaticRange {
+  background-color: #0a1724;
+  color: #ababab;
+}
+
+.rdrStaticRange .rdrStaticRangeLabel:hover {
+    background: #172e4e ;
+    color: #f89d1c;
+}
+
+.rdrStaticRange.rdrStaticRangeSelected .rdrStaticRangeLabel {
+    color: #f89d1c;
+}
+
+.rdrInRange {
+    background-color: #172e4e;
+  }
+
+  .rdrStartEdge{
+    background-color: #172e4e;
+  }
+
+  .rdrEndEdge{
+    background-color: #172e4e;
+  }
+
+  .rdrInputRangeInput{
+    background-color: #0A1724;
+    border: 1px solid #222255;
+    color:#d5cea3 ;
+  }
+
+  .rdrInputRangeInput:focus{
+    background-color: #0A1724;
+    border: 1px solid #222255;
+    color: wheat;
+  }

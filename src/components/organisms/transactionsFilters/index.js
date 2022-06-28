@@ -81,7 +81,7 @@ class TransactionFilter extends Component {
         </Box>
         
         <Collapsible open={showFilters}>
-          <Filters 
+          {/* <Filters 
             showFilters={showFilters}
             typeFilters={typeFilters} 
             filterStartDate={filterStartDate}
@@ -91,7 +91,7 @@ class TransactionFilter extends Component {
             setFilterRange={this.setFilterRange}
             toggleFilter={this.toggleFilter}
             noDateFilter={true}
-          />
+          /> */}
         </Collapsible>
       </Box>
     );

@@ -12,6 +12,7 @@ import React, { Component } from "react";
 import { Calendar } from "grommet";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import "./styles.css";
 import { addDays } from "date-fns";
 import { DateRangePicker as ReactDateRangePicker } from "react-date-range";
 
@@ -36,28 +37,12 @@ class DateRangePicker extends Component {
   }
 
   render() {
-    const { date, dates, startDate, endDate, key, rangeState } = this.state;
-    // const range = rangeState
-    //   ? rangeState
-    //   : //   // ? [[startDate.toISOString(), endDate.toISOString()]]
-    //     [
-    //       {
-    //         startDate: new Date(),
-    //         endDate: addDays(new Date(), 7),
-    //         key: "selection",
-    //       },
-    //     ];
-    // : dates;
-    // console.log(startDate.toISOString(), endDate.toISOString())
 
     return (
       <>
-        <h1>Hello</h1>
         <ReactDateRangePicker
           onChange={(item) => {
             this.onSelect(item.selection);
-            // console.log(item,"item");
-            // console.log(item.selection,"item.selection")
           }}
           showSelectionPreview={true}
           moveRangeOnFirstSelection={false}
@@ -67,7 +52,6 @@ class DateRangePicker extends Component {
           preventSnapRefocus={true}
           calendarFocus="backwards"
         />
-        ;
       </>
     );
   }
