@@ -20,24 +20,35 @@ class DateRangePicker extends Component {
   constructor(props) {
     super(props);
     const { startDate, endDate } = this.props;
+    console.log(startDate, "startDateProps");
+    console.log(endDate, "endDateProps");
+
     this.state = {
       date: new Date().toISOString(),
       dates: null,
       open: null,
-      startDate,
-      endDate,
-      rangeState: [
-        {
-          startDate: new Date(),
-          endDate: addDays(new Date(), 7),
-          key: "selection",
-        },
-      ],
+      startDate: startDate,
+      endDate: endDate,
+      rangeState:
+        startDate && endDate
+          ? [
+              {
+                startDate: startDate.toDate(),
+                endDate: endDate.toDate(),
+                key: "selection",
+              },
+            ]
+          : [
+              {
+                startDate: new Date(),
+                endDate: addDays(new Date(), 7),
+                key: "selection",
+              },
+            ],
     };
   }
 
   render() {
-
     return (
       <>
         <ReactDateRangePicker
@@ -60,8 +71,15 @@ class DateRangePicker extends Component {
     const { startDate, endDate } = this.props;
     if (startDate !== prevProps.startDate || endDate !== prevProps.endDate) {
       this.setState({
-        startDate,
-        endDate,
+        rangeState:
+          [
+            {
+              startDate: startDate.toDate(),
+              endDate: endDate.toDate(),
+              key: "selection",
+            },
+          ]
+        
       });
     }
   }
