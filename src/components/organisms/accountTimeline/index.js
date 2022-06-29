@@ -23,7 +23,7 @@ const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES);
 class AccountTimeline extends Component {
   constructor(props) {
     super(props);
-    
+
     const { filterStartDate, filterEndDate } = this.getDateRange(3);
     this.state = {
       events: props.events,
@@ -38,12 +38,12 @@ class AccountTimeline extends Component {
     this.getEventTransactions();
 
 
-    this.filteredEvents = props.events;
+    // this.filteredEvents = props.events;
     
   }
 
   render() {
-    const { events, balance } = this.props;
+    const { events, balance,getAccountData } = this.props;
     if (!events) {
       return null;
     }
@@ -88,6 +88,7 @@ class AccountTimeline extends Component {
             setFilterRange={this.setFilterRange}
             toggleFilter={this.toggleFilter}
             selectedEvent={selectedEvent}
+            getAccountData={getAccountData}
           />
         </Box>
 
