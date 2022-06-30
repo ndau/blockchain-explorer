@@ -1,0 +1,25 @@
+.containerPagination .prevPagination {
+  background-color: blue;
+}
+
+.containerPagination .nextPagination{
+  background-color: slateblue;
+}
+
+.containerPagination {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333333;
+  width: 90vw;
+}
+
+.pagePagination{
+  background-color: aqua;
+  float: left;
+}
+
+.activePagePagination{
+  background-color: rebeccapurple;
+}

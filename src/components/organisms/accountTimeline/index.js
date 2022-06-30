@@ -17,6 +17,8 @@ import TimelineFilter from "../../organisms/timelineFilter";
 import { getTransaction } from "../../../helpers/fetch";
 import { TRANSACTION_TYPES } from "../../../constants";
 
+import PaginatedEvents from "./PaginatedEvents";
+
 // Default to show all transaction types
 const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES);
 
@@ -33,17 +35,16 @@ class AccountTimeline extends Component {
       filterRange: "Last 3 months",
       selectedEvent: null,
       activeEvent: null,
+      displayedEventsState: null,
     };
 
     this.getEventTransactions();
 
-
     // this.filteredEvents = props.events;
-    
   }
 
   render() {
-    const { events, balance,getAccountData } = this.props;
+    const { events, balance, getAccountData } = this.props;
     if (!events) {
       return null;
     }
@@ -59,6 +60,9 @@ class AccountTimeline extends Component {
 
     const filteredEvents = this.filterEvents() || events;
     const displayedEvents = selectedEvent ? [selectedEvent] : filteredEvents;
+    const displayedEventsStateHolder = this.state.displayedEventsState
+      ? this.state.displayedEventsState
+      : displayedEvents;
     const borderStyle = "1px dashed rgba(255,255,255,0.1)";
 
     return (
@@ -93,43 +97,10 @@ class AccountTimeline extends Component {
         </Box>
 
         <Box onMouseLeave={this.clearActiveEvent}>
-          {displayedEvents.map((event, index) => {
-            const { activeEvent, selectedEvent } = this.state;
-            const isActive = activeEvent && activeEvent.TxHash === event.TxHash;
-            const isSelected =
-              selectedEvent && selectedEvent.TxHash === event.TxHash;
-
-            return (
-              <Box key={index} onMouseEnter={() => this.setActiveEvent(event)}>
-                <Box
-                  round="xsmall"
-                  style={{
-                    border: isActive
-                      ? "1px dashed rgba(255,255,255,0.3)"
-                      : borderStyle,
-                  }}
-                  background="rgba(255,255,255,0.05)"
-                >
-                  <TimelineEvent
-                    event={event}
-                    previousEvent={this.getPreviousEvent(event)}
-                    index={index}
-                    selected={isSelected}
-                  />
-                </Box>
-
-                {index !== events.length - 1 && (
-                  <Box
-                    alignSelf="center"
-                    border="right"
-                    height="20px"
-                    width="0"
-                    style={{ borderRight: borderStyle }}
-                  />
-                )}
-              </Box>
-            );
-          })}
+          <PaginatedEvents
+            itemsPerPage={10}
+            totalEventsToDisplay={displayedEventsStateHolder}
+          />
         </Box>
       </Box>
     );
