@@ -32,7 +32,7 @@ class AccountTimeline extends Component {
       typeFilters: DEFAULT_TYPE_FILTERS,
       filterStartDate,
       filterEndDate,
-      filterRange: "Last 3 months",
+      filterRange: "Last month",
       selectedEvent: null,
       activeEvent: null,
       displayedEventsState: null,
