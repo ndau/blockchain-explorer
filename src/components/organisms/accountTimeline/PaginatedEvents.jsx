@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import TimelineEvent from "../../molecules/timelineEvent";
-import "./styles.css";
+import "./PaginatedEvents.modules.css";
 
 // Example items, to simulate fetching from another resources.
 // const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
@@ -9,7 +9,7 @@ import "./styles.css";
 function DisplayedEvents(props) {
   const currentPageEvents = props.currentPageEvents;
   const lastPreviousEvent = props.lastPreviousEvent;
-  console.log(lastPreviousEvent, "lastPreviousEvent");
+
   return (
     <>
       {currentPageEvents &&
@@ -34,10 +34,11 @@ function DisplayedEvents(props) {
 
 export default function PaginatedEvents(props) {
   const totalEventsRecieved = props.totalEventsToDisplay;
-  console.log(totalEventsRecieved, "totalEventsRecieved");
+  // console.log(totalEventsRecieved, "totalEventsRecieved");
 
   const itemsPerPage = props.itemsPerPage;
 
+  const [totalEventRecievedState, setTotalEventRecievedState] = useState(null);
   const [currentEventsState, setCurrentEventsState] = useState(null);
   const [pageCountState, setPageCountState] = useState(0);
   const [lastPreviousEventState, setLastPreviousEventState] = useState(null);
@@ -46,20 +47,38 @@ export default function PaginatedEvents(props) {
   const [itemOffsetState, setItemOffsetState] = useState(0);
 
   useEffect(() => {
+    console.log(totalEventsRecieved, "totalEventsRecieved useEffect");
+    setTotalEventRecievedState(totalEventsRecieved);
+  }, []);
+
+  useEffect(() => {
+    if (
+      JSON.stringify(totalEventsRecieved) !==
+      JSON.stringify(totalEventRecievedState)
+    ) {
+      setTotalEventRecievedState(totalEventsRecieved);
+      setItemOffsetState(0);
+    }
+  }, [totalEventsRecieved]);
+
+  useEffect(() => {
     // Fetch items from another resources.
     const endOffset = itemOffsetState + itemsPerPage;
-    console.log(`Loading items from ${itemOffsetState} to ${endOffset}`);
+    if (totalEventRecievedState) {
+      setCurrentEventsState(
+        totalEventRecievedState.slice(itemOffsetState, endOffset)
+      );
 
-    setCurrentEventsState(
-      totalEventsRecieved.slice(itemOffsetState, endOffset)
-    );
-
-    setPageCountState(Math.ceil(totalEventsRecieved.length / itemsPerPage));
-    setLastPreviousEventState(totalEventsRecieved[endOffset]);
-  }, [itemOffsetState, itemsPerPage, totalEventsRecieved]);
+      setPageCountState(
+        Math.ceil(totalEventRecievedState.length / itemsPerPage)
+      );
+      setLastPreviousEventState(totalEventRecievedState[endOffset]);
+    }
+  }, [itemOffsetState, itemsPerPage, totalEventRecievedState]);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
+    console.log(event, "clicked");
     const newOffset =
       (event.selected * itemsPerPage) % totalEventsRecieved.length;
     console.log(
@@ -78,11 +97,11 @@ export default function PaginatedEvents(props) {
 
       <ReactPaginate
         breakLabel="..."
-        nextLabel="next >"
+        nextLabel="next"
         onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
+        pageRangeDisplayed={3}
         pageCount={pageCountState}
-        previousLabel="< previous"
+        previousLabel="previous"
         renderOnZeroPageCount={null}
         previousClassName="prevPagination"
         nextClassName="nextPagination"

@@ -26,8 +26,6 @@ class AccountTimeline extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props.loading, "constructor loading");
-
     const { filterStartDate, filterEndDate } = this.getDateRange(3);
     this.state = {
       events: props.events,
@@ -114,7 +112,7 @@ class AccountTimeline extends Component {
   componentDidUpdate = async (prevProps) => {
     const { events } = this.props;
     const newLoading = this.props.loading;
-    console.log(newLoading, "newLoading");
+    // console.log(newLoading, "newLoading");
 
     if (this.state.loading != newLoading) {
       this.setState({ loading: newLoading });
