@@ -25,7 +25,7 @@ class Account extends Component {
       history: null,
       hideDetails: false,
       valid: false,
-      loading: true,
+      loading: false,
     };
 
     this.getData();
@@ -108,6 +108,7 @@ class Account extends Component {
                 balance={account && account.balance}
                 fill={hideDetails}
                 getAccountData={this.getData}
+                loading={this.state.loading}
               />
             </Box>
           </>
@@ -115,7 +116,7 @@ class Account extends Component {
           "This account currently has no transactions on the blockchain."
         ) : (
           <Box align="center">
-            <Spinner size="medium" />
+            <Spinner size="medium" color="#F29A1D" />
           </Box>
         )}
       </Details>
@@ -144,13 +145,12 @@ class Account extends Component {
             this.setState({
               history: null,
               valid: true,
+              loading: false,
             });
-            this.setState({ loading: false });
             return;
           }
 
-          this.setState({ history });
-          this.setState({ loading: false });
+          this.setState({ history, loading: false });
         });
       });
   };

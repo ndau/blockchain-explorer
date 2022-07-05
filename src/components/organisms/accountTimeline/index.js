@@ -9,7 +9,7 @@
  */
 
 import React, { Component } from "react";
-import { Box } from "grommet";
+import { Box, Spinner } from "grommet";
 import moment from "moment";
 import TimelineEvent from "../../molecules/timelineEvent";
 import TimelineChart from "../../molecules/timelineChart";
@@ -26,9 +26,12 @@ class AccountTimeline extends Component {
   constructor(props) {
     super(props);
 
+    console.log(props.loading, "constructor loading");
+
     const { filterStartDate, filterEndDate } = this.getDateRange(3);
     this.state = {
       events: props.events,
+      loading: true,
       typeFilters: DEFAULT_TYPE_FILTERS,
       filterStartDate,
       filterEndDate,
@@ -60,9 +63,6 @@ class AccountTimeline extends Component {
 
     const filteredEvents = this.filterEvents() || events;
     const displayedEvents = selectedEvent ? [selectedEvent] : filteredEvents;
-    const displayedEventsStateHolder = this.state.displayedEventsState
-      ? this.state.displayedEventsState
-      : displayedEvents;
     const borderStyle = "1px dashed rgba(255,255,255,0.1)";
 
     return (
@@ -95,19 +95,30 @@ class AccountTimeline extends Component {
             getAccountData={getAccountData}
           />
         </Box>
-
-        <Box onMouseLeave={this.clearActiveEvent}>
-          <PaginatedEvents
-            itemsPerPage={10}
-            totalEventsToDisplay={displayedEventsStateHolder}
-          />
-        </Box>
+        {!this.state.loading ? (
+          <Box onMouseLeave={this.clearActiveEvent}>
+            <PaginatedEvents
+              itemsPerPage={10}
+              totalEventsToDisplay={displayedEvents}
+            />
+          </Box>
+        ) : (
+          <Box align="center">
+            <Spinner size="small" color="#F29A1D" />
+          </Box>
+        )}
       </Box>
     );
   }
 
   componentDidUpdate = async (prevProps) => {
     const { events } = this.props;
+    const newLoading = this.props.loading;
+    console.log(newLoading, "newLoading");
+
+    if (this.state.loading != newLoading) {
+      this.setState({ loading: newLoading });
+    }
 
     if (
       (!prevProps.events && this.props.events) ||

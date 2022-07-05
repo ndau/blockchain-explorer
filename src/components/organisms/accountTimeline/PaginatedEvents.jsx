@@ -1,41 +1,62 @@
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-
+import TimelineEvent from "../../molecules/timelineEvent";
 import "./styles.css";
 
 // Example items, to simulate fetching from another resources.
 // const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 function DisplayedEvents(props) {
-  const DisplayedEventsArray = props.DisplayedEventsArray;
-  const itemsPerPage = props.itemsPerPage;
+  const currentPageEvents = props.currentPageEvents;
+  const lastPreviousEvent = props.lastPreviousEvent;
+  console.log(lastPreviousEvent, "lastPreviousEvent");
   return (
-    // <h3>Hello</h3>
     <>
-      {DisplayedEventsArray &&
-        DisplayedEventsArray.map((item) => <div>{item.Balance}</div>)}
+      {currentPageEvents &&
+        currentPageEvents.map((event, index, currentPageEventsArr) => {
+          let previousEventVal = currentPageEventsArr[index + 1];
+
+          if (index === currentPageEventsArr.length - 1) {
+            previousEventVal = lastPreviousEvent;
+          }
+          return (
+            <TimelineEvent
+              key={JSON.stringify(event) + index}
+              index={index}
+              event={event}
+              previousEvent={previousEventVal}
+            />
+          );
+        })}
     </>
   );
 }
 
 export default function PaginatedEvents(props) {
   const totalEventsRecieved = props.totalEventsToDisplay;
+  console.log(totalEventsRecieved, "totalEventsRecieved");
+
   const itemsPerPage = props.itemsPerPage;
 
-  // We start with an empty list of items.
   const [currentEventsState, setCurrentEventsState] = useState(null);
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCountState, setPageCountState] = useState(0);
+  const [lastPreviousEventState, setLastPreviousEventState] = useState(null);
   // Here we use item offsets; we could also use page offsets
   // following the API or data you're working with.
-  const [itemOffset, setItemOffset] = useState(0);
+  const [itemOffsetState, setItemOffsetState] = useState(0);
 
   useEffect(() => {
     // Fetch items from another resources.
-    const endOffset = itemOffset + itemsPerPage;
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-    setCurrentEventsState(totalEventsRecieved.slice(itemOffset, endOffset));
-    setPageCount(Math.ceil(totalEventsRecieved.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage]);
+    const endOffset = itemOffsetState + itemsPerPage;
+    console.log(`Loading items from ${itemOffsetState} to ${endOffset}`);
+
+    setCurrentEventsState(
+      totalEventsRecieved.slice(itemOffsetState, endOffset)
+    );
+
+    setPageCountState(Math.ceil(totalEventsRecieved.length / itemsPerPage));
+    setLastPreviousEventState(totalEventsRecieved[endOffset]);
+  }, [itemOffsetState, itemsPerPage, totalEventsRecieved]);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
@@ -44,14 +65,15 @@ export default function PaginatedEvents(props) {
     console.log(
       `User requested page number ${event.selected}, which is offset ${newOffset}`
     );
-    setItemOffset(newOffset);
+    setItemOffsetState(newOffset);
   };
 
   return (
     <>
       <DisplayedEvents
-        DisplayedEventsArray={currentEventsState}
+        currentPageEvents={currentEventsState}
         itemsPerPage={itemsPerPage}
+        lastPreviousEvent={lastPreviousEventState}
       />
 
       <ReactPaginate
@@ -59,7 +81,7 @@ export default function PaginatedEvents(props) {
         nextLabel="next >"
         onPageChange={handlePageClick}
         pageRangeDisplayed={5}
-        pageCount={pageCount}
+        pageCount={pageCountState}
         previousLabel="< previous"
         renderOnZeroPageCount={null}
         previousClassName="prevPagination"
