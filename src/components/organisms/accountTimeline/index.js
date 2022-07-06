@@ -25,11 +25,9 @@ const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES);
 class AccountTimeline extends Component {
   constructor(props) {
     super(props);
-
-    const { filterStartDate, filterEndDate } = this.getDateRange(3);
+    const { filterStartDate, filterEndDate } = this.getDateRange(1);
     this.state = {
       events: props.events,
-      loading: true,
       typeFilters: DEFAULT_TYPE_FILTERS,
       filterStartDate,
       filterEndDate,
@@ -37,9 +35,11 @@ class AccountTimeline extends Component {
       selectedEvent: null,
       activeEvent: null,
       displayedEventsState: null,
+      loading: props.loading,
+      getAccountData: props.getAccountData,
     };
 
-    this.getEventTransactions();
+    // this.getEventTransactions();
 
     // this.filteredEvents = props.events;
   }
@@ -98,6 +98,7 @@ class AccountTimeline extends Component {
             <PaginatedEvents
               itemsPerPage={10}
               totalEventsToDisplay={displayedEvents}
+              loading={this.state.loading}
             />
           </Box>
         ) : (
@@ -112,7 +113,7 @@ class AccountTimeline extends Component {
   componentDidUpdate = async (prevProps) => {
     const { events } = this.props;
     const newLoading = this.props.loading;
-    // console.log(newLoading, "newLoading");
+    console.log(newLoading, "newLoading");
 
     if (this.state.loading != newLoading) {
       this.setState({ loading: newLoading });
@@ -122,7 +123,7 @@ class AccountTimeline extends Component {
       (!prevProps.events && this.props.events) ||
       JSON.stringify(events) !== JSON.stringify(prevProps.events)
     ) {
-      await this.getEventTransactions();
+      this.setState({ events: this.props.events });
     }
   };
 
@@ -137,6 +138,7 @@ class AccountTimeline extends Component {
 
   filterEvents = () => {
     const { events, typeFilters } = this.state;
+    console.log(events, "events to be filtered");
 
     if (!events || events.length === 0 || events[0] === null) {
       console.log("return not events");
@@ -148,13 +150,15 @@ class AccountTimeline extends Component {
       const eventDate = moment(event.Timestamp);
       const isWithinFilterRange =
         eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate);
-      const transactionType = event.transaction && event.transaction.raw.type;
-      const isSelected =
-        transactionType && typeFilters.includes(transactionType);
+      // const transactionType = event.transaction && event.transaction.raw.type;
+      // const isSelected =
+      //   transactionType && typeFilters.includes(transactionType);
 
-      return isWithinFilterRange && isSelected;
+      // return isWithinFilterRange && isSelected;
+      return isWithinFilterRange;
     });
 
+    console.log(this.filteredEvents, "filtered events");
     return this.filteredEvents;
   };
 
@@ -168,6 +172,15 @@ class AccountTimeline extends Component {
   selectFilterRange = (numberOfMonths, filterRange) => {
     const { filterStartDate, filterEndDate } =
       this.getDateRange(numberOfMonths);
+
+    console.log("Selecting Filter Range");
+    console.log(filterStartDate, "filterStartDate");
+    console.log(filterEndDate, "filterEndDate");
+    this.state.getAccountData(
+      filterStartDate.toISOString(),
+      filterEndDate.toISOString()
+    );
+
     this.setState({
       filterStartDate,
       filterEndDate,

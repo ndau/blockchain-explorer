@@ -124,10 +124,10 @@ class TimelineEvent extends Component {
               </Text>
               <Text>
                 {/* transaction:  */}
-                <TransactionsList
+                {/* <TransactionsList
                   transactionHashes={[transactionHash]}
                   blockHeight={blockHeight}
-                />
+                /> */}
               </Text>
             </Box>
           </Box>

@@ -12,7 +12,7 @@ import React, { Component } from 'react'
 import { Box, Text, } from 'grommet'
 import { StatusGood, Radial } from 'grommet-icons'
 import DateRangePicker from '../../molecules/dateRangePicker'
-import { TRANSACTION_TYPES } from '../../../constants'
+// import { TRANSACTION_TYPES } from '../../../constants'
 
 class Filters extends Component {
   render() {
@@ -29,9 +29,9 @@ class Filters extends Component {
       getAccountData
      } = this.props
 
-    const transanctionTypes = Object.values(TRANSACTION_TYPES)
-    const unselectedTypes = transanctionTypes.filter(filter => !typeFilters.includes(filter))
-    const sortedTransanctionTypes = [...typeFilters, ...unselectedTypes]
+    // const transanctionTypes = Object.values(TRANSACTION_TYPES)
+    // const unselectedTypes = transanctionTypes.filter(filter => !typeFilters.includes(filter))
+    // const sortedTransanctionTypes = [...typeFilters, ...unselectedTypes]
 
     const daterangeFilters = !noDateFilter && [
       {
@@ -113,7 +113,7 @@ class Filters extends Component {
             }
             
 
-            <Box margin={{bottom:"15px"}}>
+            {/* <Box margin={{bottom:"15px"}}>
               <Box 
                 width="100%" 
                 style={{borderBottom: "1px solid rgba(255,255,255, 0.3)"}}
@@ -122,9 +122,9 @@ class Filters extends Component {
                   filter by type
                 </Text>
               </Box>
-            </Box>
+            </Box> */}
           
-            {
+            {/* {
               sortedTransanctionTypes.map((type, index) => {
                 const IsSelected = typeFilters.includes(type)
 
@@ -142,7 +142,7 @@ class Filters extends Component {
                   </Box>
                 )
               })
-            }  
+            }   */}
           </Box>
         </Box>
       </Box>
