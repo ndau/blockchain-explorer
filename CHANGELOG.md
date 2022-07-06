@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0-staging](https://github.com/ndau/blockchain-explorer/compare/v1.0.0-staging...v1.1.0-staging) (2022-07-06)
+
+
+### Features
+
+* **account:** update date-range filter for txs ([709eae1](https://github.com/ndau/blockchain-explorer/commit/709eae168f06b73a3a538a7dd9680b6f3d1d46b2))
+
 ## [1.0.0-staging](https://github.com/ndau/blockchain-explorer/compare/v0.1.37-staging...v1.0.0-staging) (2022-07-06)
 
 
