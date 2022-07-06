@@ -23,7 +23,7 @@ const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES);
 class AccountTimeline extends Component {
   constructor(props) {
     super(props);
-
+    
     const { filterStartDate, filterEndDate } = this.getDateRange(3);
     this.state = {
       events: props.events,
@@ -135,7 +135,6 @@ class AccountTimeline extends Component {
 
   componentDidUpdate = async (prevProps) => {
     const { events } = this.props;
-
     if (
       (!prevProps.events && this.props.events) ||
       JSON.stringify(events) !== JSON.stringify(prevProps.events)
