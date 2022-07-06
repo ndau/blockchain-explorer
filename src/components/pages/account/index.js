@@ -107,6 +107,7 @@ class Account extends Component {
                 events={history && [...history].reverse()}
                 balance={account && account.balance}
                 fill={hideDetails}
+                getAccountData={this.getData}
               />
             </Box>
           </>
@@ -121,8 +122,9 @@ class Account extends Component {
     );
   }
 
-  getData = () => {
+  getData = (fromDate, toDate) => {
     this.setState({ loading: true });
+    console.log("getting account data");
 
     const { accountAddress: address } = this.props.match.params;
     getAccount(address)
@@ -137,7 +139,7 @@ class Account extends Component {
           return;
         }
 
-        getAccountHistory(address).then((history) => {
+        getAccountHistory(address, fromDate, toDate).then((history) => {
           if ((history && history.length === 0) || history[0] === null) {
             this.setState({
               history: null,

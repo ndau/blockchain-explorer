@@ -25,7 +25,8 @@ class Filters extends Component {
       setFilterRange,
       toggleFilter,
       showFilters,
-      noDateFilter
+      noDateFilter,
+      getAccountData
      } = this.props
 
     const transanctionTypes = Object.values(TRANSACTION_TYPES)
@@ -81,7 +82,8 @@ class Filters extends Component {
                 <DateRangePicker 
                   startDate={filterStartDate}
                   endDate={filterEndDate}
-                  onSetRange={setFilterRange} 
+                  onSetRange={setFilterRange}
+                  getAccountData={getAccountData}
                 />
               </Box>
             </Box>

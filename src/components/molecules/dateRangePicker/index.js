@@ -19,10 +19,8 @@ import { DateRangePicker as ReactDateRangePicker } from "react-date-range";
 class DateRangePicker extends Component {
   constructor(props) {
     super(props);
-    const { startDate, endDate } = this.props;
-    console.log(startDate, "startDateProps");
-    console.log(endDate, "endDateProps");
-
+    const { startDate, endDate, getAccountData } = this.props;
+    console.log(getAccountData, "dateRangePicker contructor getAccountData");
     this.state = {
       date: new Date().toISOString(),
       dates: null,
@@ -71,22 +69,22 @@ class DateRangePicker extends Component {
     const { startDate, endDate } = this.props;
     if (startDate !== prevProps.startDate || endDate !== prevProps.endDate) {
       this.setState({
-        rangeState:
-          [
-            {
-              startDate: startDate.toDate(),
-              endDate: endDate.toDate(),
-              key: "selection",
-            },
-          ]
-        
+        rangeState: [
+          {
+            startDate: startDate.toDate(),
+            endDate: endDate.toDate(),
+            key: "selection",
+          },
+        ],
       });
     }
   }
 
   onSelect = (arg) => {
+    const { getAccountData } = this.props;
+
     this.setState({ rangeState: [arg] });
-    console.log(arg.startDate, "arg.startDate");
+    getAccountData(arg.startDate.toISOString(), arg.endDate.toISOString());
     this.props.onSetRange({ startDate: arg.startDate, endDate: arg.endDate });
 
     // if (Array.isArray(arg)) {

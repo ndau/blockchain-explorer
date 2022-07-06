@@ -36,6 +36,7 @@ class TimelineFilter extends Component {
       setFilterRange,
       toggleFilter,
       selectedEvent,
+      getAccountData
      } = this.props
 
     if (selectedEvent) {
@@ -95,6 +96,7 @@ class TimelineFilter extends Component {
             selectFilterRange={selectFilterRange}
             setFilterRange={setFilterRange}
             toggleFilter={toggleFilter}
+            getAccountData={getAccountData}
           />
         </Collapsible>
       </Box>

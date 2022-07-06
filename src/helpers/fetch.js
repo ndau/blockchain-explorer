@@ -246,7 +246,8 @@ export const getAccount = async (address) => {
       ]
     );
 
-    const EAIRate = systemEAIRateEndpointResponse.data[0].eairate;
+    let EAIRate = systemEAIRateEndpointResponse.data[0].eairate;
+    EAIRate = (EAIRate / 10 ** 10).toString() + "%";
 
     return { ...formattedAccount, EAIRate };
   } catch (e) {
@@ -269,16 +270,46 @@ export const getAccount = async (address) => {
 // })
 //     .catch((error) => {});
 // };
+const dateToday = new Date(Date.now()).toISOString();
+const initDate30DaysAgo = new Date(Date.now());
+initDate30DaysAgo.setDate(initDate30DaysAgo.getDate() - 30);
+let Date30DaysAgo = initDate30DaysAgo.toISOString();
 
-export const getAccountHistory = async (address) => {
+export const getAccountHistory = async (
+  address,
+  fromDate = Date30DaysAgo,
+  toDate = dateToday
+) => {
+  const dateToday = new Date(Date.now()).toISOString();
+  const getAccountHistoryFromDate = fromDate ?? Date30DaysAgo;
+  const getAccountHistoryToDate = toDate ?? dateToday;
+
+  console.log(getAccountHistoryFromDate, "getHistoryFromDate");
+  console.log(getAccountHistoryToDate, "getAccountHistoryToDate");
+
+  const BlockDateRangeEndpoint = `${await getNodeEndpoint()}/block/daterange/${getAccountHistoryFromDate}/${getAccountHistoryToDate}?noempty=true&limit=2`;
+
+  console.log(BlockDateRangeEndpoint, "BlockDateRangeEndpoint");
+  const blocksInRange = await axios.get(BlockDateRangeEndpoint);
+  console.log(blocksInRange, "blocksInRange");
+  const oldestBlockInRange = blocksInRange.data.last_height;
+
+  console.log(oldestBlockInRange, "oldestBlockInRange");
+
+  const limitedAccountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}?after=${oldestBlockInRange}`;
+
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`;
+
+  console.log(limitedAccountHistoryEndpoint, "limitedAccountHistoryEndpoint");
+
   let allItems = [];
   let offset = 0;
   let MAX_LOOPS = 100;
   while (true && MAX_LOOPS) {
     const url = offset
       ? `${accountHistoryEndpoint}?after=${offset}`
-      : accountHistoryEndpoint;
+      : limitedAccountHistoryEndpoint;
+
     const response = await axios.get(url, HTTP_REQUEST_HEADER);
     let history = response.data && response.data.Items;
 
@@ -311,7 +342,7 @@ export const pollForAccountUpdates = ({ metadata, success }) => {
         .then((history) => {
           success && success(history);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.error(error));
     }
   };
 };
@@ -352,7 +383,7 @@ export const getNodeHealth = async (nodeEndpoint) => {
     })
     .catch((error) => {
       axios.defaults.timeout = 0;
-      console.log(error);
+      console.error(error);
     });
 };
 
@@ -370,7 +401,7 @@ export const getNodeEndpoint = async (node) => {
       //      }
       return nodeEndpoint;
     } else {
-      console.log(nodeEndpoint + " not responding");
+      // console.log(nodeEndpoint + " not responding");
     }
   }
 };
@@ -401,7 +432,7 @@ export const tryNodeEndpoint = async (node) => {
       const randomNode = Object.values(nodes)[randomNodeIndex];
       nodeEndpoint = randomNode && randomNode.api;
     });
-    console.log("Found node " + nodeEndpoint);
+    // console.log("Found node " + nodeEndpoint);
     return "https://" + nodeEndpoint;
   }
 };
@@ -418,7 +449,7 @@ export const getCurrentOrder = async () => {
     .then((response) => {
       return formatPriceInfo(response.data);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.error(error));
 };
 
 //
