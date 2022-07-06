@@ -27,10 +27,10 @@ class Navbar extends Component {
           <Container topPad="0">
             <Box margin={{vertical: "10px"}}>
               <Box height="100%" direction="row" align="center" justify="between">
-                <Logo />
+              {/* <BlockchainSearch /> */}
                 
                 <Box margin={{left: "medium"}}>
-                  <BlockchainSearch />
+                <Logo />                  
                 </Box>
 
                 <Box>

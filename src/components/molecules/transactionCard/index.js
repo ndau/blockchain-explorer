@@ -8,32 +8,32 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Text, Collapsible, Box } from 'grommet'
-import Anchor from '../../atoms/anchor'
-import { Expand, Contract } from 'grommet-icons'
-import Card from '../../atoms/card'
-// import TransactionDetails from '../../organisms/transactionDetails'
-// import TransactionDetails from '../../organisms/txDetails'
-import DetailsCard from '../../molecules/detailsCard'
-import TruncatedText from '../../atoms/truncatedText'
-import { getTransaction } from '../../../helpers/fetch'
-import './style.css'
+import React, { Component } from "react";
+import { Text, Collapsible, Box, Avatar } from "grommet";
+import Anchor from "../../atoms/anchor";
+import { Expand, Contract } from "grommet-icons";
+import Card from "../../atoms/card";
+import DetailsCard from "../../molecules/detailsCard";
+import TruncatedText from "../../atoms/truncatedText";
+import Age from "../../atoms/age";
+import { getTransaction } from "../../../helpers/fetch";
+import moment from "moment";
+import "./style.css";
 
 class TransactionCard extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
-      transaction: {}
-    }
+      transaction: {},
+    };
 
-    this.getTransaction()
+    this.getTransaction();
   }
 
-  render () {
-    const { transaction } = this.state
-    const { open } = this.props
+  render() {
+    const { transaction } = this.state;
+    const { open, border } = this.props;
 
     if (!transaction) {
       return (
@@ -43,102 +43,97 @@ class TransactionCard extends Component {
               <Text>No transaction data was retrieved.</Text>
             </header>
           }
-          pad='15px'
+          pad="small"
         />
-      )
+      );
     }
 
-    const { hash, type } = transaction
+    const { hash, type, timestamp } = transaction;
 
     return (
       <Card
         header={
           <header>
-            <Box>
-              <Text truncate as='article'>
-                <Text style={{ float: 'right' }}>
-                  {open ? (
-                    <Contract
-                      style={{ cursor: 'pointer' }}
-                      size='12px'
-                      color='#777'
-                      onClick={this.toggleActiveState}
-                    />
-                  ) : (
-                    <Expand
-                      size='12px'
-                      color='#777'
-                      style={{ cursor: 'pointer' }}
-                      onClick={this.toggleActiveState}
-                    />
-                  )}
-                </Text>
-                <Text weight='bold' header>
-                  Transaction
-                  <Text>
-                    {hash && (
-                      <Anchor
-                        href={`/transaction/${window.encodeURIComponent(hash)}`}
-                      >
-                        {` `}
-                        <TruncatedText value={hash} className='txHash' />
-                      </Anchor>
-                    )}
-                  </Text>
-                </Text>
+            <Box direction="row" width="large" justify="between" align="center">
+              <Box
+                background="#012D5A"
+                width="30px"
+                height="30px"
+                justify="center"
+                align="center"
+              >
+                <Text color="#8096AD">TX</Text>
+              </Box>
+
+              <Box size="small">
+                {hash && (
+                  <>
+                    <Anchor
+                      href={`/transaction/${window.encodeURIComponent(hash)}`}
+                    >
+                      <Box width="xsmall">
+                        <Text weight="lighter" size="small" truncate={true}>
+                          {hash}
+                        </Text>
+                      </Box>
+                    </Anchor>
+
+                    {/* <TruncatedText value={hash} size="small" weight="lighter" /> */}
+                  </>
+                )}
+              </Box>
+
+              <Text size="xsmall" color="#aaa">
+                {type} Transaction
               </Text>
-              {!open && type && (
-                <Box lanimation='fadeIn'>
-                  <Text size='xsmall'>{type} Transaction</Text>
-                </Box>
+              {timestamp && (
+                <Text size="10px" color="#aaa">
+                  <i>
+                    <Age
+                      timestamp={moment(
+                        timestamp,
+                        "DD MMM YYYY. HH:mm zz"
+                      ).valueOf()}
+                      suffix="ago"
+                    />
+                  </i>
+                </Text>
               )}
             </Box>
           </header>
         }
-        background='#0b1f3a'
-        opacity='0.3'
-        pad='15px'
+        background="#132A47"
+        opacity="0.3"
+        height="80px"
+        pad="medium"
+        round="none"
+        border={border}
       >
-        <Collapsible open={open}>
-          <Box
-            margin={{ top: '10px' }}
-            animation={
-              open
-                ? 'fadeIn'
-                : {
-                    type: 'fadeOut',
-                    delay: 0,
-                    duration: 100
-                  }
-            }
-          >
-            <DetailsCard data={transaction} />
-          </Box>
-        </Collapsible>
+    
       </Card>
-    )
+    );
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.transactionHash !== prevProps.transactionHash) {
-      this.getTransaction()
+      this.getTransaction();
     }
   }
 
   getTransaction = () => {
-    const { transactionHash } = this.props
+    const { transactionHash } = this.props;
 
-    getTransaction(transactionHash).then(transaction => {
-      this.setState({ transaction })
-    })
-  }
+    getTransaction(transactionHash).then((transaction) => {
+      this.setState({ transaction });
+    });
+  };
 
-  toggleActiveState = event => {
-    event.stopPropagation()
-    const { open, index, setActiveTransaction } = this.props
+  toggleActiveState = (event) => {
+    event.stopPropagation();
+    const { open, index, setActiveTransaction } = this.props;
 
-    return open ? setActiveTransaction(null) : setActiveTransaction(index)
-  }
+    return open ? setActiveTransaction(null) : setActiveTransaction(index);
+  };
 }
 
-export default TransactionCard
+export default TransactionCard;

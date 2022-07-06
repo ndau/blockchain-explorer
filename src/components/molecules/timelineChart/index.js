@@ -86,13 +86,7 @@ class TimelineChart extends Component {
                   color={{ color: "#f99d1c", opacity: "strong" }}
                   thickness="xxsmall"
                 />
-                <Chart
-                  {...chartProps}
-                  type="area"
-                  color={{ color: "#f99d1c", opacity: "weak" }}
-                  thickness="xsmall"
-                  pad="0"
-                />
+
 
                 {/* Bubbles */}
                 <Box flex direction="row" justify="between" align="end" overflow="visible">

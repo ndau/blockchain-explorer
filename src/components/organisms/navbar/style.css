@@ -1,9 +1,20 @@
 .Navbar {
   position: fixed;
+  box-sizing: border-box;
   width: 100%;
-  z-index: 5;
+  height: 15vh;
+  display: flex;
+  vertical-align: top;
+  background-color: #0f2748;
+  clip-path: polygon(0 0%, 100% 0, 65% 100%, 35% 100%);
+  z-index: 11;
 }
 
-.navbarAction {
-  display: inline-block;
+.sidebar {
+  position: absolute;
+  z-index: 1;
+  width: 50vw;
+  height: 90vh;
+  right: 0;
+  z-index: 12;
 }

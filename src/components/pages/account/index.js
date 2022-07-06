@@ -8,125 +8,156 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Box, Text, Collapsible, CheckBox } from 'grommet';
-import Details from '../../templates/details'
-import DetailsCard from '../../molecules/detailsCard'
-import AccountTimeline from '../../organisms/accountTimeline'
-import { getAccount, getAccountHistory } from '../../../helpers/fetch'
+import React, { Component } from "react";
+import { Box, Text, Collapsible, CheckBox, Spinner } from "grommet";
+import Details from "../../templates/details";
+import DetailsCard from "../../molecules/detailsCard";
+import AccountTimeline from "../../organisms/accountTimeline";
+import { getAccount, getAccountHistory } from "../../../helpers/fetch";
 
 class Account extends Component {
+  displaystring;
   constructor(props) {
     super(props);
 
     this.state = {
       account: {},
       history: null,
-      hideDetails: false
-    }
+      hideDetails: false,
+      valid: false,
+      loading: true,
+    };
 
     this.getData();
   }
 
   render() {
-    const { account, history, hideDetails } = this.state
-    const showDetails = !hideDetails
+    const { account, history, hideDetails } = this.state;
+    const showDetails = !hideDetails;
 
     return (
-      <Details 
-        browserHistory={this.props.history} 
-        notFound={!account}
-      >
-        <Box margin={{bottom: "20px"}}>
-          <Text size="large">
-            {/* hide empty toggle is not fully functional */}
-            <Text
-              size="xsmall"
-              color="#aaa"
-              weight="normal"
-              style={{float: "right"}}
-            >
-              <CheckBox
-                toggle
-                checked={hideDetails}
-                label="hide details"
-                onChange={this.toggleShowDetails}
-                reverse
-                name="small"
-              />
-            </Text>
-            <Text size="large">
-              Account{' '}
-              <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
-                {account && account.address}
+      <Details browserHistory={this.props.history} notFound={!account}>
+        {this.state.history ? (
+          <>
+            <Box margin={{ bottom: "20px" }}>
+              <Text size="large">
+                {/* hide empty toggle is not fully functional */}
+                <Text
+                  size="xsmall"
+                  color="#aaa"
+                  weight="normal"
+                  style={{ float: "right" }}
+                >
+                  <CheckBox
+                    toggle
+                    checked={hideDetails}
+                    label="hide details"
+                    onChange={this.toggleShowDetails}
+                    reverse
+                    name="small"
+                  />
+                </Text>
+                <Text size="large">
+                  Account{" "}
+                  <Text
+                    weight="bold"
+                    as="em"
+                    style={{ wordWrap: "break-word" }}
+                  >
+                    {account && account.address}
+                  </Text>
+                </Text>
               </Text>
-            </Text>
-          </Text>
-        </Box>
+            </Box>
 
-        <Collapsible open={showDetails}>
-          <Box 
-            animation={
-              showDetails ? 'fadeIn' : {
-                "type": "fadeOut",
-                "delay": 0,
-                "duration": 100,
+            <Collapsible open={showDetails}>
+              <Box
+                animation={
+                  showDetails
+                    ? "fadeIn"
+                    : {
+                        type: "fadeOut",
+                        delay: 0,
+                        duration: 100,
+                      }
+                }
+              >
+                {/* ACCOUNT DETAILS */}
+                <DetailsCard data={account} keywordMap={this.keywordMap} />
+              </Box>
+            </Collapsible>
+
+            <Box animation="fadeIn">
+              <Text>
+                <b>History{showDetails && ":"}</b>
+              </Text>
+            </Box>
+            <Box
+              style={
+                showDetails
+                  ? {
+                      margin: "10px 0px 0px 15px",
+                      paddingLeft: "11px",
+                      borderLeft: "1px solid rgba(255,255, 255, 0.3)",
+                    }
+                  : {}
               }
-            }
-          >
-            {/* ACCOUNT DETAILS */}
-            <DetailsCard data={account} keywordMap={this.keywordMap} />
+            >
+              <AccountTimeline
+                events={history && [...history].reverse()}
+                balance={account && account.balance}
+                fill={hideDetails}
+              />
+            </Box>
+          </>
+        ) : this.state.valid ? (
+          "This account currently has no transactions on the blockchain."
+        ) : (
+          <Box align="center">
+            <Spinner size="medium" />
           </Box>
-        </Collapsible>
-
-        
-        <Box animation="fadeIn">
-          <Text>
-            <b>History{showDetails && ':'}</b>
-          </Text>
-        </Box>
-  
-        <Box 
-          style={showDetails ? {
-            margin: "10px 0px 0px 15px",
-            paddingLeft: "11px",
-            borderLeft: "1px solid rgba(255,255, 255, 0.3)",
-          }:{}}  
-        >
-          <AccountTimeline 
-            events={history && [...history].reverse()} 
-            balance={account && account.balance}
-            fill={hideDetails} 
-          />
-        </Box>
+        )}
       </Details>
-    )
+    );
   }
 
   getData = () => {
+    this.setState({ loading: true });
+
     const { accountAddress: address } = this.props.match.params;
     getAccount(address)
-      .then(account => {
-        this.setState({ account })
+      .then((account) => {
+        this.setState({ account });
 
-        return account && account.address
+        return account && account.address;
       })
-      .then(address => {
-        if(!address) {
-          return 
+      .then((address) => {
+        if (!address) {
+          this.setState({ loading: false });
+          return;
         }
-        getAccountHistory(address)
-          .then(history => {
-            this.setState({ history });
-          })
-      })   
-  }
+
+        getAccountHistory(address).then((history) => {
+          if ((history && history.length === 0) || history[0] === null) {
+            this.setState({
+              history: null,
+              valid: true,
+            });
+            this.setState({ loading: false });
+            return;
+          }
+
+          this.setState({ history });
+          this.setState({ loading: false });
+        });
+      });
+  };
 
   componentDidUpdate(prevProps) {
-    const getURL = (location={}) => {
-      const {pathname, search} = location
-      return `${pathname}${search}`
-    }
+    const getURL = (location = {}) => {
+      const { pathname, search } = location;
+      return `${pathname}${search}`;
+    };
 
     if (getURL(this.props.location) !== getURL(prevProps.location)) {
       this.getData();
@@ -134,10 +165,10 @@ class Account extends Component {
   }
 
   toggleShowDetails = () => {
-    this.setState(({hideDetails}) => {
-      return { hideDetails: !hideDetails }
-    })
-  }
+    this.setState(({ hideDetails }) => {
+      return { hideDetails: !hideDetails };
+    });
+  };
 
   keywordMap = {
     address: "address",
@@ -153,10 +184,10 @@ class Account extends Component {
     recourseSettings: "recourse",
     holds: "recourse",
     stake: "stake",
-    validationKeys: "validationKey", 
+    validationKeys: "validationKey",
     validationScript: "validationScript",
     weightedAverageAge: "WAA",
-  }
+  };
 }
 
-export default Account
+export default Account;

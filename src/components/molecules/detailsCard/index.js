@@ -33,7 +33,7 @@ class DetailsCard extends Component {
             Object.keys(details).map((item, index) => {
               const value = data[item]
               return (value === 0 || value) && (
-                <Box key={index} className="detailField" round="xsmall">
+                <Box key={index} className="detailField" round="xsmall" pad="5px" margin="small ">
                   <Text 
                     as="section"  
                     margin={{bottom: "5px"}}

@@ -8,61 +8,66 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Text, Box, Collapsible } from 'grommet'
-import TransactionList from '../../organisms/transactionsList'
-import Value from '../../molecules/value'
-import Card from '../../atoms/card'
-import '../detailsCard/style.css'
+import React, { Component } from "react";
+import { Text, Box, Collapsible } from "grommet";
+
+import TransactionsList from "../../organisms/transactionsList";
+import Value from "../../molecules/value";
+import Card from "../../atoms/card";
+import "../detailsCard/style.css";
 
 class BlockCard extends Component {
-  render () {
-    const { block, active, txLoading } = this.props
+  render() {
+    const { block, active, txLoading,exclude } = this.props;
 
     if (!block) {
-      return <h3>Loading...</h3>
+      return <h3>Loading...</h3>;
     }
 
-    const { raw, ...blockDetails } = block
 
-    const { transactionHashes, height, numberOfTransactions } = blockDetails
+    const { raw, ...blockDetails } = block;
+
+    const { transactionHashes, height, numberOfTransactions } = blockDetails;
 
     const notDisplayed = [
-      'transactions',
-      'numberOfTransactions',
-      'transactionHashes',
-      'timestamp'
-    ]
+      "transactions",
+      "numberOfTransactions",
+      "transactionHashes",
+      "timestamp",
+    ];
     return (
-      <Card background='transparent' pad={{ horizontal: '0' }}>
-        <Box>
-          <Collapsible open={active}>
+      <div>
+        <Collapsible open={!exclude}>
+          <>
             {Object.keys(blockDetails).map((property, index) => {
               if (notDisplayed.includes(property)) {
-                return null
+                return null;
               }
-              const value = blockDetails[property]
+              const value = blockDetails[property];
               return (
-                <Box key={index} className='detailField' round='xsmall'>
+                <Box key={index} className="detailField" round="xsmall">
                   <Text key={index}>
                     <b>{property}: </b>
                     {<Value value={value} rawValue={raw[property]} />}
                   </Text>
                 </Box>
-              )
+              );
             })}
-          </Collapsible>
-          <TransactionList
-            transactionHashes={transactionHashes}
-            numberOfTransactions={numberOfTransactions}
-            blockHeight={height}
-            active={active}
-            loading={txLoading}
-          />
-        </Box>
-      </Card>
-    )
+          </>
+        </Collapsible>
+
+
+         {!exclude && <TransactionsList
+          transactionHashes={transactionHashes}
+          numberOfTransactions={numberOfTransactions}
+          blockHeight={height}
+          active={active}
+          loading={txLoading}
+        />
+  }
+      </div>
+    );
   }
 }
 
-export default BlockCard
+export default BlockCard;

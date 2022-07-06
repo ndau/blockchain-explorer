@@ -23,7 +23,9 @@ class Card extends Component {
       onClick, 
       animation, 
       margin, 
-      elevation 
+      elevation,
+      border,
+      height,
     } = this.props;
 
     return (
@@ -36,6 +38,8 @@ class Card extends Component {
         onClick={onClick}
         elevation={elevation}
         animation={animation}
+        border={border}
+        height={height}
       >
         {header}
         {children}

@@ -50,9 +50,9 @@ class BlockchainSearch extends Component {
 
     return (
       <Box 
-        round="large" 
+        round="xsmall" 
         border
-        width="large"
+        width="medium"
         direction="row"
         // align="end" 
         style={{
@@ -93,7 +93,7 @@ class BlockchainSearch extends Component {
                 plain
                 size="small"
                 placeholder="search for blocks, transactions or accounts..."
-                style={{paddingRight: "5px"}}
+                style={{paddingRight: "5px",zIndex:0}}
               />
             </Form>
             
