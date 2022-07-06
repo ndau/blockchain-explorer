@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1-staging](https://github.com/ndau/blockchain-explorer/compare/v1.1.0-staging...v1.1.1-staging) (2022-07-06)
+
+
+### Bug Fixes
+
+* **account:** load limited data when account opens ([83b0144](https://github.com/ndau/blockchain-explorer/commit/83b01446d544ab20519f9135cfb647f64d82fd34))
+* **eai-rate:** fix eai-rate display ([83b0144](https://github.com/ndau/blockchain-explorer/commit/83b01446d544ab20519f9135cfb647f64d82fd34))
+
 ## [1.1.0-staging](https://github.com/ndau/blockchain-explorer/compare/v1.0.0-staging...v1.1.0-staging) (2022-07-06)
 
 
