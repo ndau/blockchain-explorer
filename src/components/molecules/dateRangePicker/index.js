@@ -20,7 +20,6 @@ class DateRangePicker extends Component {
   constructor(props) {
     super(props);
     const { startDate, endDate, getAccountData } = this.props;
-    console.log(getAccountData, "dateRangePicker contructor getAccountData");
     this.state = {
       date: new Date().toISOString(),
       dates: null,
@@ -87,33 +86,6 @@ class DateRangePicker extends Component {
     getAccountData(arg.startDate.toISOString(), arg.endDate.toISOString());
     this.props.onSetRange({ startDate: arg.startDate, endDate: arg.endDate });
 
-    // if (Array.isArray(arg)) {
-    //   this.setState(
-    //     {
-    //       dates: arg,
-    //       date: null,
-    //     },
-    //     () => {
-    //       this.props.onSetRange({
-    //         startDate: arg[0][0],
-    //         endDate: arg[0][1],
-    //       });
-    //     }
-    //   );
-    // } else {
-    //   this.setState(
-    //     {
-    //       dates: null,
-    //       date: arg,
-    //     },
-    //     () => {
-    //       this.props.onSetRange({
-    //         startDate: arg,
-    //         endDate: arg,
-    //       });
-    //     }
-    //   );
-    // }
   };
 }
 

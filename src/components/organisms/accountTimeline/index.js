@@ -9,7 +9,7 @@
  */
 
 import React, { Component } from "react";
-import { Box } from "grommet";
+import { Box, Spinner } from "grommet";
 import moment from "moment";
 import TimelineEvent from "../../molecules/timelineEvent";
 import TimelineChart from "../../molecules/timelineChart";
@@ -17,14 +17,15 @@ import TimelineFilter from "../../organisms/timelineFilter";
 import { getTransaction } from "../../../helpers/fetch";
 import { TRANSACTION_TYPES } from "../../../constants";
 
+import PaginatedEvents from "./PaginatedEvents";
+
 // Default to show all transaction types
 const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES);
 
 class AccountTimeline extends Component {
   constructor(props) {
     super(props);
-    
-    const { filterStartDate, filterEndDate } = this.getDateRange(3);
+    const { filterStartDate, filterEndDate } = this.getDateRange(1);
     this.state = {
       events: props.events,
       typeFilters: DEFAULT_TYPE_FILTERS,
@@ -33,9 +34,12 @@ class AccountTimeline extends Component {
       filterRange: "Last month",
       selectedEvent: null,
       activeEvent: null,
+      displayedEventsState: null,
+      loading: props.loading,
+      getAccountData: props.getAccountData,
     };
 
-    this.getEventTransactions();
+    // this.getEventTransactions();
 
     // this.filteredEvents = props.events;
   }
@@ -89,57 +93,37 @@ class AccountTimeline extends Component {
             getAccountData={getAccountData}
           />
         </Box>
-
-        <Box onMouseLeave={this.clearActiveEvent}>
-          {displayedEvents.map((event, index) => {
-            const { activeEvent, selectedEvent } = this.state;
-            const isActive = activeEvent && activeEvent.TxHash === event.TxHash;
-            const isSelected =
-              selectedEvent && selectedEvent.TxHash === event.TxHash;
-
-            return (
-              <Box key={index} onMouseEnter={() => this.setActiveEvent(event)}>
-                <Box
-                  round="xsmall"
-                  style={{
-                    border: isActive
-                      ? "1px dashed rgba(255,255,255,0.3)"
-                      : borderStyle,
-                  }}
-                  background="rgba(255,255,255,0.05)"
-                >
-                  <TimelineEvent
-                    event={event}
-                    previousEvent={this.getPreviousEvent(event)}
-                    index={index}
-                    selected={isSelected}
-                  />
-                </Box>
-
-                {index !== events.length - 1 && (
-                  <Box
-                    alignSelf="center"
-                    border="right"
-                    height="20px"
-                    width="0"
-                    style={{ borderRight: borderStyle }}
-                  />
-                )}
-              </Box>
-            );
-          })}
-        </Box>
+        {!this.state.loading ? (
+          <Box onMouseLeave={this.clearActiveEvent}>
+            <PaginatedEvents
+              itemsPerPage={10}
+              totalEventsToDisplay={displayedEvents}
+              loading={this.state.loading}
+            />
+          </Box>
+        ) : (
+          <Box align="center">
+            <Spinner size="small" color="#F29A1D" />
+          </Box>
+        )}
       </Box>
     );
   }
 
   componentDidUpdate = async (prevProps) => {
     const { events } = this.props;
+    const newLoading = this.props.loading;
+    console.log(newLoading, "newLoading");
+
+    if (this.state.loading != newLoading) {
+      this.setState({ loading: newLoading });
+    }
+
     if (
       (!prevProps.events && this.props.events) ||
       JSON.stringify(events) !== JSON.stringify(prevProps.events)
     ) {
-      await this.getEventTransactions();
+      this.setState({ events: this.props.events });
     }
   };
 
@@ -154,6 +138,7 @@ class AccountTimeline extends Component {
 
   filterEvents = () => {
     const { events, typeFilters } = this.state;
+    console.log(events, "events to be filtered");
 
     if (!events || events.length === 0 || events[0] === null) {
       console.log("return not events");
@@ -165,13 +150,15 @@ class AccountTimeline extends Component {
       const eventDate = moment(event.Timestamp);
       const isWithinFilterRange =
         eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate);
-      const transactionType = event.transaction && event.transaction.raw.type;
-      const isSelected =
-        transactionType && typeFilters.includes(transactionType);
+      // const transactionType = event.transaction && event.transaction.raw.type;
+      // const isSelected =
+      //   transactionType && typeFilters.includes(transactionType);
 
-      return isWithinFilterRange && isSelected;
+      // return isWithinFilterRange && isSelected;
+      return isWithinFilterRange;
     });
 
+    console.log(this.filteredEvents, "filtered events");
     return this.filteredEvents;
   };
 
@@ -185,6 +172,15 @@ class AccountTimeline extends Component {
   selectFilterRange = (numberOfMonths, filterRange) => {
     const { filterStartDate, filterEndDate } =
       this.getDateRange(numberOfMonths);
+
+    console.log("Selecting Filter Range");
+    console.log(filterStartDate, "filterStartDate");
+    console.log(filterEndDate, "filterEndDate");
+    this.state.getAccountData(
+      filterStartDate.toISOString(),
+      filterEndDate.toISOString()
+    );
+
     this.setState({
       filterStartDate,
       filterEndDate,

@@ -89,7 +89,7 @@ class TimelineFilter extends Component {
         <Collapsible open={showFilters}>
           <Filters 
             showFilters={showFilters}
-            typeFilters={typeFilters} 
+            // typeFilters={typeFilters} 
             filterStartDate={filterStartDate}
             filterEndDate={filterEndDate}
             filterRange={filterRange}

@@ -37,7 +37,8 @@ export const getBlock = async (blockHeight) => {
       return formatBlock(response.data.block_meta);
     })
     .catch((error) => {
-      console.error(error);
+      // console.error(error);
+      console.log("2");
     });
 };
 
@@ -332,6 +333,7 @@ export const getAccountHistory = async (
     }
   }
 
+  console.log(allItems,"allItems")
   return allItems;
 };
 
@@ -342,7 +344,10 @@ export const pollForAccountUpdates = ({ metadata, success }) => {
         .then((history) => {
           success && success(history);
         })
-        .catch((error) => console.error(error));
+        .catch((error) =>
+          // console.error(error)
+          console.log("3")
+        );
     }
   };
 };
@@ -383,7 +388,8 @@ export const getNodeHealth = async (nodeEndpoint) => {
     })
     .catch((error) => {
       axios.defaults.timeout = 0;
-      console.error(error);
+      // console.error(error);
+      console.log("Node Health Check Negative");
     });
 };
 
@@ -449,7 +455,10 @@ export const getCurrentOrder = async () => {
     .then((response) => {
       return formatPriceInfo(response.data);
     })
-    .catch((error) => console.error(error));
+    .catch((error) =>
+      // console.error(error)
+      console.log(5)
+    );
 };
 
 //
