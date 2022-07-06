@@ -311,7 +311,7 @@ export const pollForAccountUpdates = ({ metadata, success }) => {
         .then((history) => {
           success && success(history);
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.log(error));
     }
   };
 };
@@ -352,7 +352,7 @@ export const getNodeHealth = async (nodeEndpoint) => {
     })
     .catch((error) => {
       axios.defaults.timeout = 0;
-      console.error(error);
+      console.log(error);
     });
 };
 
@@ -418,7 +418,7 @@ export const getCurrentOrder = async () => {
     .then((response) => {
       return formatPriceInfo(response.data);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.log(error));
 };
 
 //

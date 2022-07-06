@@ -136,7 +136,6 @@ class AccountTimeline extends Component {
 
   componentDidUpdate = async (prevProps) => {
     const { events } = this.props;
-
     if (
       (!prevProps.events && this.props.events) ||
       JSON.stringify(events) !== JSON.stringify(prevProps.events)
