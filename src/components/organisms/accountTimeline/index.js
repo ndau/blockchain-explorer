@@ -23,7 +23,7 @@ const DEFAULT_TYPE_FILTERS = Object.values(TRANSACTION_TYPES);
 class AccountTimeline extends Component {
   constructor(props) {
     super(props);
-
+    
     const { filterStartDate, filterEndDate } = this.getDateRange(3);
     this.state = {
       events: props.events,
@@ -35,7 +35,11 @@ class AccountTimeline extends Component {
       activeEvent: null,
     };
 
+    this.getEventTransactions();
+
+
     this.filteredEvents = props.events;
+    
   }
 
   render() {
@@ -152,7 +156,7 @@ class AccountTimeline extends Component {
   filterEvents = () => {
     const { events, typeFilters } = this.state;
 
-    if (!events || events.length === 0 || events[0]===null) {
+    if (!events || events.length === 0 || events[0] === null) {
       console.log("return not events");
       return [];
     }

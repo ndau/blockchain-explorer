@@ -37,7 +37,7 @@ export const getBlock = async (blockHeight) => {
       return formatBlock(response.data.block_meta);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 };
 
