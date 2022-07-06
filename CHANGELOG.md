@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0-staging](https://github.com/ndau/blockchain-explorer/compare/v1.1.1-staging...v1.2.0-staging) (2022-07-06)
+
+
+### Features
+
+* **account:** add pagination to transactions ([1aec9ef](https://github.com/ndau/blockchain-explorer/commit/1aec9ef2fdc6acc222d8d34ababaeeeb4c81c0a1))
+
 ## [1.1.1-staging](https://github.com/ndau/blockchain-explorer/compare/v1.1.0-staging...v1.1.1-staging) (2022-07-06)
 
 
