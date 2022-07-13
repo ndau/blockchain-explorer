@@ -59,6 +59,7 @@ class DateRangePicker extends Component {
           direction="horizontal"
           preventSnapRefocus={true}
           calendarFocus="backwards"
+          maxDate={new Date()}
         />
       </>
     );

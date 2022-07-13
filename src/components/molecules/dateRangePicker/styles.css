@@ -52,34 +52,55 @@
 }
 
 .rdrStaticRange .rdrStaticRangeLabel:hover {
-    background: #172e4e ;
-    color: #f89d1c;
+  background: #172e4e;
+  color: #f89d1c;
 }
 
 .rdrStaticRange.rdrStaticRangeSelected .rdrStaticRangeLabel {
-    color: #f89d1c;
+  color: #f89d1c;
 }
 
 .rdrInRange {
-    background-color: #172e4e;
-  }
+  background-color: #172e4e;
+}
 
-  .rdrStartEdge{
-    background-color: #172e4e;
-  }
+.rdrStartEdge {
+  background-color: #172e4e;
+}
 
-  .rdrEndEdge{
-    background-color: #172e4e;
-  }
+.rdrEndEdge {
+  background-color: #172e4e;
+}
 
-  .rdrInputRangeInput{
-    background-color: #0A1724;
-    border: 1px solid #222255;
-    color:#d5cea3 ;
-  }
+.rdrInputRangeInput {
+  background-color: #0a1724;
+  border: 1px solid #222255;
+  color: #d5cea3;
+}
 
-  .rdrInputRangeInput:focus{
-    background-color: #0A1724;
-    border: 1px solid #222255;
-    color: wheat;
-  }
+.rdrInputRangeInput:focus {
+  background-color: #0a1724;
+  border: 1px solid #222255;
+  color: wheat;
+}
+.rdrDayDisabled {
+  background-color: #0a1724;
+  filter: brightness(80%);
+}
+
+.rdrDayDisabled span {
+  background-color: #666677;
+  border-radius: 45% 0 0 45%;
+  width: 90%;
+  left: 10%;
+}
+
+.rdrDayDisabled span span {
+  line-height: normal;
+}
+
+.rdrDayDisabled ~ .rdrDayDisabled span {
+  left: 0%;
+  border-radius: 0;
+  width: 100%;
+}

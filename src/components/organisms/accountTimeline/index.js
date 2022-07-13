@@ -34,9 +34,10 @@ class AccountTimeline extends Component {
       filterRange: "Last month",
       selectedEvent: null,
       activeEvent: null,
-      displayedEventsState: null,
       loading: props.loading,
       getAccountData: props.getAccountData,
+      // filteredEvents: this.filterEvents() || props.events,]
+      // filteredEvents: null,
     };
 
     // this.getEventTransactions();
@@ -59,9 +60,7 @@ class AccountTimeline extends Component {
       activeEvent,
     } = this.state;
 
-    const filteredEvents = this.filterEvents() || events;
-    const displayedEvents = selectedEvent ? [selectedEvent] : filteredEvents;
-    const borderStyle = "1px dashed rgba(255,255,255,0.1)";
+    const displayedEvents = selectedEvent ? [selectedEvent] : this.state.events;
 
     return (
       <Box>
@@ -69,7 +68,7 @@ class AccountTimeline extends Component {
           <Box margin={{ bottom: "20px" }}>
             <TimelineChart
               events={[...events, this.initialEvent]}
-              filteredEvents={filteredEvents}
+              filteredEvents={this.state.events || [...events]}
               balance={balance}
               selectedEvent={selectedEvent}
               activeEvent={activeEvent}
@@ -84,13 +83,14 @@ class AccountTimeline extends Component {
             filterStartDate={filterStartDate}
             filterEndDate={filterEndDate}
             filterRange={filterRange}
-            filteredEventsCount={filteredEvents && filteredEvents.length}
+            filteredEventsCount={this.state.events && this.state.events.length}
             typeFilters={typeFilters}
             selectFilterRange={this.selectFilterRange}
             setFilterRange={this.setFilterRange}
             toggleFilter={this.toggleFilter}
             selectedEvent={selectedEvent}
             getAccountData={getAccountData}
+            loading={this.state.loading}
           />
         </Box>
         {!this.state.loading ? (
@@ -112,18 +112,21 @@ class AccountTimeline extends Component {
 
   componentDidUpdate = async (prevProps) => {
     const { events } = this.props;
-    const newLoading = this.props.loading;
-    console.log(newLoading, "newLoading");
+    const newPropsLoading = this.props.loading;
 
-    if (this.state.loading != newLoading) {
-      this.setState({ loading: newLoading });
+    if (this.state.loading != newPropsLoading) {
+      console.log("Changing Loading");
+      this.setState({ loading: newPropsLoading });
     }
 
     if (
       (!prevProps.events && this.props.events) ||
       JSON.stringify(events) !== JSON.stringify(prevProps.events)
     ) {
+      console.log("setting events");
       this.setState({ events: this.props.events });
+      // const filteredEventsArr = this.filterEvents(events);
+      // this.setState({ filteredEvents: filteredEventsArr });
     }
   };
 
@@ -136,17 +139,16 @@ class AccountTimeline extends Component {
     return isFirstEvent ? this.initialEvent : events[currentEvent.index + 1];
   };
 
-  filterEvents = () => {
-    const { events, typeFilters } = this.state;
-    console.log(events, "events to be filtered");
+  filterEvents = (givenEvents) => {
+    this.setState({ loading: true });
 
-    if (!events || events.length === 0 || events[0] === null) {
-      console.log("return not events");
+    if (!givenEvents || givenEvents.length === 0 || givenEvents[0] === null) {
+      this.setState({ loading: false });
       return [];
     }
 
     const { filterStartDate, filterEndDate } = this.state;
-    this.filteredEvents = events.filter((event) => {
+    const filteredEvents = givenEvents.filter((event) => {
       const eventDate = moment(event.Timestamp);
       const isWithinFilterRange =
         eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate);
@@ -158,8 +160,9 @@ class AccountTimeline extends Component {
       return isWithinFilterRange;
     });
 
-    console.log(this.filteredEvents, "filtered events");
-    return this.filteredEvents;
+    console.log(filteredEvents, "filteredEvents");
+    this.setState({ loading: false });
+    return filteredEvents;
   };
 
   getDateRange = (numberOfMonths) => {
