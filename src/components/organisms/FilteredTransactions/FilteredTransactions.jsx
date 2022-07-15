@@ -2,6 +2,7 @@ import PaginatedTransactions from "./PaginatedTransactions/PaginatedTransactions
 import { useEffect, useState } from "react";
 import { Heading, Box, Spinner, Text } from "grommet";
 import { getTransaction } from "../../../helpers/fetch";
+import pLimit from "p-limit";
 
 const FilteredTransactions = (props) => {
   const [filtersAppliedState, setFiltersAppliedState] = useState(null);
@@ -59,17 +60,26 @@ const FilteredTransactions = (props) => {
       }
 
       async function getTransactionsWithProgress(transactionHashes = []) {
+        const limit = pLimit(10);
         const transactionRequests = transactionHashes.map((hash) => {
-          return getTransaction(hash);
+          return limit(() => getTransaction(hash));
         });
 
         function getTransactionsWithCallback(proms, progress_cb) {
           let d = 0;
+          let prevPercentage;
           progress_cb(0);
           for (const p of proms) {
+            if (d === 0) {
+              prevPercentage = 0;
+            }
             p.then(() => {
               d++;
-              progress_cb((d * 100) / proms.length);
+              let newPercentage = (d * 100) / proms.length;
+              if (newPercentage - prevPercentage > 1) {
+                progress_cb((d * 100) / proms.length);
+                prevPercentage = newPercentage;
+              }
             });
           }
           return Promise.all(proms);
@@ -77,10 +87,7 @@ const FilteredTransactions = (props) => {
 
         return getTransactionsWithCallback(transactionRequests, (p) => {
           if (p) {
-            if (p - fetchingPercentageState.toFixed(2) > 0.5) {
-              console.log(p, "p");
-              setFetchingPercentageState(p.toFixed(2));
-            }
+            setFetchingPercentageState(p.toFixed(2));
           }
         });
       }
@@ -107,15 +114,15 @@ const FilteredTransactions = (props) => {
         <Box align="center">
           <Spinner size="medium" color="#F29A1D" />
           <br></br>
-          {fetchingPercentageState}
-          {unfilteredEventsState && unfilteredEventsState.length > 550 ? (
+          {fetchingPercentageState} % Done
+          {unfilteredEventsState && unfilteredEventsState.length > 750 ? (
             <Text>
               Filtering a very large amount of data. There may be significant
               wait
             </Text>
           ) : (
             unfilteredEventsState &&
-            unfilteredEventsState.length > 150 && (
+            unfilteredEventsState.length > 250 && (
               <Text>
                 Filtering a large amount of data. There may be some wait
               </Text>

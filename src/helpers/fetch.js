@@ -299,23 +299,23 @@ export const getAccountHistory = async (
   const getAccountHistoryFromDate = fromDate ?? Date30DaysAgo;
   const getAccountHistoryToDate = toDate ?? dateToday;
 
-  console.log(getAccountHistoryFromDate, "getHistoryFromDate");
-  console.log(getAccountHistoryToDate, "getAccountHistoryToDate");
+  // console.log(getAccountHistoryFromDate, "getHistoryFromDate");
+  // console.log(getAccountHistoryToDate, "getAccountHistoryToDate");
 
   const BlockDateRangeEndpoint = `${await getNodeEndpoint()}/block/daterange/${getAccountHistoryFromDate}/${getAccountHistoryToDate}?noempty=true&limit=2`;
 
-  console.log(BlockDateRangeEndpoint, "BlockDateRangeEndpoint");
+  // console.log(BlockDateRangeEndpoint, "BlockDateRangeEndpoint");
   const blocksInRange = await axios.get(BlockDateRangeEndpoint);
   console.log(blocksInRange, "blocksInRange");
   const oldestBlockInRange = blocksInRange.data.last_height;
 
-  console.log(oldestBlockInRange, "oldestBlockInRange");
+  // console.log(oldestBlockInRange, "oldestBlockInRange");
 
   const limitedAccountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}?after=${oldestBlockInRange}`;
 
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`;
 
-  console.log(limitedAccountHistoryEndpoint, "limitedAccountHistoryEndpoint");
+  // console.log(limitedAccountHistoryEndpoint, "limitedAccountHistoryEndpoint");
 
   let allItems = [];
   let offset = 0;

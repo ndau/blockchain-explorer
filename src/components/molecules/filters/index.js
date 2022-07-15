@@ -15,6 +15,12 @@ import DateRangePicker from "../../molecules/dateRangePicker";
 import { TRANSACTION_TYPES } from "../../../constants";
 
 class Filters extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+    };
+  }
   render() {
     const {
       typeFilters,
@@ -155,11 +161,13 @@ class Filters extends Component {
               );
             })}
 
-            <Box>
+            <Box width="medium" alignSelf="center" margin={{ top: "medium" }}>
               <Button
                 primary
                 label="Filter by Type"
                 onClick={this.openFilteredTransactionsInNewTab}
+                disabled={this.state.loading}
+                fill={true}
               ></Button>
             </Box>
           </Box>
@@ -182,6 +190,14 @@ class Filters extends Component {
     this.saveTypeFiltersInLocalStorage();
     this.saveUnfilteredEventsInLocalStorage();
     window.open("http://localhost:3000/filteredTransactions", "_blank");
+  };
+
+  componentDidUpdate = async (prevProps) => {
+    const newPropsLoading = this.props.loading;
+
+    if (this.state.loading != newPropsLoading) {
+      this.setState({ loading: newPropsLoading });
+    }
   };
 }
 

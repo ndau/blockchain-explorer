@@ -18,7 +18,6 @@ import { formatTime } from "../../../helpers/format";
 class TimelineFilter extends Component {
   constructor(props) {
     super(props);
-    console.log(props.typeFilters, "props.typeFilters timelineFilter");
     this.state = {
       showFilters: false,
       loading: true,
@@ -29,7 +28,6 @@ class TimelineFilter extends Component {
     const newPropsLoading = this.props.loading;
 
     if (this.state.loading != newPropsLoading) {
-      console.log("Changing Loading");
       this.setState({ loading: newPropsLoading });
     }
   };
@@ -132,6 +130,7 @@ class TimelineFilter extends Component {
             setFilterRange={setFilterRange}
             toggleFilter={toggleFilter}
             getAccountData={getAccountData}
+            loading={this.state.loading}
           />
         </Collapsible>
       </Box>
