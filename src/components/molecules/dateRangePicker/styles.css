@@ -71,11 +71,15 @@
 .rdrEndEdge {
   background-color: #172e4e;
 }
+.rdrInputRanges {
+  display: none;
+}
 
 .rdrInputRangeInput {
   background-color: #0a1724;
   border: 1px solid #222255;
   color: #d5cea3;
+  pointer-events: none;
 }
 
 .rdrInputRangeInput:focus {
