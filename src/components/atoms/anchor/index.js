@@ -8,23 +8,32 @@
  * - -- --- ---- -----
  */
 
-import React from 'react';
-import { Link } from 'react-router-dom'
-import { Anchor as StyledAnchor } from 'grommet'
-import { makeURLQuery } from '../../../helpers'
+import React from "react";
+import { Link } from "react-router-dom";
+import { Anchor as StyledAnchor } from "grommet";
+import { makeURLQuery } from "../../../helpers";
 
 function Anchor(props) {
+  const openInNewTab = props.openInNewTab;
+  let target;
+  let rel;
+  if (openInNewTab) {
+    target = "_blank";
+    rel = "noopener noreferrer";
+  }
   return (
-    <Link 
+    <Link
       to={`${props.href}${makeURLQuery(props.additionalQuery)}`}
       onClick={(event) => event.stopPropagation()}
       style={{ textDecoration: "none" }}
+      target={target}
+      rel={rel}
     >
       <StyledAnchor label={props.label} as="span">
         {props.children}
       </StyledAnchor>
     </Link>
-  )
+  );
 }
 
 export default Anchor;

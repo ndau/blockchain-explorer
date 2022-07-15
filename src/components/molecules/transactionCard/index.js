@@ -18,8 +18,6 @@ import TruncatedText from "../../atoms/truncatedText";
 import Age from "../../atoms/age";
 import { getTransaction } from "../../../helpers/fetch";
 import moment from "moment";
-import "./style.css";
-
 class TransactionCard extends Component {
   constructor(props) {
     super(props);

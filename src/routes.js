@@ -16,6 +16,7 @@ import Block from './components/pages/block'
 import Transaction from './components/pages/transaction'
 import Transactions from './components/pages/transactions'
 import Account from './components/pages/account'
+import FilteredTransactions from './components/organisms/FilteredTransactions/FilteredTransactions'
 
 export default (
   <BrowserRouter>
@@ -26,7 +27,7 @@ export default (
       <Route exact path="/transaction/:transactionHash" component={Transaction} />
       <Route exact path="/transactions" component={Transactions} /> 
       <Route exact path="/account/:accountAddress" component={Account} />
-
+      <Route exact path="/filteredTransactions" component={FilteredTransactions} />
       {/* <Route component={NotFound} /> */}
     </Switch>
   </BrowserRouter>
