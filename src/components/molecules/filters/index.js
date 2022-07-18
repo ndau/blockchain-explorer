@@ -17,9 +17,6 @@ import { TRANSACTION_TYPES } from "../../../constants";
 class Filters extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-    };
   }
   render() {
     const {
@@ -166,7 +163,7 @@ class Filters extends Component {
                 primary
                 label="Filter by Type"
                 onClick={this.openFilteredTransactionsInNewTab}
-                disabled={this.state.loading}
+                disabled={this.props.loading}
                 fill={true}
               ></Button>
             </Box>
@@ -192,13 +189,6 @@ class Filters extends Component {
     window.open("http://localhost:3000/filteredTransactions", "_blank");
   };
 
-  componentDidUpdate = async (prevProps) => {
-    const newPropsLoading = this.props.loading;
-
-    if (this.state.loading != newPropsLoading) {
-      this.setState({ loading: newPropsLoading });
-    }
-  };
 }
 
 export default Filters;
