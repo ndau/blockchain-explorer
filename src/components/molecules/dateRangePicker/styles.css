@@ -46,6 +46,39 @@
   background-color: #0a1724;
 }
 
+@media screen and (max-width: 768px) {
+  [class~="rdrStaticRange"]:last-of-type {
+    border-right: none;
+  }
+
+  .rdrMonths.rdrMonthsHorizontal {
+    align-self: center;
+  }
+  .rdrDateRangePickerWrapper {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .rdrStaticRanges {
+    display: flex;
+    flex-direction: row;
+  }
+  .rdrDefinedRangesWrapper {
+    width: 100%;
+    border-right: none;
+  }
+  .rdrStaticRange {
+    box-sizing: border-box;
+    width: 16.6%;
+    height: 30px;
+    border-right: 1px solid #172e4e;
+    border-bottom: 1px solid #172e4e;
+  }
+  .rdrStaticRangeLabel {
+    text-align: center;
+    padding: 0;
+  }
+}
+
 .rdrStaticRange {
   background-color: #0a1724;
   color: #ababab;
