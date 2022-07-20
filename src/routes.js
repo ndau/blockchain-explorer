@@ -17,6 +17,8 @@ import Transaction from './components/pages/transaction'
 import Transactions from './components/pages/transactions'
 import Account from './components/pages/account'
 import FilteredTransactions from './components/organisms/FilteredTransactions/FilteredTransactions'
+import RegistrationPage from './components/pages/Registration/RegistrationPage'
+import LoginPage from './components/pages/Login/LoginPage'
 
 export default (
   <BrowserRouter>
@@ -28,6 +30,8 @@ export default (
       <Route exact path="/transactions" component={Transactions} /> 
       <Route exact path="/account/:accountAddress" component={Account} />
       <Route exact path="/filteredTransactions" component={FilteredTransactions} />
+      <Route exact path="/register" component={RegistrationPage} />
+      <Route exact path="/login" component={LoginPage} />
       {/* <Route component={NotFound} /> */}
     </Switch>
   </BrowserRouter>
