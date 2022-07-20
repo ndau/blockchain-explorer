@@ -13,6 +13,7 @@ import registerBgImg from "../../../img/registerBg.png";
 import ndauLogo from "../../../img/ndau_orange_logo.png";
 import styled from "styled-components";
 import { User, Mail, Lock } from "grommet-icons";
+import axios from "axios";
 import { useContext } from "react";
 
 const StyledFormField = styled(FormField)`
@@ -20,14 +21,15 @@ const StyledFormField = styled(FormField)`
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 0;
 `;
 
 const StyledTextInput = styled(TextInput)`
   background-color: #172e4e;
   padding-left: 5%;
   padding-right: 10%;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   font-size: xx-small;
   border: none;
   border-radius: 6px;
@@ -100,6 +102,7 @@ function RegistrationPage() {
           <Heading margin="none" level={3} size="small" alignSelf="center">
             Welcome to ndau
           </Heading>
+
           <Box align="center" width="70%" alignSelf="center" margin="small">
             <Text size="10px" color={"#999"}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -108,15 +111,44 @@ function RegistrationPage() {
             </Text>
           </Box>
 
-          <StyledForm onSubmit={({ value }) => {}}>
+          <StyledForm
+            onSubmit={({ value }) => {
+              axios
+                .post("http://127.0.0.1:3001/api/users/register", {
+                  email: value.email,
+                  password: value.password,
+                  username: value.username,
+                })
+                .then((res) => {
+                  console.log("getting reponse");
+                  if (
+                    res.data.message === "User Registered Successfully" &&
+                    res.data.status === true
+                  ) {
+                    console.log("registered");
+                  }
+                })
+                .catch((e) => {
+                  console.log("failed to login");
+                });
+            }}
+            onValidate={({ e }) => {
+              if (e) console.log(e, "onValidate");
+            }}
+          >
             <StyledFormField
+              validate={function (fieldValue) {
+                if (!fieldValue) return "Username cannot be empty";
+                if (fieldValue.length < 4)
+                  return "Username must be at least 4 characters";
+              }}
               contentProps={{ border: false }}
-              name="Username"
+              name="username"
               htmlFor="StyledTextInput-id"
             >
               <StyledTextInput
                 plain={true}
-                name="Username"
+                name="username"
                 id="StyledTextInput-id"
                 placeholder="Username"
                 icon={<StyledUserIcon />}
@@ -127,20 +159,30 @@ function RegistrationPage() {
             <StyledFormField
               contentProps={{ border: false }}
               name="email"
+              validate={{
+                regexp: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                message: "Email Incorrectly entered",
+                status: "error",
+              }}
               htmlFor="StyledTextInput-id"
             >
               <StyledTextInput
                 name="email"
                 id="StyledTextInput-id"
-                placeholder="Email"
+                placeholder="email@domain.com"
                 icon={<StyledMailIcon />}
                 reverse
               />
             </StyledFormField>
+            
             <StyledFormField
               contentProps={{ border: false }}
               name="password"
               htmlFor="StyledTextInput-id"
+              validate={function (fieldValue, entireValue) {
+                if (fieldValue?.length < 8)
+                  return "Password must be at least 8 characters";
+              }}
             >
               <StyledTextInput
                 name="password"
@@ -152,11 +194,16 @@ function RegistrationPage() {
             </StyledFormField>
             <StyledFormField
               contentProps={{ border: false }}
-              name="repeatedpassword"
+              name="repeatedPassword"
               htmlFor="StyledTextInput-id"
+              validate={function (fieldValue, entireValue) {
+                // console.log(fieldValue, "fieldValue");
+                if (fieldValue !== entireValue.password)
+                  return "Passwords do not match";
+              }}
             >
               <StyledTextInput
-                name="repeatedpassword"
+                name="repeatedPassword"
                 id="StyledTextInput-id"
                 placeholder="Repeat Password"
                 icon={<StyledLockIcon />}

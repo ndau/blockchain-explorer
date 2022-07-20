@@ -10,10 +10,14 @@ import {
   Anchor,
   CheckBox,
 } from "grommet";
+import Page from "../../templates/page";
 import registerBgImg from "../../../img/registerBg.png";
 import ndauLogo from "../../../img/ndau_orange_logo.png";
 import styled from "styled-components";
 import { User, Mail, Lock } from "grommet-icons";
+import { UserContext } from "../../../context/context";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 import { useContext, useState } from "react";
 
 const StyledFormField = styled(FormField)`
@@ -64,10 +68,16 @@ const StyledForm = styled(Form)`
 `;
 
 function LoginPage() {
+  const loggedInContext = useContext(UserContext);
+  console.log(loggedInContext, "loggedInContext");
+  const isLoggedIn = loggedInContext.loggedIn;
+  const updateLoggedIn = loggedInContext.updateLoggedIn;
+
   const [checkedState, setCheckedState] = useState(false);
   const size = useContext(ResponsiveContext);
+  const history = useHistory();
   return (
-    <div style={{ backgroundColor: "#111", width: "100vw" }}>
+    <Page>
       <div
         style={{
           backgroundColor: "#0B2140",
@@ -110,24 +120,58 @@ function LoginPage() {
             </Text>
           </Box>
 
-          <StyledForm onSubmit={({ value }) => {}}>
+          <StyledForm
+            onSubmit={({ value }) => {
+              axios
+                .post("http://127.0.0.1:3001/api/users/login", {
+                  email: value.email,
+                  password: value.password,
+                })
+                .then((res) => {
+                  console.log(res, "getting reponse");
+                  if (res.data.status === true) {
+                    console.log("logged in");
+                    localStorage.setItem(
+                      "ndau_user_token",
+                      res.data.user_token
+                    );
+                    updateLoggedIn(true);
+                    console.log(isLoggedIn, "isLoggedIn");
+                    history.push("/");
+                  }
+                })
+                .catch((e) => {
+                  console.log("failed to login");
+                });
+            }}
+          >
             <StyledFormField
               contentProps={{ border: false }}
               name="email"
+              validate={{
+                regexp: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                message: "Email Incorrectly entered",
+                status: "error",
+              }}
               htmlFor="StyledTextInput-id"
             >
               <StyledTextInput
                 name="email"
                 id="StyledTextInput-id"
-                placeholder="Email"
+                placeholder="email@domain.com"
                 icon={<StyledMailIcon />}
                 reverse
               />
             </StyledFormField>
+
             <StyledFormField
               contentProps={{ border: false }}
               name="password"
               htmlFor="StyledTextInput-id"
+              validate={function (fieldValue, entireValue) {
+                if (fieldValue?.length < 8)
+                  return "Password must be at least 8 characters";
+              }}
             >
               <StyledTextInput
                 name="password"
@@ -138,11 +182,7 @@ function LoginPage() {
               />
             </StyledFormField>
 
-            <Box
-              direction="row"
-              justify="evenly"
-              margin={{ bottom: "small" }}
-            >
+            <Box direction="row" justify="evenly" margin={{ bottom: "small" }}>
               <CheckBox
                 checked={checkedState}
                 label="Remember Me"
@@ -155,7 +195,12 @@ function LoginPage() {
               <StyledSignUpButton type="submit" primary label="Login" />
             </Box>
           </StyledForm>
-          <Box align="center" direction="row" alignSelf="center" margin={{top:"35%"}}>
+          <Box
+            align="center"
+            direction="row"
+            alignSelf="center"
+            margin={{ top: "35%" }}
+          >
             <Text size="xsmall" color={"#AAA"}>
               Don't have an account?
               <Anchor align="center" margin={{ left: "5px" }}>
@@ -165,7 +210,7 @@ function LoginPage() {
           </Box>
         </Box>
       </div>
-    </div>
+    </Page>
   );
 }
 

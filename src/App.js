@@ -8,28 +8,29 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react';
-import { Grommet } from 'grommet';
+import UserContextProvider from "./context/context";
+import React, { Component } from "react";
+import { Grommet } from "grommet";
 import { deepMerge } from "grommet/utils";
-import {  dark as grommetDarkTheme } from 'grommet/themes';
-import routes from './routes'
-import 'normalize.css'
+import { dark as grommetDarkTheme } from "grommet/themes";
+import routes from "./routes";
+import "normalize.css";
 import "./components/organisms/priceCurve/StatisticsPanel/WidgetBox/WidgetBox.css";
 
 const ndauStyleGuide = {
   global: {
     colors: {
-      background: "#0a1724", 
+      background: "#0a1724",
       text: {
-        dark: '#fff',
-        light: '#fff',
-      }
+        dark: "#fff",
+        light: "#fff",
+      },
     },
     drop: {
       background: "#132844",
       extend: {
-        fontSize: "small"
-      }
+        fontSize: "small",
+      },
     },
     font: {
       family: "Titillium Web",
@@ -39,35 +40,47 @@ const ndauStyleGuide = {
     },
     elevation: {
       dark: {
-        none: 'none',
-        xsmall: '0px 1px 2px rgba(0, 0, 0, 0.20)',
-        small: '0px 2px 4px rgba(0, 0, 0, 0.20)',
-        medium: '0px 4px 8px rgba(0, 0, 0, 0.20)',
-        large: '0px 8px 16px rgba(0, 0, 0, 0.20)',
-        xlarge: '0px 12px 24px rgba(0, 0, 0, 0.20)',
+        none: "none",
+        xsmall: "0px 1px 2px rgba(0, 0, 0, 0.20)",
+        small: "0px 2px 4px rgba(0, 0, 0, 0.20)",
+        medium: "0px 4px 8px rgba(0, 0, 0, 0.20)",
+        large: "0px 8px 16px rgba(0, 0, 0, 0.20)",
+        xlarge: "0px 12px 24px rgba(0, 0, 0, 0.20)",
       },
     },
   },
   anchor: {
     color: "#f99d1c",
   },
+
+  
+
   checkBox: {
     color: {
-      dark: "#f99d1c"
+      dark: "#f99d1c",
     },
     hover: {
       border: {
-        color: null
-      }
+        color: null,
+      },
     },
     toggle: {
       color: {
-        dark: "#aaa"
-      }
+        dark: "#aaa",
+      },
     },
-    size: "18px"
-  }
-}
+    size: "18px",
+  },
+  formField: {
+    error: {
+      color: "#B25",
+      size: "10px",
+      margin: {
+        vertical: "xxsmall",
+      },
+    },
+  },
+};
 
 const ndauTheme = deepMerge(grommetDarkTheme, ndauStyleGuide);
 
@@ -75,7 +88,7 @@ class App extends Component {
   render() {
     return (
       <Grommet full theme={ndauTheme}>
-        {routes}
+        <UserContextProvider>{routes}</UserContextProvider>
       </Grommet>
     );
   }

@@ -16,6 +16,8 @@ import {
   Nav,
   Button,
   Layer,
+  Menu,
+  Text,
 } from "grommet";
 
 import LogoImg from "../../../img/ndau_orange_logo.png";
@@ -23,7 +25,9 @@ import { AppsRounded } from "grommet-icons";
 
 import { NAVBAR_COLOR } from "../../../constants";
 import { Link } from "react-router-dom";
-import React, { useRef, useState } from "react";
+import { UserContext } from "../../../context/context";
+import styled from "styled-components";
+import React, { useContext, useRef, useState } from "react";
 
 import "./style.css";
 
@@ -60,33 +64,81 @@ const NavbarMenuButton = (props) => {
 };
 
 const SideBar = (props) => {
+  const loggedInContext = useContext(UserContext);
+  const isLoggedIn = loggedInContext.loggedIn;
+  const updateLoggedIn = loggedInContext.updateLoggedIn;
+
   return (
-    <Sidebar className="sidebar">
-      <Nav direction="column" background="black" pad="medium" align="center">
-        <Box pad="small" width={"100%"} align="center">
-          <img src={LogoImg} style={{ width: "60%" }} alt="ndau-logo" />
-        </Box>
+    <Nav
+      direction="column"
+      background="black"
+      pad="medium"
+      align="center"
+      width={"70vw"}
+    >
+      <Box pad="small" align="center">
+        <img src={LogoImg} style={{ width: "40%" }} alt="ndau-logo" />
+      </Box>
 
-        <NavbarLink margin="small" to="/">
-          Home
-        </NavbarLink>
+      <NavbarLink margin="small" to="/">
+        Home
+      </NavbarLink>
 
-        <NavbarLink margin="small" to="/about">
-          About
-        </NavbarLink>
-        <NavbarLink margin="small" to="/blockchain">
-          Blockchain
-        </NavbarLink>
-        <NavbarLink margin="small" to="/signin">
-          Sign In
-        </NavbarLink>
-      </Nav>
-    </Sidebar>
+      <NavbarLink margin="small" to="/about">
+        About
+      </NavbarLink>
+      <NavbarLink margin="small" to="/blockchain">
+        Blockchain
+      </NavbarLink>
+      {isLoggedIn ? (
+        <StyledProfileMenu
+          dropAlign={{ top: "bottom", left: "left" }}
+          dropBackground={{ color: "#259", opacity: "weak" }}
+          margin={{ bottom: "14px" }}
+          icon={true}
+          label={<Text size="14px">Profile</Text>}
+          items={[
+            {
+              label: (
+                <Anchor as={Link} to={"/profile"} size="xsmall">
+                  Profile
+                </Anchor>
+              ),
+            },
+            {
+              label: (
+                <Text weight={1000} size="xsmall" color={"#D32"}>
+                  Sign Out
+                </Text>
+              ),
+              onClick: () => {
+                localStorage.removeItem("ndau_user_token");
+                updateLoggedIn(false);
+              },
+            },
+          ]}
+        ></StyledProfileMenu>
+      ) : (
+        <NavbarLink to="/login">Login</NavbarLink>
+      )}
+    </Nav>
   );
 };
 
+const StyledProfileMenu = styled(Menu)`
+  color: #f99d1c;
+  font-weight: 600;
+  line-height: 20px;
+`;
+
 const Navbar = (props) => {
+  const loggedInContext = useContext(UserContext);
+  const isLoggedIn = loggedInContext.loggedIn;
+  const updateLoggedIn = loggedInContext.updateLoggedIn;
+
   const [navbarDrawerState, setNavbarDrawerState] = useState(false);
+
+  const sidebarRef = useRef(null);
 
   const background = props.background || NAVBAR_COLOR;
 
@@ -106,7 +158,6 @@ const Navbar = (props) => {
             <NavbarLink to="/about" small={screenSize === "small"}>
               About
             </NavbarLink>
-
             <Box
               style={{ marginRight: screenSize === "small" ? "100px" : "0px" }}
               pad="small"
@@ -114,35 +165,65 @@ const Navbar = (props) => {
             >
               <img src={LogoImg} style={{ height: "90%" }} alt="ndau-logo" />
             </Box>
-
             {screenSize === "small" && (
               <NavbarMenuButton
                 currentDrawerState={navbarDrawerState}
                 toggleDrawerStateFunc={setNavbarDrawerState}
               />
             )}
-
             <NavbarLink to="/blocks" small={screenSize === "small"}>
               Blockchain
             </NavbarLink>
-            <NavbarLink to="/signin" small={screenSize === "small"}>
-              Sign in
-            </NavbarLink>
+
+            {screenSize !== "small" && isLoggedIn ? (
+              <StyledProfileMenu
+                dropAlign={{ top: "bottom", left: "left" }}
+                dropBackground={{ color: "#259", opacity: "weak" }}
+                margin={{ bottom: "14px" }}
+                icon={true}
+                label={<Text size="14px">Profile</Text>}
+                items={[
+                  {
+                    label: (
+                      <Anchor as={Link} to={"/profile"} size="xsmall">
+                        Profile
+                      </Anchor>
+                    ),
+                  },
+                  {
+                    label: (
+                      <Text weight={1000} size="xsmall" color={"#D32"}>
+                        Sign Out
+                      </Text>
+                    ),
+                    onClick: () => {
+                      localStorage.removeItem("ndau_user_token");
+                      updateLoggedIn(false);
+                    },
+                  },
+                ]}
+              ></StyledProfileMenu>
+            ) : (
+              <NavbarLink to="/login">Login</NavbarLink>
+            )}
           </Box>
 
           {navbarDrawerState && (
-            // <Box>
-            <Layer
-              onEsc={() => setNavbarDrawerState(false)}
-              onClick={() => setNavbarDrawerState(false)}
-              background={{
-                color: "black",
-                opacity: "medium",
-              }}
-            >
-              <SideBar></SideBar>
-            </Layer>
-            // </Box>
+            <Box>
+              <Layer
+                animation={false}
+                position="top-right"
+                responsive={false}
+                onEsc={() => setNavbarDrawerState(false)}
+                onClickOutside={() => setNavbarDrawerState(false)}
+                background={{
+                  color: "black",
+                  opacity: "medium",
+                }}
+              >
+                <SideBar></SideBar>
+              </Layer>
+            </Box>
           )}
           {/* <Collapsible open={navbarDrawerState}>              
                 

@@ -8,17 +8,18 @@
  * - -- --- ---- -----
  */
 
-import React from 'react'
-import { Route, Switch, BrowserRouter } from "react-router-dom"
-import NdauDashboard from './components/pages/ndauDashboard'
-import Blocks from './components/pages/blocks'
-import Block from './components/pages/block'
-import Transaction from './components/pages/transaction'
-import Transactions from './components/pages/transactions'
-import Account from './components/pages/account'
-import FilteredTransactions from './components/organisms/FilteredTransactions/FilteredTransactions'
-import RegistrationPage from './components/pages/Registration/RegistrationPage'
-import LoginPage from './components/pages/Login/LoginPage'
+import React from "react";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
+import NdauDashboard from "./components/pages/ndauDashboard";
+import Blocks from "./components/pages/blocks";
+import Block from "./components/pages/block";
+import Transaction from "./components/pages/transaction";
+import Transactions from "./components/pages/transactions";
+import Account from "./components/pages/account";
+import FilteredTransactions from "./components/organisms/FilteredTransactions/FilteredTransactions";
+import RegistrationPage from "./components/pages/Registration/RegistrationPage";
+import LoginPage from "./components/pages/Login/LoginPage";
+import Profile from "./components/pages/Profile/Profile";
 
 export default (
   <BrowserRouter>
@@ -26,13 +27,22 @@ export default (
       <Route exact path="/" component={NdauDashboard} />
       <Route exact path="/blocks" component={Blocks} />
       <Route exact path="/block/:blockHeight" component={Block} />
-      <Route exact path="/transaction/:transactionHash" component={Transaction} />
-      <Route exact path="/transactions" component={Transactions} /> 
+      <Route
+        exact
+        path="/transaction/:transactionHash"
+        component={Transaction}
+      />
+      <Route exact path="/transactions" component={Transactions} />
       <Route exact path="/account/:accountAddress" component={Account} />
-      <Route exact path="/filteredTransactions" component={FilteredTransactions} />
+      <Route
+        exact
+        path="/filteredTransactions"
+        component={FilteredTransactions}
+      />
       <Route exact path="/register" component={RegistrationPage} />
       <Route exact path="/login" component={LoginPage} />
+      <Route exact path="/profile" component={Profile} />
       {/* <Route component={NotFound} /> */}
     </Switch>
   </BrowserRouter>
-)
+);
