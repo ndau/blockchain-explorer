@@ -16,7 +16,7 @@ import ndauLogo from "../../../img/ndau_orange_logo.png";
 import styled from "styled-components";
 import { User, Mail, Lock } from "grommet-icons";
 import { UserContext } from "../../../context/context";
-import { useHistory } from "react-router-dom";
+import { useHistory,Link } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState } from "react";
 
@@ -73,7 +73,7 @@ function LoginPage() {
   const isLoggedIn = loggedInContext.loggedIn;
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
-  const [checkedState, setCheckedState] = useState(false);
+  const [rememberMeCheckedState, setRememberMeCheckedState] = useState(false);
   const size = useContext(ResponsiveContext);
   const history = useHistory();
   return (
@@ -131,10 +131,20 @@ function LoginPage() {
                   console.log(res, "getting reponse");
                   if (res.data.status === true) {
                     console.log("logged in");
+                    
+                    if(rememberMeCheckedState){
+                      localStorage.setItem(
+                        "remember_user_token",
+                        "bearer " + res.data.user_token
+                      );
+                    }
+                    else{
                     localStorage.setItem(
                       "ndau_user_token",
-                      res.data.user_token
+                      "bearer " + res.data.user_token
                     );
+                    }
+                    
                     updateLoggedIn(true);
                     console.log(isLoggedIn, "isLoggedIn");
                     history.push("/");
@@ -158,7 +168,7 @@ function LoginPage() {
               <StyledTextInput
                 name="email"
                 id="StyledTextInput-id"
-                placeholder="email@domain.com"
+                placeholder="John@ed.com"
                 icon={<StyledMailIcon />}
                 reverse
               />
@@ -184,11 +194,11 @@ function LoginPage() {
 
             <Box direction="row" justify="evenly" margin={{ bottom: "small" }}>
               <CheckBox
-                checked={checkedState}
+                checked={rememberMeCheckedState}
                 label="Remember Me"
-                onChange={(event) => setCheckedState(event.target.checked)}
+                onChange={(event) => setRememberMeCheckedState(event.target.checked)}
               />
-              <Anchor>Forgot Password</Anchor>
+              {/* <Anchor>Forgot Password</Anchor> */}
             </Box>
 
             <Box align="center">
@@ -203,7 +213,7 @@ function LoginPage() {
           >
             <Text size="xsmall" color={"#AAA"}>
               Don't have an account?
-              <Anchor align="center" margin={{ left: "5px" }}>
+              <Anchor  as={Link} to="/register" align="center" margin={{ left: "5px" }}>
                 {"Sign Up"}
               </Anchor>
             </Text>

@@ -9,11 +9,11 @@
  */
 
 import UserContextProvider from "./context/context";
-import React, { Component } from "react";
 import { Grommet } from "grommet";
 import { deepMerge } from "grommet/utils";
 import { dark as grommetDarkTheme } from "grommet/themes";
-import routes from "./routes";
+// import routes from "./routes";
+import Routes from "./Routes";
 import "normalize.css";
 import "./components/organisms/priceCurve/StatisticsPanel/WidgetBox/WidgetBox.css";
 
@@ -53,8 +53,6 @@ const ndauStyleGuide = {
     color: "#f99d1c",
   },
 
-  
-
   checkBox: {
     color: {
       dark: "#f99d1c",
@@ -84,14 +82,14 @@ const ndauStyleGuide = {
 
 const ndauTheme = deepMerge(grommetDarkTheme, ndauStyleGuide);
 
-class App extends Component {
-  render() {
-    return (
-      <Grommet full theme={ndauTheme}>
-        <UserContextProvider>{routes}</UserContextProvider>
-      </Grommet>
-    );
-  }
+function App(props) {
+  return (
+    <Grommet full theme={ndauTheme}>
+      <UserContextProvider>
+        <Routes />
+      </UserContextProvider>
+    </Grommet>
+  );
 }
 
 export default App;

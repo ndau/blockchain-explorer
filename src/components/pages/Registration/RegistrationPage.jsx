@@ -13,8 +13,10 @@ import registerBgImg from "../../../img/registerBg.png";
 import ndauLogo from "../../../img/ndau_orange_logo.png";
 import styled from "styled-components";
 import { User, Mail, Lock } from "grommet-icons";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "../../../context/context";
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
@@ -65,7 +67,15 @@ const StyledForm = styled(Form)`
 `;
 
 function RegistrationPage() {
+  const history = useHistory();
   const size = useContext(ResponsiveContext);
+
+  const loggedInContext = useContext(UserContext);
+  const isLoggedIn = loggedInContext.loggedIn;
+  const updateLoggedIn = loggedInContext.updateLoggedIn;
+
+  const [emailErrorState, setEmailErrorState] = useState("");
+
   return (
     <div style={{ backgroundColor: "#111", width: "100vw" }}>
       <div
@@ -120,16 +130,25 @@ function RegistrationPage() {
                   username: value.username,
                 })
                 .then((res) => {
-                  console.log("getting reponse");
+                  console.log(res, "getting reponse");
                   if (
                     res.data.message === "User Registered Successfully" &&
                     res.data.status === true
                   ) {
                     console.log("registered");
+                    updateLoggedIn(true);
+                    localStorage.setItem(
+                      "ndau_user_token",
+                      "bearer " + res.data.user_token
+                    );
+                    history.push("/");
                   }
                 })
                 .catch((e) => {
-                  console.log("failed to login");
+                  console.log(e, "failed to login");
+                  if (e.response.data.message === "Email already exists") {
+                    setEmailErrorState("Email Already Exists");
+                  }
                 });
             }}
             onValidate={({ e }) => {
@@ -159,6 +178,8 @@ function RegistrationPage() {
             <StyledFormField
               contentProps={{ border: false }}
               name="email"
+              onFocus={() => setEmailErrorState("")}
+              error={emailErrorState}
               validate={{
                 regexp: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
                 message: "Email Incorrectly entered",
@@ -174,7 +195,7 @@ function RegistrationPage() {
                 reverse
               />
             </StyledFormField>
-            
+
             <StyledFormField
               contentProps={{ border: false }}
               name="password"

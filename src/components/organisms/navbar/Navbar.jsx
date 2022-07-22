@@ -22,14 +22,12 @@ import {
 
 import LogoImg from "../../../img/ndau_orange_logo.png";
 import { AppsRounded } from "grommet-icons";
-
+import "./style.css";
 import { NAVBAR_COLOR } from "../../../constants";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../../../context/context";
 import styled from "styled-components";
 import React, { useContext, useRef, useState } from "react";
-
-import "./style.css";
 
 const NavbarLink = (props) => {
   return (
@@ -67,6 +65,7 @@ const SideBar = (props) => {
   const loggedInContext = useContext(UserContext);
   const isLoggedIn = loggedInContext.loggedIn;
   const updateLoggedIn = loggedInContext.updateLoggedIn;
+  const history = useHistory();
 
   return (
     <Nav
@@ -100,10 +99,13 @@ const SideBar = (props) => {
           items={[
             {
               label: (
-                <Anchor as={Link} to={"/profile"} size="xsmall">
+                <Text weight={1000} size="xsmall" color={"#F6931D"}>
                   Profile
-                </Anchor>
+                </Text>
               ),
+              onClick: () => {
+                history.push("/profile");
+              },
             },
             {
               label: (
@@ -136,11 +138,9 @@ const Navbar = (props) => {
   const isLoggedIn = loggedInContext.loggedIn;
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
+  const history = useHistory();
+
   const [navbarDrawerState, setNavbarDrawerState] = useState(false);
-
-  const sidebarRef = useRef(null);
-
-  const background = props.background || NAVBAR_COLOR;
 
   return (
     <ResponsiveContext.Consumer>
@@ -185,10 +185,13 @@ const Navbar = (props) => {
                 items={[
                   {
                     label: (
-                      <Anchor as={Link} to={"/profile"} size="xsmall">
+                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
                         Profile
-                      </Anchor>
+                      </Text>
                     ),
+                    onClick: () => {
+                      history.push("/profile");
+                    },
                   },
                   {
                     label: (
@@ -197,7 +200,7 @@ const Navbar = (props) => {
                       </Text>
                     ),
                     onClick: () => {
-                      localStorage.removeItem("ndau_user_token");
+                      localStorage.clear();
                       updateLoggedIn(false);
                     },
                   },
