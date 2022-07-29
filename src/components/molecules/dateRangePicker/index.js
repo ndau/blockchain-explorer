@@ -9,7 +9,6 @@
  */
 
 import React, { Component } from "react";
-import { Calendar } from "grommet";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import "./styles.css";
@@ -59,6 +58,7 @@ class DateRangePicker extends Component {
           direction="horizontal"
           preventSnapRefocus={true}
           calendarFocus="backwards"
+          maxDate={new Date()}
         />
       </>
     );

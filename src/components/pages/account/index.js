@@ -27,8 +27,6 @@ class Account extends Component {
       valid: false,
       loading: false,
     };
-
-    this.getData();
   }
 
   render() {
@@ -109,6 +107,8 @@ class Account extends Component {
                 fill={hideDetails}
                 getAccountData={this.getData}
                 loading={this.state.loading}
+                setLoadingTrueFunc={this.setLoadingTrue}
+                setLoadingFalseFunc={this.setLoadingFalse}
               />
             </Box>
           </>
@@ -123,11 +123,22 @@ class Account extends Component {
     );
   }
 
-  getData = (fromDate, toDate) => {
+  setLoadingTrue = () => {
     this.setState({ loading: true });
-    console.log("getting account data");
+  };
+
+  setLoadingFalse = () => {
+    this.setState({ loading: false });
+  };
+
+  getData = (fromDate, toDate) => {
+    console.log("calling Get Data");
+    // if (this.state.loading === true) return;
+    this.setState({ loading: true });
 
     const { accountAddress: address } = this.props.match.params;
+    console.log(this.state.loading, "account loading before");
+
     getAccount(address)
       .then((account) => {
         this.setState({ account });
@@ -151,11 +162,19 @@ class Account extends Component {
           }
 
           this.setState({ history, loading: false });
+          console.log("Done Now");
+          console.log(this.state.loading, "account loading after");
+          return;
         });
       });
   };
 
+  componentDidMount() {
+    this.getData();
+  }
+
   componentDidUpdate(prevProps) {
+    console.log("updating account");
     const getURL = (location = {}) => {
       const { pathname, search } = location;
       return `${pathname}${search}`;

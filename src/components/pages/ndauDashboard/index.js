@@ -93,7 +93,7 @@ class NdauDashboard extends Component {
                 top: screenSize === "small" ? "4%" : "",
               }}
             >
-              <Heading alignSelf="left" size="small" textAlign="left">
+              <Heading size="small" textAlign="left">
                 The Ndau Blockchain Explorer
               </Heading>
 

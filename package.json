@@ -14,6 +14,7 @@
     "moment-timezone": "^0.5.34",
     "msgpack-lite": "^0.1.26",
     "normalize.css": "^8.0.1",
+    "p-limit": "^4.0.0",
     "prop-types": "^15.8.1",
     "query-string": "^7.1.1",
     "react": "^18.1.0",
@@ -23,7 +24,8 @@
     "react-internationalization": "^1.1.0",
     "react-paginate": "^8.1.3",
     "react-router-dom": "^5.3.3",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "react-toastify": "^9.0.7"
   },
   "scripts": {
     "start": "react-scripts start",

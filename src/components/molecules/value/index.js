@@ -36,7 +36,13 @@ const Value = ({ value, rawValue }) => {
         return <ExpandedTime value={value} rawValue={rawValue} />;
       }
       if (isAddress(value)) {
-        return <Anchor href={`/account/${value}`}>{value}</Anchor>;
+        return (
+          <Box width="large">
+            <Text truncate>
+              <Anchor href={`/account/${value}`}>{value}</Anchor>
+            </Text>
+          </Box>
+        );
       }
       return <TruncatedText value={value} />;
     case "number":

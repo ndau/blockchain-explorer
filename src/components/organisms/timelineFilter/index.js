@@ -8,26 +8,38 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Box, Text, Collapsible } from 'grommet'
-import { Filter } from 'grommet-icons'
-import Filters from '../../molecules/filters'
-import { TRANSACTION_TYPES } from '../../../constants'
-import { formatTime } from '../../../helpers/format'
+import React, { Component } from "react";
+import { Box, Text, Collapsible } from "grommet";
+import { Filter } from "grommet-icons";
+import Filters from "../../molecules/filters";
+import { TRANSACTION_TYPES } from "../../../constants";
+import { formatTime } from "../../../helpers/format";
 
 class TimelineFilter extends Component {
-  state = {
-    showFilters: false
+  constructor(props) {
+    super(props);
+    this.state = {
+      showFilters: false,
+      loading: true,
+    };
   }
 
-  render() {
-    if(!this.props.events) {
-      return null
+  componentDidUpdate = async (prevProps) => {
+    const newPropsLoading = this.props.loading;
+
+    if (this.state.loading != newPropsLoading) {
+      this.setState({ loading: newPropsLoading });
     }
-    
-    const { showFilters } = this.state
-    const { 
-      typeFilters, 
+  };
+
+  render() {
+    if (!this.props.events) {
+      return null;
+    }
+
+    const { showFilters, loading } = this.state;
+    const {
+      typeFilters,
       filterStartDate,
       filterEndDate,
       filterRange,
@@ -36,60 +48,81 @@ class TimelineFilter extends Component {
       setFilterRange,
       toggleFilter,
       selectedEvent,
-      getAccountData
-     } = this.props
+      getAccountData,
+      events,
+    } = this.props;
 
     if (selectedEvent) {
       return (
         <Box>
-          <Box onClick={this.toggleShowFilter} margin={{bottom: "medium"}} alignSelf="center">
-            <Text 
+          <Box
+            onClick={this.toggleShowFilter}
+            margin={{ bottom: "medium" }}
+            alignSelf="center"
+          >
+            <Text
               size="xsmall"
-              style={{fontStyle: "italic", color: "rgba(255,255,255, 0.7)"}}
+              style={{ fontStyle: "italic", color: "rgba(255,255,255, 0.7)" }}
             >
               Showing selected transaction
             </Text>
           </Box>
-          
         </Box>
-      )
+      );
     }
 
-    const transanctionTypes = Object.values(TRANSACTION_TYPES)
+    const transanctionTypes = Object.values(TRANSACTION_TYPES);
 
     return (
       <Box>
-        <Box onClick={this.toggleShowFilter} margin={{bottom: "medium"}} alignSelf="center">
-          <Text 
+        <Box
+          onClick={this.toggleShowFilter}
+          margin={{ bottom: "medium" }}
+          alignSelf="center"
+        >
+          <Text
             size="xsmall"
-            style={{fontStyle: "italic", color: "rgba(255,255,255, 0.7)"}}
+            style={{ fontStyle: "italic", color: "rgba(255,255,255, 0.7)" }}
           >
-            {`${filteredEventsCount === 0 ? 'No transactions found ': `Showing ${filteredEventsCount || ''} transactions` } between 
+            {`${
+              filteredEventsCount === 0
+                ? "No transactions found "
+                : loading
+                ? "Fetching Transactions"
+                : `Showing ${filteredEventsCount || ""} transactions`
+            } between 
             ${formatTime(filterStartDate)} and ${formatTime(filterEndDate)}
-            of the ${typeFilters.length} / ${transanctionTypes.length} selected types.`}
-            
-            <Text 
+            of the ${typeFilters.length} / ${
+              transanctionTypes.length
+            } selected types.`}
+
+            <Text
               size="xsmall"
               color="rgba(255,255,255, 0.7)"
               style={{
-                marginLeft: "5px", 
+                marginLeft: "5px",
                 lineHeight: "10px",
-                fontStyle: "normal", 
+                fontStyle: "normal",
                 fontWeight: "bold",
-                borderBottom: "0.5px dashed #ffe7c6"
+                borderBottom: "0.5px dashed #ffe7c6",
               }}
               bold
             >
               {showFilters ? "Hide" : "Show"} filter options
-              <Filter size="small" color="rgba(255,255,255, 0.8)" style={{paddingLeft: "2px"}}/>
+              <Filter
+                size="small"
+                color="rgba(255,255,255, 0.8)"
+                style={{ paddingLeft: "2px" }}
+              />
             </Text>
           </Text>
         </Box>
-        
+
         <Collapsible open={showFilters}>
-          <Filters 
+          <Filters
+            events={events}
             showFilters={showFilters}
-            // typeFilters={typeFilters} 
+            typeFilters={typeFilters}
             filterStartDate={filterStartDate}
             filterEndDate={filterEndDate}
             filterRange={filterRange}
@@ -97,6 +130,7 @@ class TimelineFilter extends Component {
             setFilterRange={setFilterRange}
             toggleFilter={toggleFilter}
             getAccountData={getAccountData}
+            loading={this.state.loading}
           />
         </Collapsible>
       </Box>
@@ -104,8 +138,8 @@ class TimelineFilter extends Component {
   }
 
   toggleShowFilter = () => {
-    this.setState(({showFilters}) => ({ showFilters: !showFilters }))
-  }
+    this.setState(({ showFilters }) => ({ showFilters: !showFilters }));
+  };
 }
 
-export default TimelineFilter
+export default TimelineFilter;

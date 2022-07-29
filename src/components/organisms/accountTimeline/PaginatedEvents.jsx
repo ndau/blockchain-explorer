@@ -3,9 +3,6 @@ import ReactPaginate from "react-paginate";
 import TimelineEvent from "../../molecules/timelineEvent";
 import "./PaginatedEvents.modules.css";
 
-// Example items, to simulate fetching from another resources.
-// const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-
 function DisplayedEvents(props) {
   const currentPageEvents = props.currentPageEvents;
   const lastPreviousEvent = props.lastPreviousEvent;

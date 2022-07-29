@@ -9,12 +9,3 @@
   clip-path: polygon(0 0%, 100% 0, 65% 100%, 35% 100%);
   z-index: 11;
 }
-
-.sidebar {
-  position: absolute;
-  z-index: 1;
-  width: 50vw;
-  height: 90vh;
-  right: 0;
-  z-index: 12;
-}
