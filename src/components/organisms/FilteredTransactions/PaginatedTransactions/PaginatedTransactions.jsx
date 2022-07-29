@@ -51,7 +51,6 @@ export default function PaginatedTransactions(props) {
   const [itemOffsetState, setItemOffsetState] = useState(0);
 
   useEffect(() => {
-
     setTotalTxsRecievedState(totalTransactionsRecieved);
   }, []);
 
