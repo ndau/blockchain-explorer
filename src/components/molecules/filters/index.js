@@ -174,7 +174,6 @@ class Filters extends Component {
   }
 
   saveUnfilteredEventsInLocalStorage = () => {
-    console.log(this.props.events, "unfilteredEvents");
     localStorage.setItem("unfilteredEvents", JSON.stringify(this.props.events));
   };
 

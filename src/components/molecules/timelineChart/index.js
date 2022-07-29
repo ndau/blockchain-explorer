@@ -57,7 +57,7 @@ class TimelineChart extends Component {
           </Box>
 
           {/* y-axis */}
-          <Box flex justify="between" margin={{bottom: "0px", right: "10px"}}>
+          <Box justify="between" margin={{bottom: "0px", right: "10px"}}>
             {
               yAxis.map((y, index) => {
                 return (
@@ -89,7 +89,7 @@ class TimelineChart extends Component {
 
 
                 {/* Bubbles */}
-                <Box flex direction="row" justify="between" align="end" overflow="visible">
+                <Box direction="row" justify="between" align="end" overflow="visible">
                   {
                     this.bubblePoints.map((bubblePoint, index) => { 
                       const {eventIndex, pad, event, isActive, isSelected, display, onSelect} = bubblePoint

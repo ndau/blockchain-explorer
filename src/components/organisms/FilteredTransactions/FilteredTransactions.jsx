@@ -18,7 +18,6 @@ const FilteredTransactions = (props) => {
       const unfilteredEventsString = localStorage.getItem("unfilteredEvents");
       if (unfilteredEventsString) {
         const unfilteredEventsArr = JSON.parse(unfilteredEventsString);
-        console.log(unfilteredEventsArr, "unfilteredEventsArr");
         setUnfilteredEventsState(unfilteredEventsArr);
         localStorage.removeItem("unfilteredEvents");
       }
@@ -29,7 +28,6 @@ const FilteredTransactions = (props) => {
 
       if (typeFiltersString) {
         const typeFiltersArr = typeFiltersString.split(",");
-        console.log(typeFiltersArr, "typeFiltersArr");
         setFiltersAppliedState(typeFiltersArr);
         localStorage.removeItem("typeFilters");
       }
@@ -52,10 +50,17 @@ const FilteredTransactions = (props) => {
       async function filterTransactionsByType() {
         let detailedTransactions = await getTransactionDetails();
         const filteredTransactions = detailedTransactions.filter(
-          (transaction) =>
-            filtersAppliedState.includes(transaction.type.replace(/ /g, ""))
+          (transaction, index) => {
+            if (transaction) {
+              return filtersAppliedState.includes(
+                transaction.type.replace(/ /g, "")
+              );
+            } else {
+              console.log(`Transaction at index ${index} is null`);
+              return null;
+            }
+          }
         );
-        console.log(filteredTransactions, "filteredTransactions");
         return filteredTransactions;
       }
 
@@ -99,7 +104,6 @@ const FilteredTransactions = (props) => {
         const detailedTransactions = await getTransactionsWithProgress(
           TransactionHashesArr
         );
-        console.log(detailedTransactions, "detailedTransactions");
         return detailedTransactions;
       }
     }
