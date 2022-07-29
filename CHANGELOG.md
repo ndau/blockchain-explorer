@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0-staging](https://github.com/ndau/blockchain-explorer/compare/v1.2.0-staging...v1.3.0-staging) (2022-07-29)
+
+
+### Features
+
+* add user login/registration view ([ef2ed38](https://github.com/ndau/blockchain-explorer/commit/ef2ed387b55de3b8824cc9dc3813ec51fbb8870c))
+
+
+### Bug Fixes
+
+* fix getTransactionDetails for failing endpoints ([163cf57](https://github.com/ndau/blockchain-explorer/commit/163cf57e3490e5a6169e695fba401523789f184a))
+
 ## [1.2.0-staging](https://github.com/ndau/blockchain-explorer/compare/v1.1.1-staging...v1.2.0-staging) (2022-07-06)
 
 
