@@ -17,7 +17,7 @@ export default function Profile({}) {
       const jwtToken = localStorage.getItem("ndau_user_token");
       console.log(jwtToken, "jwtToken");
       axios
-        .get("http://127.0.0.1:3001/api/user-profile-details", {
+        .get("http://127.0.0.1:3001/api/user/user-profile-details", {
           headers: { authorization: jwtToken },
         })
         .then((res) => {
@@ -33,7 +33,7 @@ export default function Profile({}) {
     <Page>
       <Box align="center">
         <Heading>User Profile</Heading>
-        {userEmailState && <Text>Email:{userEmailState}</Text>}
+        {userEmailState ? <Text>Email:{userEmailState}</Text> : "Loading..."}
       </Box>
     </Page>
   );

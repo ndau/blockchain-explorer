@@ -20,7 +20,13 @@ import FilteredTransactions from "./components/organisms/FilteredTransactions/Fi
 import RegistrationPage from "./components/pages/Registration/RegistrationPage";
 import LoginPage from "./components/pages/Login/LoginPage";
 import Profile from "./components/pages/Profile/Profile";
+import Richlist from "./components/pages/Richlist/Richlist";
+import ForgotPasswordPage from "./components/pages/Login/ForgotPassword/ForgotPassword";
+import ForgotPasswordSuccessful from "./components/pages/Login/ForgotPassword/ForgotPasswordSuccessful/ForgotPasswordSuccessful";
+import ChangePassword from "./components/pages/Login/ForgotPassword/ChangePassword/ChangePassword";
 import { UserContext } from "./context/context";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useContext } from "react";
 import axios from "axios";
 
@@ -33,17 +39,18 @@ const Routes = () => {
     if (rememberMeToken) {
       localStorage.setItem("ndau_user_token", rememberMeToken);
     }
-    const jwtToken = localStorage.getItem("ndau_user_token");
-    console.log(jwtToken, "jwtToken");
-    axios
-      .get("http://127.0.0.1:3001/api/user-profile-details", {
-        headers: { authorization: jwtToken },
-      })
-      .then((res) => {
-        console.log(res.data.email, "Routes");
-        updateLoggedIn(true);
-      });
 
+    const jwtToken = localStorage.getItem("ndau_user_token");
+    if (jwtToken) {
+      axios
+        .get("http://127.0.0.1:3001/api/user/user-profile-details", {
+          headers: { authorization: jwtToken },
+        })
+        .then((res) => {
+          console.log(res.data.email, "Routes");
+          updateLoggedIn(true);
+        });
+    }
     return () => {
       localStorage.removeItem("ndau_user_token");
     };
@@ -51,6 +58,7 @@ const Routes = () => {
 
   return (
     <BrowserRouter>
+      <ToastContainer />
       <Switch>
         <Route exact path="/" component={NdauDashboard} />
         <Route exact path="/blocks" component={Blocks} />
@@ -69,8 +77,20 @@ const Routes = () => {
         />
         <Route exact path="/register" component={RegistrationPage} />
         <Route exact path="/login" component={LoginPage} />
+        <Route
+          exact
+          path="/login/forgot-password"
+          component={ForgotPasswordPage}
+        />
+        <Route
+          exact
+          path="/login/forgot-password-successful"
+          component={ForgotPasswordSuccessful}
+        />
+        <Route path="/change-password/:token" component={ChangePassword} />
+
         <Route exact path="/profile" component={Profile} />
-        {/* <Route component={NotFound} /> */}
+        <Route exact path="/richlist" component={Richlist} />
       </Switch>
     </BrowserRouter>
   );

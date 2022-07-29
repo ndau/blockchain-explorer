@@ -17,6 +17,7 @@ import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../../../context/context";
+import Page from "../../templates/page";
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
@@ -71,18 +72,17 @@ function RegistrationPage() {
   const size = useContext(ResponsiveContext);
 
   const loggedInContext = useContext(UserContext);
-  const isLoggedIn = loggedInContext.loggedIn;
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
   const [emailErrorState, setEmailErrorState] = useState("");
 
   return (
-    <div style={{ backgroundColor: "#111", width: "100vw" }}>
+    <Page>
       <div
         style={{
           backgroundColor: "#0B2140",
           position: "relative",
-          width: size !== "small" ? "80%" : "90%",
+          width: size !== "small" ? "90%" : "100%",
           margin: "auto",
           display: "flex",
         }}
@@ -137,11 +137,7 @@ function RegistrationPage() {
                   ) {
                     console.log("registered");
                     updateLoggedIn(true);
-                    localStorage.setItem(
-                      "ndau_user_token",
-                      "bearer " + res.data.user_token
-                    );
-                    history.push("/");
+                    history.push("/login");
                   }
                 })
                 .catch((e) => {
@@ -207,6 +203,7 @@ function RegistrationPage() {
             >
               <StyledTextInput
                 name="password"
+                type={"password"}
                 id="StyledTextInput-id"
                 placeholder="Password"
                 icon={<StyledLockIcon />}
@@ -224,6 +221,7 @@ function RegistrationPage() {
               }}
             >
               <StyledTextInput
+                type={"password"}
                 name="repeatedPassword"
                 id="StyledTextInput-id"
                 placeholder="Repeat Password"
@@ -239,14 +237,19 @@ function RegistrationPage() {
           <Box align="center" direction="row" alignSelf="center">
             <Text size="xsmall" color={"#AAA"}>
               Already Registered?
-              <Anchor align="center" margin={{ left: "5px" }}>
+              <Anchor
+                as={Link}
+                to="/login"
+                align="center"
+                margin={{ left: "5px" }}
+              >
                 {"Sign In"}
               </Anchor>
             </Text>
           </Box>
         </Box>
       </div>
-    </div>
+    </Page>
   );
 }
 

@@ -12,7 +12,6 @@ import UserContextProvider from "./context/context";
 import { Grommet } from "grommet";
 import { deepMerge } from "grommet/utils";
 import { dark as grommetDarkTheme } from "grommet/themes";
-// import routes from "./routes";
 import Routes from "./Routes";
 import "normalize.css";
 import "./components/organisms/priceCurve/StatisticsPanel/WidgetBox/WidgetBox.css";

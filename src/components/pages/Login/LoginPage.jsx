@@ -16,9 +16,10 @@ import ndauLogo from "../../../img/ndau_orange_logo.png";
 import styled from "styled-components";
 import { User, Mail, Lock } from "grommet-icons";
 import { UserContext } from "../../../context/context";
-import { useHistory,Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
@@ -36,11 +37,6 @@ const StyledTextInput = styled(TextInput)`
   font-size: xx-small;
   border: none;
   border-radius: 6px;
-`;
-
-const StyledUserIcon = styled(User)`
-  width: 12px;
-  height: 12px;
 `;
 
 const StyledMailIcon = styled(Mail)`
@@ -76,6 +72,7 @@ function LoginPage() {
   const [rememberMeCheckedState, setRememberMeCheckedState] = useState(false);
   const size = useContext(ResponsiveContext);
   const history = useHistory();
+
   return (
     <Page>
       <div
@@ -123,7 +120,7 @@ function LoginPage() {
           <StyledForm
             onSubmit={({ value }) => {
               axios
-                .post("http://127.0.0.1:3001/api/users/login", {
+                .post("http://127.0.0.1:3001/api/user/login", {
                   email: value.email,
                   password: value.password,
                 })
@@ -131,23 +128,23 @@ function LoginPage() {
                   console.log(res, "getting reponse");
                   if (res.data.status === true) {
                     console.log("logged in");
-                    
-                    if(rememberMeCheckedState){
+
+                    if (rememberMeCheckedState) {
                       localStorage.setItem(
                         "remember_user_token",
                         "bearer " + res.data.user_token
                       );
+                    } else {
+                      localStorage.setItem(
+                        "ndau_user_token",
+                        "bearer " + res.data.user_token
+                      );
                     }
-                    else{
-                    localStorage.setItem(
-                      "ndau_user_token",
-                      "bearer " + res.data.user_token
-                    );
-                    }
-                    
+
                     updateLoggedIn(true);
                     console.log(isLoggedIn, "isLoggedIn");
                     history.push("/");
+                    toast.success("Logged In");
                   }
                 })
                 .catch((e) => {
@@ -185,6 +182,7 @@ function LoginPage() {
             >
               <StyledTextInput
                 name="password"
+                type={"password"}
                 id="StyledTextInput-id"
                 placeholder="Password"
                 icon={<StyledLockIcon />}
@@ -196,9 +194,18 @@ function LoginPage() {
               <CheckBox
                 checked={rememberMeCheckedState}
                 label="Remember Me"
-                onChange={(event) => setRememberMeCheckedState(event.target.checked)}
+                onChange={(event) =>
+                  setRememberMeCheckedState(event.target.checked)
+                }
               />
-              {/* <Anchor>Forgot Password</Anchor> */}
+              <Anchor
+                as={Link}
+                to="login/forgot-password"
+                align="center"
+                margin={{ left: "5px" }}
+              >
+                Forgot Password
+              </Anchor>
             </Box>
 
             <Box align="center">
@@ -213,7 +220,12 @@ function LoginPage() {
           >
             <Text size="xsmall" color={"#AAA"}>
               Don't have an account?
-              <Anchor  as={Link} to="/register" align="center" margin={{ left: "5px" }}>
+              <Anchor
+                as={Link}
+                to="/register"
+                align="center"
+                margin={{ left: "5px" }}
+              >
                 {"Sign Up"}
               </Anchor>
             </Text>
