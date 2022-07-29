@@ -96,7 +96,7 @@ class TimelineChart extends Component {
                       const previousEvent = this.props.events[eventIndex - 1]
                       const amount = previousEvent && event.Balance - previousEvent.Balance
 
-                      // console.log(isActive, index) 
+                      //
                       return bubblePoint && (
                         <Box pad={{bottom: pad}} key={index}>
                           <Stack>

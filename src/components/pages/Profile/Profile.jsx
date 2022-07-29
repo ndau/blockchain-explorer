@@ -15,13 +15,13 @@ export default function Profile({}) {
   useEffect(() => {
     if (isLoggedIn) {
       const jwtToken = localStorage.getItem("ndau_user_token");
-      console.log(jwtToken, "jwtToken");
+     
       axios
         .get("http://127.0.0.1:3001/api/user/user-profile-details", {
           headers: { authorization: jwtToken },
         })
         .then((res) => {
-          console.log(res.data.email);
+         
           setUserEmailState(res.data.email);
         });
     } else {

@@ -55,21 +55,21 @@ const StyledForm = styled(Form)`
 
 function ChangePassword() {
   const loggedInContext = useContext(UserContext);
-  console.log(loggedInContext, "loggedInContext");
+ 
 
   const isLoggedIn = loggedInContext.loggedIn;
 
   const history = useHistory();
   const { token } = useParams();
 
-  console.log(token, "token");
+ 
 
   return (
     <Page>
       <Box width={"medium"} alignSelf="center">
         <StyledForm
           onSubmit={({ value }) => {
-            console.log(value, "value");
+           
             axios
               .put(
                 "http://127.0.0.1:3001/api/user/reset-password",
@@ -83,7 +83,7 @@ function ChangePassword() {
                 }
               )
               .then((res) => {
-                console.log(res, "reponse");
+               
                 history.push("/login/");
                 toast.success("Password Changed. Please Log In");
               })

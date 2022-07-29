@@ -33,7 +33,7 @@ class Filters extends Component {
     } = this.props;
 
     const transanctionTypes = Object.values(TRANSACTION_TYPES);
-    // console.log(transanctionTypes, "transanctionTypes");
+    //
     const unselectedTypes = transanctionTypes.filter(
       (filter) => !typeFilters.includes(filter)
     );
@@ -178,7 +178,6 @@ class Filters extends Component {
   };
 
   saveTypeFiltersInLocalStorage = () => {
-    console.log(this.props.typeFilters, "typeFilters");
     localStorage.setItem("typeFilters", this.props.typeFilters);
   };
 

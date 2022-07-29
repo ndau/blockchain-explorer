@@ -53,7 +53,7 @@ class BookmarkMenu extends Component {
     const { bookmarks } = this.state
     const bookmarked = Boolean(bookmarks[this.getURL()])
     const pageNote = this.getPageNote()
-    // console.log(pageNote, this.getURL())
+    //
 
     return (
       <Box>

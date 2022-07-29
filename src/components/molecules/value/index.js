@@ -87,8 +87,6 @@ const Values = ({ value, isArray }) => {
         let itemValue = value[item];
         if (item === "market_price") {
           itemValue = `$${(itemValue / 10 ** 11).toFixed(2)}`;
-          console.log(itemValue, "itemValue");
-          console.log(item, "item");
         }
         return (
           itemValue && (

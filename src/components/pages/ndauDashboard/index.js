@@ -179,7 +179,7 @@ class NdauDashboard extends Component {
                 i++;
               } catch (e) {
                 // console.error(e);
-                console.log("1");
+               
                 break;
               }
               // }

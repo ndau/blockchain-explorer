@@ -20,24 +20,15 @@ class TimelineFilter extends Component {
     super(props);
     this.state = {
       showFilters: false,
-      loading: true,
     };
   }
-
-  componentDidUpdate = async (prevProps) => {
-    const newPropsLoading = this.props.loading;
-
-    if (this.state.loading != newPropsLoading) {
-      this.setState({ loading: newPropsLoading });
-    }
-  };
 
   render() {
     if (!this.props.events) {
       return null;
     }
 
-    const { showFilters, loading } = this.state;
+    const { showFilters } = this.state;
     const {
       typeFilters,
       filterStartDate,
@@ -87,7 +78,7 @@ class TimelineFilter extends Component {
             {`${
               filteredEventsCount === 0
                 ? "No transactions found "
-                : loading
+                : this.props.loading
                 ? "Fetching Transactions"
                 : `Showing ${filteredEventsCount || ""} transactions`
             } between 
@@ -130,7 +121,7 @@ class TimelineFilter extends Component {
             setFilterRange={setFilterRange}
             toggleFilter={toggleFilter}
             getAccountData={getAccountData}
-            loading={this.state.loading}
+            loading={this.props.loading}
           />
         </Collapsible>
       </Box>

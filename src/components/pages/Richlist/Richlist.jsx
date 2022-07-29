@@ -8,7 +8,7 @@ function Richlist() {
 
   useEffect(() => {
     axios.get("http://127.0.0.1:3001/api/richlist").then((res) => {
-      console.log(res, "richlist");
+     
       setRichlistState(res.data);
     });
   }, []);

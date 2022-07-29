@@ -25,39 +25,39 @@
 //   }
 
 //   handlePermissionGranted(){
-//     console.log('Permission Granted')
+//    
 //     this.setState({
 //       ignore: false
 //     })
 //   }
 //   handlePermissionDenied(){
-//     console.log('Permission Denied')
+//    
 //     this.setState({
 //       ignore: true
 //     })
 //   }
 //   handleNotSupported(){
-//     console.log('Web Notification not Supported')
+//    
 //     this.setState({
 //       ignore: true
 //     })
 //   }
 
 //   handleNotificationOnClick(e, tag){
-//     console.log(e, 'Notification clicked tag:' + tag)
+//    
 //   }
 
 //   handleNotificationOnError(e, tag){
-//     console.log(e, 'Notification error tag:' + tag)
+//    
 //   }
 
 //   handleNotificationOnClose(e, tag){
-//     console.log(e, 'Notification closed tag:' + tag)
+//    
 //   }
 
 //   handleNotificationOnShow(e, tag){
 //     this.playSound()
-//     console.log(e, 'Notification shown tag:' + tag)
+//    
 //   }
 
 //   playSound(filename){
@@ -96,7 +96,7 @@
 
 //   handleButtonClick2() {
 //     this.props.swRegistration.getNotifications({}).then(function(notifications) {
-//       console.log(notifications)
+//      
 //     })
 //   }
 

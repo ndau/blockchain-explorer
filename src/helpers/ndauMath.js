@@ -60,7 +60,7 @@ export const unit_at_price = (price) => {
       low = guess;
     }
     guess = Math.floor((high + low) / 2);
-    // console.log('H:', high, 'L:', low, 'G:', guess, 'p:', p, 'wanted: ', price);
+    //
   }
   return guess * 1000;
 };

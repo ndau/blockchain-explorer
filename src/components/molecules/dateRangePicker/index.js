@@ -18,7 +18,7 @@ import { DateRangePicker as ReactDateRangePicker } from "react-date-range";
 class DateRangePicker extends Component {
   constructor(props) {
     super(props);
-    const { startDate, endDate, getAccountData } = this.props;
+    const { startDate, endDate } = this.props;
     this.state = {
       date: new Date().toISOString(),
       dates: null,

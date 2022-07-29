@@ -132,12 +132,11 @@ class Account extends Component {
   };
 
   getData = (fromDate, toDate) => {
-    console.log("calling Get Data");
-    // if (this.state.loading === true) return;
+   
     this.setState({ loading: true });
 
     const { accountAddress: address } = this.props.match.params;
-    console.log(this.state.loading, "account loading before");
+   
 
     getAccount(address)
       .then((account) => {
@@ -162,8 +161,8 @@ class Account extends Component {
           }
 
           this.setState({ history, loading: false });
-          console.log("Done Now");
-          console.log(this.state.loading, "account loading after");
+         
+         
           return;
         });
       });
@@ -174,7 +173,7 @@ class Account extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("updating account");
+
     const getURL = (location = {}) => {
       const { pathname, search } = location;
       return `${pathname}${search}`;

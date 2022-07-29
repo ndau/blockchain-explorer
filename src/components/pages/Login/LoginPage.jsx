@@ -65,7 +65,7 @@ const StyledForm = styled(Form)`
 
 function LoginPage() {
   const loggedInContext = useContext(UserContext);
-  console.log(loggedInContext, "loggedInContext");
+
   const isLoggedIn = loggedInContext.loggedIn;
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
@@ -125,9 +125,9 @@ function LoginPage() {
                   password: value.password,
                 })
                 .then((res) => {
-                  console.log(res, "getting reponse");
+
                   if (res.data.status === true) {
-                    console.log("logged in");
+                   
 
                     if (rememberMeCheckedState) {
                       localStorage.setItem(
@@ -142,13 +142,12 @@ function LoginPage() {
                     }
 
                     updateLoggedIn(true);
-                    console.log(isLoggedIn, "isLoggedIn");
                     history.push("/");
                     toast.success("Logged In");
                   }
                 })
                 .catch((e) => {
-                  console.log("failed to login");
+                 
                 });
             }}
           >

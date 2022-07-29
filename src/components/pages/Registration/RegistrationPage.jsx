@@ -130,25 +130,25 @@ function RegistrationPage() {
                   username: value.username,
                 })
                 .then((res) => {
-                  console.log(res, "getting reponse");
+                 
                   if (
                     res.data.message === "User Registered Successfully" &&
                     res.data.status === true
                   ) {
-                    console.log("registered");
+                   
                     updateLoggedIn(true);
                     history.push("/login");
                   }
                 })
                 .catch((e) => {
-                  console.log(e, "failed to login");
+                 
                   if (e.response.data.message === "Email already exists") {
                     setEmailErrorState("Email Already Exists");
                   }
                 });
             }}
             onValidate={({ e }) => {
-              if (e) console.log(e, "onValidate");
+              if (e)
             }}
           >
             <StyledFormField
@@ -215,7 +215,7 @@ function RegistrationPage() {
               name="repeatedPassword"
               htmlFor="StyledTextInput-id"
               validate={function (fieldValue, entireValue) {
-                // console.log(fieldValue, "fieldValue");
+                //
                 if (fieldValue !== entireValue.password)
                   return "Passwords do not match";
               }}

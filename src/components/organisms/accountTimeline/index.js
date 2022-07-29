@@ -11,7 +11,6 @@
 import React, { Component } from "react";
 import { Box, Spinner } from "grommet";
 import moment from "moment";
-import TimelineEvent from "../../molecules/timelineEvent";
 import TimelineChart from "../../molecules/timelineChart";
 import TimelineFilter from "../../organisms/timelineFilter";
 import { getTransaction } from "../../../helpers/fetch";
@@ -27,7 +26,6 @@ class AccountTimeline extends Component {
     super(props);
     const { filterStartDate, filterEndDate } = this.getDateRange(1);
     this.state = {
-      events: props.events,
       typeFilters: DEFAULT_TYPE_FILTERS,
       filterStartDate,
       filterEndDate,
@@ -35,10 +33,28 @@ class AccountTimeline extends Component {
       selectedEvent: null,
       activeEvent: null,
       displayedEventsState: null,
-      loading: props.loading,
       getAccountData: props.getAccountData,
+      filteredEventsState: [],
     };
   }
+
+  filterEvents = (givenEvents) => {
+    if (!givenEvents || givenEvents.length === 0 || givenEvents[0] === null) {
+      return [];
+    }
+
+    const { filterStartDate, filterEndDate } = this.state;
+
+    const filteredEventsTemp = givenEvents.filter((event) => {
+      const eventDate = moment(event.Timestamp);
+      const isWithinFilterRange =
+        eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate);
+
+      return isWithinFilterRange;
+    });
+
+    return filteredEventsTemp;
+  };
 
   render() {
     const { events, balance, getAccountData } = this.props;
@@ -55,15 +71,13 @@ class AccountTimeline extends Component {
       activeEvent,
     } = this.state;
 
-    const displayedEvents = selectedEvent ? [selectedEvent] : this.state.events;
-
     return (
       <Box>
-        {events.length > 1 && (
+        {this.state.filteredEventsState.length > 1 && (
           <Box margin={{ bottom: "20px" }}>
             <TimelineChart
-              events={[...events, this.initialEvent]}
-              filteredEvents={this.state.events || [...events]}
+              events={[this.state.filteredEventsState, this.initialEvent]}
+              filteredEvents={this.state.filteredEventsState || events}
               balance={balance}
               selectedEvent={selectedEvent}
               activeEvent={activeEvent}
@@ -92,7 +106,7 @@ class AccountTimeline extends Component {
           <Box onMouseLeave={this.clearActiveEvent}>
             <PaginatedEvents
               itemsPerPage={10}
-              totalEventsToDisplay={displayedEvents}
+              totalEventsToDisplay={this.state.filteredEventsState}
             />
           </Box>
         ) : (
@@ -104,16 +118,20 @@ class AccountTimeline extends Component {
     );
   }
 
-  componentDidUpdate = async (prevProps) => {
-    const { events } = this.props;
+  componentDidMount() {
+    const filteredEventsDidMount = this.filterEvents(this.props.events);
+    this.setState({ filteredEventsState: filteredEventsDidMount });
+  }
 
-    if (
-      (!prevProps.events && this.props.events) ||
-      JSON.stringify(events) !== JSON.stringify(prevProps.events)
-    ) {
-      this.setState({ events: this.props.events });
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(this.props) !== JSON.stringify(prevProps)) {
+     
+      const filteredEventsDidMount = this.filterEvents(this.props.events);
+      this.setState({ filteredEventsState: filteredEventsDidMount });
+    } else {
+     
     }
-  };
+  }
 
   getPreviousEvent = (currentEvent) => {
     const { events } = this.props;
@@ -122,28 +140,6 @@ class AccountTimeline extends Component {
       JSON.stringify(events[events.length - 1]);
 
     return isFirstEvent ? this.initialEvent : events[currentEvent.index + 1];
-  };
-
-  filterEvents = (givenEvents) => {
-    this.props.setLoadingTrueFunc();
-
-    if (!givenEvents || givenEvents.length === 0 || givenEvents[0] === null) {
-      this.setState({ loading: false });
-      return [];
-    }
-
-    const { filterStartDate, filterEndDate } = this.state;
-    const filteredEvents = givenEvents.filter((event) => {
-      const eventDate = moment(event.Timestamp);
-      const isWithinFilterRange =
-        eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate);
-
-      return isWithinFilterRange;
-    });
-
-    console.log(filteredEvents, "filteredEvents");
-    this.props.setLoadingFalseFunc();
-    return filteredEvents;
   };
 
   getDateRange = (numberOfMonths) => {
@@ -157,9 +153,9 @@ class AccountTimeline extends Component {
     const { filterStartDate, filterEndDate } =
       this.getDateRange(numberOfMonths);
 
-    console.log("Selecting Filter Range");
-    console.log(filterStartDate, "filterStartDate");
-    console.log(filterEndDate, "filterEndDate");
+   
+   
+   
     this.props.getAccountData(
       filterStartDate.toISOString(),
       filterEndDate.toISOString()

@@ -36,7 +36,7 @@ function DisplayedTransactions(props) {
 
 export default function PaginatedTransactions(props) {
   const totalTransactionsRecieved = props.totalTransactionsToDisplay;
-  // console.log(totalEventsRecieved, "totalEventsRecieved");
+
 
   const itemsPerPage = props.itemsPerPage;
 
@@ -79,12 +79,8 @@ export default function PaginatedTransactions(props) {
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
-    console.log(event, "clicked");
     const newOffset =
       (event.selected * itemsPerPage) % totalTransactionsRecieved.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffsetState(newOffset);
   };
 

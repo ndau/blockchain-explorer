@@ -98,9 +98,9 @@ class TransactionFilter extends Component {
   }
 
   // componentDidUpdate = (prevProps) => {
-  //   // console.log("filter Transactions")
-  //   console.log("update tx filters")
-  //   // console.log(this.state, prevProps.state)
+  //   //
+  //  
+  //   //
   //   if(!prevProps.state) {
   //     return
   //   }

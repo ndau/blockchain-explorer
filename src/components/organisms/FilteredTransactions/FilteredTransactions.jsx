@@ -56,7 +56,6 @@ const FilteredTransactions = (props) => {
                 transaction.type.replace(/ /g, "")
               );
             } else {
-              console.log(`Transaction at index ${index} is null`);
               return null;
             }
           }

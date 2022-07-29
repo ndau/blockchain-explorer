@@ -117,7 +117,7 @@ class Transanctions extends Component {
             
           })
           .catch(error => {
-            console.log(error)
+           
             return
           })
             
@@ -150,7 +150,7 @@ class Transanctions extends Component {
   loadMoreTransactions = () => {
     const { nextTxHash, typeFilters } = this.state
 
-    console.log(nextTxHash, typeFilters)
+   
     if (!nextTxHash || nextTxHash.length < 1) {
       return
     }
@@ -174,7 +174,7 @@ class Transanctions extends Component {
   }
 
   updateFilters = (typeFilters) => {
-    // console.log("filter Transactions", typeFilters)
+    //
     // if (typeFilters) {
     const { transactions } = this.state
     if (!transactions) {
@@ -188,8 +188,8 @@ class Transanctions extends Component {
           const currentTxHash = Txs[0].TxHash
 
        
-          // console.log(transactions.length, filteredTransactions.length)
-          // console.log(typeFilters, filterStartDate, filterEndDate)
+          //
+          //
           this.setState({ 
             transactions: Txs,
             nextTxHash: NextTxHash,
@@ -202,7 +202,7 @@ class Transanctions extends Component {
         
       })
       .catch(error => {
-        console.log(error)
+       
         return
       })
   }

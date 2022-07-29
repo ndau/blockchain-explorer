@@ -31,7 +31,6 @@ function DisplayedEvents(props) {
 
 export default function PaginatedEvents(props) {
   const totalEventsRecieved = props.totalEventsToDisplay;
-  // console.log(totalEventsRecieved, "totalEventsRecieved");
 
   const itemsPerPage = props.itemsPerPage;
 
@@ -44,7 +43,6 @@ export default function PaginatedEvents(props) {
   const [itemOffsetState, setItemOffsetState] = useState(0);
 
   useEffect(() => {
-    console.log(totalEventsRecieved, "totalEventsRecieved useEffect");
     setTotalEventRecievedState(totalEventsRecieved);
   }, []);
 
@@ -75,12 +73,8 @@ export default function PaginatedEvents(props) {
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
-    console.log(event, "clicked");
     const newOffset =
       (event.selected * itemsPerPage) % totalEventsRecieved.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffsetState(newOffset);
   };
 

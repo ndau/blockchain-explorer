@@ -47,7 +47,6 @@ const Routes = () => {
           headers: { authorization: jwtToken },
         })
         .then((res) => {
-          console.log(res.data.email, "Routes");
           updateLoggedIn(true);
         });
     }

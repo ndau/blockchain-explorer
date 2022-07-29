@@ -33,12 +33,12 @@ export const getBlock = async (blockHeight) => {
   return axios
     .get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then((response) => {
-      console.log(response.data);
+     
       return formatBlock(response.data.block_meta);
     })
     .catch((error) => {
       // console.error(error);
-      console.log("2");
+     
     });
 };
 
@@ -59,7 +59,7 @@ export const getBlocks = async ({ before, after, filter, limit }) => {
         latestFetchedHeight: block_metas[0] && block_metas[0].header.height,
       };
     })
-    .catch((error) => console.log(error));
+    .catch((error) =>
 };
 
 export const pollForBlocks = ({ after, filter, success }) => {
@@ -88,7 +88,7 @@ export const pollForBlocks = ({ after, filter, success }) => {
               }
             });
           })
-          .catch((err) => console.log(err));
+          .catch((err) =>
       }
     });
   };
@@ -108,7 +108,7 @@ export const getTransaction = async (hash) => {
   let response = await axios.get(transactionEndpoint, HTTP_REQUEST_HEADER);
 
   while (response.data === null && getTransactionRetrycount < 8) {
-    console.log(response.data, "response.data");
+   
     const transactionEndpoint = `${await getNodeEndpoint()}/transaction/detail/${window.encodeURIComponent(
       transactionHash
     )}`;
@@ -136,7 +136,7 @@ export const getTransactions = (transactionHashes = []) => {
   }
 
   return getTransactionsWithProgress(transactionRequests, (p) => {
-    console.log(`% Done = ${p.toFixed(2)}`);
+   
   });
 };
 
@@ -284,7 +284,7 @@ export const getAccount = async (address) => {
 //     ...response.data[address],
 //   };
 
-//   console.log(
+//  
 //     response.data[address] && formatAccount(account),
 //     "response.data[address] && formatAccount(account)"
 //   );
@@ -306,23 +306,22 @@ export const getAccountHistory = async (
   const getAccountHistoryFromDate = fromDate ?? Date30DaysAgo;
   const getAccountHistoryToDate = toDate ?? dateToday;
 
-  // console.log(getAccountHistoryFromDate, "getHistoryFromDate");
-  // console.log(getAccountHistoryToDate, "getAccountHistoryToDate");
+  //
+  //
 
   const BlockDateRangeEndpoint = `${await getNodeEndpoint()}/block/daterange/${getAccountHistoryFromDate}/${getAccountHistoryToDate}?noempty=true&limit=2`;
 
-  // console.log(BlockDateRangeEndpoint, "BlockDateRangeEndpoint");
+  //
   const blocksInRange = await axios.get(BlockDateRangeEndpoint);
-  console.log(blocksInRange, "blocksInRange");
   const oldestBlockInRange = blocksInRange.data.last_height;
 
-  // console.log(oldestBlockInRange, "oldestBlockInRange");
+  //
 
   const limitedAccountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}?after=${oldestBlockInRange}`;
 
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`;
 
-  // console.log(limitedAccountHistoryEndpoint, "limitedAccountHistoryEndpoint");
+  //
 
   let allItems = [];
   let offset = 0;
@@ -354,7 +353,7 @@ export const getAccountHistory = async (
     }
   }
 
-  console.log(allItems, "allItems");
+ 
   return allItems;
 };
 
@@ -367,7 +366,7 @@ export const pollForAccountUpdates = ({ metadata, success }) => {
         })
         .catch((error) =>
           // console.error(error)
-          console.log("3")
+         
         );
     }
   };
@@ -387,7 +386,7 @@ export const getNodeStatus = async (endpoint) => {
       const status = response.data.sync_info;
       return status;
     })
-    .catch((error) => console.log(error));
+    .catch((error) =>
 };
 
 export const getNodeHealth = async (nodeEndpoint) => {
@@ -410,7 +409,7 @@ export const getNodeHealth = async (nodeEndpoint) => {
     .catch((error) => {
       axios.defaults.timeout = 0;
       // console.error(error);
-      console.log("Node Health Check Negative");
+     
     });
 };
 
@@ -423,12 +422,12 @@ export const getNodeEndpoint = async (node) => {
     if (health === "OK") {
       //      catchingUp = await getNodeStatus(node)
       //      if (catchingUp.catching_up) {
-      //        console.log(nodeEndpoint + ' is catching up')
+      //       
       //        continue
       //      }
       return nodeEndpoint;
     } else {
-      // console.log(nodeEndpoint + " not responding");
+      //
     }
   }
 };
@@ -459,7 +458,7 @@ export const tryNodeEndpoint = async (node) => {
       const randomNode = Object.values(nodes)[randomNodeIndex];
       nodeEndpoint = randomNode && randomNode.api;
     });
-    // console.log("Found node " + nodeEndpoint);
+    //
     return "https://" + nodeEndpoint;
   }
 };
@@ -478,7 +477,7 @@ export const getCurrentOrder = async () => {
     })
     .catch((error) =>
       // console.error(error)
-      console.log(5)
+     
     );
 };
 
