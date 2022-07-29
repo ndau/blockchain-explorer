@@ -34,6 +34,9 @@ class AccountTimeline extends Component {
       filterRange: "Last month",
       selectedEvent: null,
       activeEvent: null,
+      displayedEventsState: null,
+      loading: props.loading,
+      getAccountData: props.getAccountData,
     };
   }
 
