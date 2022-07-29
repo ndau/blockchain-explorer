@@ -7,7 +7,6 @@ import "./PaginatedTransactions.modules.css";
 function DisplayedTransactions(props) {
   const currentPageTransactions = props.currentPageTransactions;
   const lastPreviousTransaction = props.lastPreviousTransaction;
-  console.log(currentPageTransactions, "currentPageTransactions");
   return (
     <>
       {currentPageTransactions && currentPageTransactions.length > 0 ? (
@@ -52,10 +51,7 @@ export default function PaginatedTransactions(props) {
   const [itemOffsetState, setItemOffsetState] = useState(0);
 
   useEffect(() => {
-    console.log(
-      totalTransactionsRecieved,
-      "totalTransactionsRecieved useEffect"
-    );
+
     setTotalTxsRecievedState(totalTransactionsRecieved);
   }, []);
 

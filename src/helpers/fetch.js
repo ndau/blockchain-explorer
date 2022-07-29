@@ -104,11 +104,18 @@ export const getTransaction = async (hash) => {
     transactionHash
   )}`;
 
-  return axios
-    .get(transactionEndpoint, HTTP_REQUEST_HEADER)
-    .then((response) => {
-      return response.data && formatTransaction(response.data);
-    });
+  let getTransactionRetrycount = 0;
+  let response = await axios.get(transactionEndpoint, HTTP_REQUEST_HEADER);
+
+  while (response.data === null && getTransactionRetrycount < 8) {
+    console.log(response.data, "response.data");
+    const transactionEndpoint = `${await getNodeEndpoint()}/transaction/detail/${window.encodeURIComponent(
+      transactionHash
+    )}`;
+    response = await axios.get(transactionEndpoint, HTTP_REQUEST_HEADER);
+    getTransactionRetrycount++;
+  }
+  return formatTransaction(response.data);
 };
 
 export const getTransactions = (transactionHashes = []) => {
