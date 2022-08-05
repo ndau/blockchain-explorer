@@ -14,7 +14,6 @@ import { Expand, Contract } from 'grommet-icons'
 import Card from '../../atoms/card'
 import Age from '../../atoms/age'
 import Anchor from '../../atoms/anchor'
-import TransactionsList from '../../organisms/transactionsList'
 import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
 
 class TimelineEvent extends Component {
@@ -113,7 +112,15 @@ class TimelineEvent extends Component {
               <Text>
                 <b>previous balance: </b>
                 {formattedPreviousEvent.balance}
+
               </Text>
+
+              <Text>
+                <b>transaction Hash: </b>
+                {transactionHash}
+              </Text>
+
+
               <Text>
                 <b>time: </b>
                 {timestamp}

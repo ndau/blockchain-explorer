@@ -18,6 +18,7 @@ import { UserContext } from "../../../../../context/context";
 import { useHistory, Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState } from "react";
+import api from "../../../../../api";
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
@@ -55,24 +56,20 @@ const StyledForm = styled(Form)`
 
 function ChangePassword() {
   const loggedInContext = useContext(UserContext);
- 
 
   const isLoggedIn = loggedInContext.loggedIn;
 
   const history = useHistory();
   const { token } = useParams();
 
- 
-
   return (
     <Page>
       <Box width={"medium"} alignSelf="center">
         <StyledForm
           onSubmit={({ value }) => {
-           
             axios
               .put(
-                "http://127.0.0.1:3001/api/user/reset-password",
+                `${api}/api/user/reset-password`,
                 {
                   new_password: value.password,
                 },
@@ -83,7 +80,6 @@ function ChangePassword() {
                 }
               )
               .then((res) => {
-               
                 history.push("/login/");
                 toast.success("Password Changed. Please Log In");
               })

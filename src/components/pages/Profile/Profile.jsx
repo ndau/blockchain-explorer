@@ -4,6 +4,7 @@ import axios from "axios";
 import { Text, Heading, Box } from "grommet";
 import { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import api from "../../../api";
 
 export default function Profile({}) {
   const history = useHistory();
@@ -15,13 +16,12 @@ export default function Profile({}) {
   useEffect(() => {
     if (isLoggedIn) {
       const jwtToken = localStorage.getItem("ndau_user_token");
-     
+
       axios
-        .get("http://127.0.0.1:3001/api/user/user-profile-details", {
+        .get(`${api}/api/user/user-profile-details`, {
           headers: { authorization: jwtToken },
         })
         .then((res) => {
-         
           setUserEmailState(res.data.email);
         });
     } else {

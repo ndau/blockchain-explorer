@@ -33,12 +33,10 @@ export const getBlock = async (blockHeight) => {
   return axios
     .get(blockEndpoint, HTTP_REQUEST_HEADER)
     .then((response) => {
-     
       return formatBlock(response.data.block_meta);
     })
     .catch((error) => {
       // console.error(error);
-     
     });
 };
 
@@ -59,7 +57,9 @@ export const getBlocks = async ({ before, after, filter, limit }) => {
         latestFetchedHeight: block_metas[0] && block_metas[0].header.height,
       };
     })
-    .catch((error) =>
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 export const pollForBlocks = ({ after, filter, success }) => {
@@ -88,7 +88,9 @@ export const pollForBlocks = ({ after, filter, success }) => {
               }
             });
           })
-          .catch((err) =>
+          .catch((err) => {
+            console.log(err);
+          });
       }
     });
   };
@@ -108,7 +110,6 @@ export const getTransaction = async (hash) => {
   let response = await axios.get(transactionEndpoint, HTTP_REQUEST_HEADER);
 
   while (response.data === null && getTransactionRetrycount < 8) {
-   
     const transactionEndpoint = `${await getNodeEndpoint()}/transaction/detail/${window.encodeURIComponent(
       transactionHash
     )}`;
@@ -135,9 +136,7 @@ export const getTransactions = (transactionHashes = []) => {
     return Promise.all(proms);
   }
 
-  return getTransactionsWithProgress(transactionRequests, (p) => {
-   
-  });
+  return getTransactionsWithProgress(transactionRequests, (p) => {});
 };
 
 export const getTransactionHashes = async (blockHeight) => {
@@ -284,7 +283,7 @@ export const getAccount = async (address) => {
 //     ...response.data[address],
 //   };
 
-//  
+//
 //     response.data[address] && formatAccount(account),
 //     "response.data[address] && formatAccount(account)"
 //   );
@@ -353,7 +352,6 @@ export const getAccountHistory = async (
     }
   }
 
- 
   return allItems;
 };
 
@@ -364,10 +362,9 @@ export const pollForAccountUpdates = ({ metadata, success }) => {
         .then((history) => {
           success && success(history);
         })
-        .catch((error) =>
-          // console.error(error)
-         
-        );
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 };
@@ -386,7 +383,9 @@ export const getNodeStatus = async (endpoint) => {
       const status = response.data.sync_info;
       return status;
     })
-    .catch((error) =>
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 export const getNodeHealth = async (nodeEndpoint) => {
@@ -409,7 +408,6 @@ export const getNodeHealth = async (nodeEndpoint) => {
     .catch((error) => {
       axios.defaults.timeout = 0;
       // console.error(error);
-     
     });
 };
 
@@ -422,7 +420,7 @@ export const getNodeEndpoint = async (node) => {
     if (health === "OK") {
       //      catchingUp = await getNodeStatus(node)
       //      if (catchingUp.catching_up) {
-      //       
+      //
       //        continue
       //      }
       return nodeEndpoint;
@@ -475,10 +473,10 @@ export const getCurrentOrder = async () => {
     .then((response) => {
       return formatPriceInfo(response.data);
     })
-    .catch((error) =>
-      // console.error(error)
-     
-    );
+    .catch((error) => {
+      console.error(error);
+    });
+  // console.error(error)
 };
 
 //

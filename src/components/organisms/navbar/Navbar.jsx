@@ -52,7 +52,6 @@ const NavbarMenuButton = (props) => {
 
   return (
     <Button
-      margin={{ right: "xlarge" }}
       onClick={() => {
         toggleDrawerStateFunc(!currentDrawerState);
       }}
@@ -73,7 +72,8 @@ const SideBar = (props) => {
       background="black"
       pad="medium"
       align="center"
-      width={"70vw"}
+      width={"60vw"}
+      height={"100vh"}
     >
       <Box pad="small" align="center">
         <img src={LogoImg} style={{ width: "40%" }} alt="ndau-logo" />
@@ -90,36 +90,25 @@ const SideBar = (props) => {
         Blockchain
       </NavbarLink>
       {isLoggedIn ? (
-        <StyledProfileMenu
-          dropAlign={{ top: "bottom", left: "left" }}
-          dropBackground={{ color: "#259", opacity: "weak" }}
-          margin={{ bottom: "14px" }}
-          icon={true}
-          label={<Text size="14px">Profile</Text>}
-          items={[
-            {
-              label: (
-                <Text weight={1000} size="xsmall" color={"#F6931D"}>
-                  Profile
-                </Text>
-              ),
-              onClick: () => {
-                history.push("/profile");
-              },
-            },
-            {
-              label: (
-                <Text weight={1000} size="xsmall" color={"#D32"}>
-                  Sign Out
-                </Text>
-              ),
-              onClick: () => {
-                localStorage.removeItem("ndau_user_token");
-                updateLoggedIn(false);
-              },
-            },
-          ]}
-        ></StyledProfileMenu>
+        <>
+          <Text
+            size="14px"
+            margin={{ vertical: "medium", horizontal: "medium" }}
+            color={"#F99D1C"}
+            weight="600"
+          >
+            Profile
+          </Text>
+
+          <Text
+            size="14px"
+            margin={{ vertical: "medium", horizontal: "medium" }}
+            color={"#D32"}
+            weight="600"
+          >
+            Sign Out
+          </Text>
+        </>
       ) : (
         <NavbarLink to="/login">Login</NavbarLink>
       )}
@@ -163,7 +152,9 @@ const Navbar = (props) => {
               pad="small"
               height={"100%"}
             >
-              <img src={LogoImg} style={{ height: "90%" }} alt="ndau-logo" />
+              {screenSize !== "small" && (
+                <img src={LogoImg} style={{ height: "90%" }} alt="ndau-logo" />
+              )}
             </Box>
             {screenSize === "small" && (
               <NavbarMenuButton
@@ -175,39 +166,43 @@ const Navbar = (props) => {
               Blockchain
             </NavbarLink>
 
-            {screenSize !== "small" && isLoggedIn ? (
-              <StyledProfileMenu
-                dropAlign={{ top: "bottom", left: "left" }}
-                dropBackground={{ color: "#259", opacity: "weak" }}
-                margin={{ bottom: "14px" }}
-                icon={true}
-                label={<Text size="14px">Profile</Text>}
-                items={[
-                  {
-                    label: (
-                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
-                        Profile
-                      </Text>
-                    ),
-                    onClick: () => {
-                      history.push("/profile");
+            {screenSize !== "small" ? (
+              isLoggedIn ? (
+                <StyledProfileMenu
+                  dropAlign={{ top: "bottom", left: "left" }}
+                  dropBackground={{ color: "#259", opacity: "weak" }}
+                  margin={{ bottom: "14px" }}
+                  icon={true}
+                  label={<Text size="14px">Profile</Text>}
+                  items={[
+                    {
+                      label: (
+                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                          Profile
+                        </Text>
+                      ),
+                      onClick: () => {
+                        history.push("/profile");
+                      },
                     },
-                  },
-                  {
-                    label: (
-                      <Text weight={1000} size="xsmall" color={"#D32"}>
-                        Sign Out
-                      </Text>
-                    ),
-                    onClick: () => {
-                      localStorage.clear();
-                      updateLoggedIn(false);
+                    {
+                      label: (
+                        <Text weight={1000} size="xsmall" color={"#D32"}>
+                          Sign Out
+                        </Text>
+                      ),
+                      onClick: () => {
+                        localStorage.clear();
+                        updateLoggedIn(false);
+                      },
                     },
-                  },
-                ]}
-              ></StyledProfileMenu>
+                  ]}
+                ></StyledProfileMenu>
+              ) : (
+                <NavbarLink to="/login">Login</NavbarLink>
+              )
             ) : (
-              <NavbarLink to="/login">Login</NavbarLink>
+              ""
             )}
           </Box>
 
@@ -228,9 +223,6 @@ const Navbar = (props) => {
               </Layer>
             </Box>
           )}
-          {/* <Collapsible open={navbarDrawerState}>              
-                
-          </Collapsible> */}
         </Box>
       )}
     </ResponsiveContext.Consumer>

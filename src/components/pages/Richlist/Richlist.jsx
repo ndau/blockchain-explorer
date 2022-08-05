@@ -2,13 +2,13 @@ import { Heading, Text, Box } from "grommet";
 import axios from "axios";
 import Page from "../../templates/page";
 import { useState, useEffect } from "react";
+import api from "../../../api";
 
 function Richlist() {
   const [richlistState, setRichlistState] = useState();
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:3001/api/richlist").then((res) => {
-     
+    axios.get(`${api}/api/richlist`).then((res) => {
       setRichlistState(res.data);
     });
   }, []);

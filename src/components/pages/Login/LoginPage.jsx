@@ -14,18 +14,24 @@ import Page from "../../templates/page";
 import registerBgImg from "../../../img/registerBg.png";
 import ndauLogo from "../../../img/ndau_orange_logo.png";
 import styled from "styled-components";
-import { User, Mail, Lock } from "grommet-icons";
+import { Mail, Lock, FormView } from "grommet-icons";
 import { UserContext } from "../../../context/context";
 import { toast } from "react-toastify";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
+import api from "../../../api";
 
 const StyledFormField = styled(FormField)`
+  position: relative;
   border-bottom: none;
   width: 70%;
   margin-left: auto;
   margin-right: auto;
+
+  input {
+    color-scheme: dark;
+  }
 `;
 
 const StyledTextInput = styled(TextInput)`
@@ -56,6 +62,15 @@ const StyledSignUpButton = styled(Button)`
   border-radius: 5px;
 `;
 
+const StyledPasswordShowButton = styled(Button)`
+  position: absolute;
+  background-color: transparent;
+  border-color: #f89d1c;
+  border-radius: 5px;
+  right: 0%;
+  z-index: 2;
+`;
+
 const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
@@ -66,10 +81,11 @@ const StyledForm = styled(Form)`
 function LoginPage() {
   const loggedInContext = useContext(UserContext);
 
-  const isLoggedIn = loggedInContext.loggedIn;
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
   const [rememberMeCheckedState, setRememberMeCheckedState] = useState(false);
+  const [emailErrorState, setEmailErrorState] = useState("");
+  const [showPasswordState, setShowPasswordState] = useState(false);
   const size = useContext(ResponsiveContext);
   const history = useHistory();
 
@@ -79,7 +95,7 @@ function LoginPage() {
         style={{
           backgroundColor: "#0B2140",
           position: "relative",
-          width: size !== "small" ? "80%" : "90%",
+          width: size === "small" ? "90%" : "80%",
           margin: "auto",
           display: "flex",
         }}
@@ -95,7 +111,7 @@ function LoginPage() {
           ></div>
         )}
 
-        <Box width={size !== "small" ? "50%" : "100%"} height="100vh">
+        <Box width={size === "small" ? "100%" : "50%"} height="100vh">
           <img
             src={ndauLogo}
             style={{
@@ -109,7 +125,13 @@ function LoginPage() {
           <Heading margin="none" level={3} size="small" alignSelf="center">
             Welcome to ndau
           </Heading>
-          <Box align="center" width="70%" alignSelf="center" margin="small">
+
+          <Box
+            align="center"
+            width="70%"
+            alignSelf="center"
+            margin={{ bottom: "5vh", top: "5vh" }}
+          >
             <Text size="10px" color={"#999"}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -120,26 +142,17 @@ function LoginPage() {
           <StyledForm
             onSubmit={({ value }) => {
               axios
-                .post("http://127.0.0.1:3001/api/user/login", {
+                .post(`${api}/api/user/login`, {
                   email: value.email,
                   password: value.password,
+                  rememberMe: rememberMeCheckedState,
                 })
                 .then((res) => {
-
                   if (res.data.status === true) {
-                   
-
-                    if (rememberMeCheckedState) {
-                      localStorage.setItem(
-                        "remember_user_token",
-                        "bearer " + res.data.user_token
-                      );
-                    } else {
-                      localStorage.setItem(
-                        "ndau_user_token",
-                        "bearer " + res.data.user_token
-                      );
-                    }
+                    localStorage.setItem(
+                      "ndau_user_token",
+                      "bearer " + res.data.user_token
+                    );
 
                     updateLoggedIn(true);
                     history.push("/");
@@ -147,7 +160,7 @@ function LoginPage() {
                   }
                 })
                 .catch((e) => {
-                 
+                  setEmailErrorState("Email or Password Incorrect");
                 });
             }}
           >
@@ -159,6 +172,8 @@ function LoginPage() {
                 message: "Email Incorrectly entered",
                 status: "error",
               }}
+              onFocus={() => setEmailErrorState("")}
+              error={emailErrorState}
               htmlFor="StyledTextInput-id"
             >
               <StyledTextInput
@@ -179,14 +194,17 @@ function LoginPage() {
                   return "Password must be at least 8 characters";
               }}
             >
+              <StyledPasswordShowButton
+                icon={<FormView />}
+                onClick={() => setShowPasswordState((prev) => !prev)}
+              ></StyledPasswordShowButton>
               <StyledTextInput
                 name="password"
-                type={"password"}
+                type={showPasswordState ? "text" : "password"}
                 id="StyledTextInput-id"
                 placeholder="Password"
-                icon={<StyledLockIcon />}
                 reverse
-              />
+              ></StyledTextInput>
             </StyledFormField>
 
             <Box direction="row" justify="evenly" margin={{ bottom: "small" }}>
@@ -211,12 +229,7 @@ function LoginPage() {
               <StyledSignUpButton type="submit" primary label="Login" />
             </Box>
           </StyledForm>
-          <Box
-            align="center"
-            direction="row"
-            alignSelf="center"
-            margin={{ top: "35%" }}
-          >
+          <Box align="center" direction="row" alignSelf="center">
             <Text size="xsmall" color={"#AAA"}>
               Don't have an account?
               <Anchor

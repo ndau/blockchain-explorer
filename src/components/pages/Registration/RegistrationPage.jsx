@@ -17,7 +17,9 @@ import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../../../context/context";
+import { toast } from "react-toastify";
 import Page from "../../templates/page";
+import api from "../../../api";
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
@@ -124,31 +126,29 @@ function RegistrationPage() {
           <StyledForm
             onSubmit={({ value }) => {
               axios
-                .post("http://127.0.0.1:3001/api/users/register", {
+                .post(`${api}/api/user/register`, {
                   email: value.email,
                   password: value.password,
                   username: value.username,
                 })
                 .then((res) => {
-                 
                   if (
                     res.data.message === "User Registered Successfully" &&
                     res.data.status === true
                   ) {
-                   
-                    updateLoggedIn(true);
+                    toast.success("Signed Up Successfully. Please Login");
                     history.push("/login");
                   }
                 })
                 .catch((e) => {
-                 
+                  console.log(e, "registration error");
                   if (e.response.data.message === "Email already exists") {
                     setEmailErrorState("Email Already Exists");
                   }
                 });
             }}
             onValidate={({ e }) => {
-              if (e)
+              if (e) console.log(e);
             }}
           >
             <StyledFormField
@@ -197,7 +197,7 @@ function RegistrationPage() {
               name="password"
               htmlFor="StyledTextInput-id"
               validate={function (fieldValue, entireValue) {
-                if (fieldValue?.length < 8)
+                if (!fieldValue || fieldValue.length < 8)
                   return "Password must be at least 8 characters";
               }}
             >

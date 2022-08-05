@@ -29,31 +29,27 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useContext } from "react";
 import axios from "axios";
+import api from "./api";
 
 const Routes = () => {
   const loggedInContext = useContext(UserContext);
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
   useEffect(() => {
-    const rememberMeToken = localStorage.getItem("remember_user_token");
-    if (rememberMeToken) {
-      localStorage.setItem("ndau_user_token", rememberMeToken);
-    }
-
     const jwtToken = localStorage.getItem("ndau_user_token");
     if (jwtToken) {
       axios
-        .get("http://127.0.0.1:3001/api/user/user-profile-details", {
+        .get(`${api}/api/user/user-profile-details`, {
           headers: { authorization: jwtToken },
         })
         .then((res) => {
           updateLoggedIn(true);
+        })
+        .catch((e) => {
+          console.log(e, "loginError");
         });
     }
-    return () => {
-      localStorage.removeItem("ndau_user_token");
-    };
-  }, []);
+  }, [updateLoggedIn]);
 
   return (
     <BrowserRouter>

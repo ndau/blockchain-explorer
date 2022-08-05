@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState } from "react";
+import api from "../../../../api";
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
@@ -66,8 +67,8 @@ function ForgotPasswordPage() {
         <StyledForm
           onSubmit={async ({ value }) => {
             const response = await toast.promise(
-              axios.post("http://127.0.0.1:3001/api/user/forgot-password", {
-                user_email: value.email,
+              axios.post(`${api}/api/user/forgot-password`, {
+                email: value.email,
               }),
               {
                 pending: "Resetting Password",
