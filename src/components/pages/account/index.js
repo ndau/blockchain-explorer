@@ -8,8 +8,9 @@
  * - -- --- ---- -----
  */
 
+import FavouriteButton from "../../organisms/FavouriteButton/FavouriteButton";
 import React, { Component } from "react";
-import { Box, Text, Collapsible, CheckBox, Spinner } from "grommet";
+import { Box, Text, Collapsible, CheckBox, Spinner, Button } from "grommet";
 import Details from "../../templates/details";
 import DetailsCard from "../../molecules/detailsCard";
 import AccountTimeline from "../../organisms/accountTimeline";
@@ -35,26 +36,13 @@ class Account extends Component {
 
     return (
       <Details browserHistory={this.props.history} notFound={!account}>
-        {this.state.history ? (
+        {/* {this.state.history ? ( */}
+        {true ? (
           <>
             <Box margin={{ bottom: "20px" }}>
               <Text size="large">
                 {/* hide empty toggle is not fully functional */}
-                <Text
-                  size="xsmall"
-                  color="#aaa"
-                  weight="normal"
-                  style={{ float: "right" }}
-                >
-                  <CheckBox
-                    toggle
-                    checked={hideDetails}
-                    label="hide details"
-                    onChange={this.toggleShowDetails}
-                    reverse
-                    name="small"
-                  />
-                </Text>
+
                 <Text size="large">
                   Account{" "}
                   <Text
@@ -63,6 +51,22 @@ class Account extends Component {
                     style={{ wordWrap: "break-word" }}
                   >
                     {account && account.address}
+                  </Text>
+                  <FavouriteButton bookmarkVal={account.address} bookmarkType="account"/>
+                  <Text
+                    size="xsmall"
+                    color="#aaa"
+                    weight="normal"
+                    style={{ float: "right" }}
+                  >
+                    <CheckBox
+                      toggle
+                      checked={hideDetails}
+                      label="hide details"
+                      onChange={this.toggleShowDetails}
+                      reverse
+                      name="small"
+                    />
                   </Text>
                 </Text>
               </Text>
@@ -132,11 +136,9 @@ class Account extends Component {
   };
 
   getData = (fromDate, toDate) => {
-   
     this.setState({ loading: true });
 
     const { accountAddress: address } = this.props.match.params;
-   
 
     getAccount(address)
       .then((account) => {
@@ -161,8 +163,7 @@ class Account extends Component {
           }
 
           this.setState({ history, loading: false });
-         
-         
+
           return;
         });
       });
@@ -173,7 +174,6 @@ class Account extends Component {
   }
 
   componentDidUpdate(prevProps) {
-
     const getURL = (location = {}) => {
       const { pathname, search } = location;
       return `${pathname}${search}`;
