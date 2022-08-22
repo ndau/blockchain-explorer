@@ -92,10 +92,11 @@ axios.get("http://localhost:3001/api/numOfAccounts").then((val)=>{
             </StatBox>
           )}
 
-          <StatBox gridArea="staked">Staked</StatBox>
+      
           
 
-          <StatBox gridArea="numOfAccounts" ><div style={{textAlign:"center"}}>Number of Accounts<br/>{numOfAccounts}</div></StatBox>
+          {/* <StatBox gridArea="numOfAccounts" ><div style={{textAlign:"center"}}>Number of Accounts<br/>{numOfAccounts}</div></StatBox> */}
+          <StatBox gridArea="staked"><div style={{textAlign:"center"}}>Number of Accounts<br/>{numOfAccounts}</div></StatBox>
         </Grid>
       )}
     </ResponsiveContext.Consumer>
