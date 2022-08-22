@@ -1,14 +1,17 @@
+import axios from "axios";
 import { Grid, Box, Text, ResponsiveContext } from "grommet";
 import { humanizeNumber } from "../../../../helpers/format";
 
 import EconomicsStatBox from "./EconomicsStatBox/EconomicsStatBox";
 import WidgetBox from "./WidgetBox/WidgetBox";
+import React from 'react';
 
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
   let justify = props.justify;
   let align = props.align;
+
   return (
     <Box
       justify={justify ?? "center"}
@@ -26,6 +29,7 @@ const bigScreenGrid = [
   { name: "staked", start: [1, 1], end: [1, 1] },
   { name: "numOfAccounts", start: [1, 2], end: [1, 2] },
 ];
+
 
 const smallScreenGrid = [
   { name: "EconomicsStat", start: [0, 0], end: [1, 0] },
@@ -50,7 +54,12 @@ const StatisticsPanel = (props) => {
     totalNdauIssued,
     nextIssuePrice,
   } = props;
-
+  const [numOfAccounts,setNumOfAccounts]=React.useState(0);
+React.useEffect(()=>{
+axios.get("http://localhost:3001/api/numOfAccounts").then((val)=>{
+  setNumOfAccounts(val.data.numOfAccounts);
+})
+},[])
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (
@@ -84,8 +93,9 @@ const StatisticsPanel = (props) => {
           )}
 
           <StatBox gridArea="staked">Staked</StatBox>
+          
 
-          <StatBox gridArea="numOfAccounts">numOfAccounts</StatBox>
+          <StatBox gridArea="numOfAccounts" ><div style={{textAlign:"center"}}>Number of Accounts<br/>{numOfAccounts}</div></StatBox>
         </Grid>
       )}
     </ResponsiveContext.Consumer>

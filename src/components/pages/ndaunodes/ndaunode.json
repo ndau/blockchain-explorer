@@ -1,0 +1,29 @@
+[
+    {
+        "moniker": "mynode",
+        "tmAddress": "ABCDEFG",
+        "ndauAddress": "nda012345",
+        "votingPower": 10234,
+        "latest_block_height": 555555,
+        "registrationDate": "2019-08-21T19:53:01.965125Z",
+        "distribution_script": "oACCAAqIgAAAIIg="
+    },
+    {
+        "moniker": "yournode",
+        "tmAddress": "XYZXYZ",
+        "ndauAddress": "nda77777",
+        "votingPower": 7384,
+        "latest_block_height": 567890,
+        "registrationDate": "2019-09-21T19:53:01.965125Z",
+        "distribution_script": "oACCAAqIgAAAIIg="
+    },
+    {
+        "moniker": "othernode",
+        "tmAddress": "XOXOXOXO",
+        "ndauAddress": "ndandanda",
+        "votingPower": 8252,
+        "latest_block_height": 545454,
+        "registrationDate": "2021-08-21T19:53:01.965125Z",
+        "distribution_script": "oACCAAqIgAAAIIg="
+    }
+]

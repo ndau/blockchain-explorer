@@ -148,7 +148,9 @@ function LoginPage() {
                   rememberMe: rememberMeCheckedState,
                 })
                 .then((res) => {
-                  if (res.data.status === true) {
+                  if (res.data.verify === true) {
+             
+                    
                     localStorage.setItem(
                       "ndau_user_token",
                       "bearer " + res.data.user_token
@@ -157,7 +159,11 @@ function LoginPage() {
                     updateLoggedIn(true);
                     history.push("/");
                     toast.success("Logged In");
-                  }
+                  
+                }
+                else{
+                  toast.error("Please verify your Email")
+                }
                 })
                 .catch((e) => {
                   setEmailErrorState("Email or Password Incorrect");

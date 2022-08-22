@@ -30,6 +30,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useContext } from "react";
 import axios from "axios";
 import api from "./api";
+import VerifyUser from "./components/pages/Registration/VerifyUser/VerifyUser";
+import ndaunodes from "./components/pages/ndaunodes/ndaunodes";
+import userBookmarks from "./components/pages/userBookmarks/userBookmarks";
 
 const Routes = () => {
   const loggedInContext = useContext(UserContext);
@@ -82,8 +85,10 @@ const Routes = () => {
           path="/login/forgot-password-successful"
           component={ForgotPasswordSuccessful}
         />
+        <Route exact path="/ndaunodes" component={ndaunodes} />{" "}
+        <Route exact path="/userBookmarks" component={userBookmarks} />
         <Route path="/change-password/:token" component={ChangePassword} />
-
+        <Route exact path="/verify-user/:token" component={VerifyUser} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/richlist" component={Richlist} />
       </Switch>

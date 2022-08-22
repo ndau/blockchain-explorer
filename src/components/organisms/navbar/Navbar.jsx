@@ -89,19 +89,22 @@ const SideBar = (props) => {
       <NavbarLink margin="small" to="/blockchain">
         Blockchain
       </NavbarLink>
+      <NavbarLink margin="small" to="/ndaunodes">
+        Ndau Nodes
+      </NavbarLink>
       {isLoggedIn ? (
         <>
+    
+          
+          <NavbarLink margin="small" to="/profile">
+          Profile
+      </NavbarLink>
+          <NavbarLink margin="small" to="/userBookmarks">
+          Bookmarks
+      </NavbarLink>
           <Text
             size="14px"
-            margin={{ vertical: "medium", horizontal: "medium" }}
-            color={"#F99D1C"}
-            weight="600"
-          >
-            Profile
-          </Text>
-
-          <Text
-            size="14px"
+            style={{cursor:"pointer" }}
             margin={{ vertical: "medium", horizontal: "medium" }}
             color={"#D32"}
             weight="600"
@@ -162,10 +165,42 @@ const Navbar = (props) => {
                 toggleDrawerStateFunc={setNavbarDrawerState}
               />
             )}
-            <NavbarLink to="/blocks" small={screenSize === "small"}>
+            {/* <NavbarLink to="/blocks" small={screenSize === "small"}>
               Blockchain
-            </NavbarLink>
-
+            </NavbarLink> */}
+            {screenSize !== "small" ? (
+            <StyledProfileMenu
+                  dropAlign={{ top: "bottom", left: "left" }}
+                  dropBackground={{ color: "#259", opacity: "weak" }}
+                  margin={{ bottom: "14px" }}
+                  icon={true}
+                  label={<Text size="14px">     Blockchain</Text>}
+                  items={[
+                    {
+                      label: (
+                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                           Blockchain
+                        </Text>
+                      ),
+                      onClick: () => {
+                        history.push("/blocks");
+                      },
+                    },
+                    {
+                      label: (
+                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                         Ndau Nodes
+                        </Text>
+                      ),
+                      onClick: () => {
+                        history.push("/ndaunodes");
+                      },
+                    },
+                  ]}
+                ></StyledProfileMenu>
+                ): (
+                  ""
+                )}
             {screenSize !== "small" ? (
               isLoggedIn ? (
                 <StyledProfileMenu
@@ -183,6 +218,16 @@ const Navbar = (props) => {
                       ),
                       onClick: () => {
                         history.push("/profile");
+                      },
+                    },
+                    {
+                      label: (
+                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                          Bookmarks
+                        </Text>
+                      ),
+                      onClick: () => {
+                        history.push("/userBookmarks");
                       },
                     },
                     {

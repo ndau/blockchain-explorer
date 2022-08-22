@@ -45,14 +45,7 @@ export default function Profile({}) {
         <Heading>User Profile</Heading>
         {userEmailState ? <Text>Email:{userEmailState}</Text> : "Loading..."}
 
-        {userBookmarksState
-          ? userBookmarksState.map((bookmark) => (
-              <div>
-                <h6>{bookmark.bookmark_type}</h6>
-                <p> {bookmark.bookmark_value}</p>
-              </div>
-            ))
-          : "Loading Bookmarks..."}
+       
       </Box>
     </Page>
   );

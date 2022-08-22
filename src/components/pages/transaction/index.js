@@ -14,6 +14,7 @@ import Anchor from '../../atoms/anchor'
 import Details from '../../templates/details'
 import DetailsCard from '../../molecules/detailsCard'
 import { getTransaction } from '../../../helpers/fetch'
+import FavouriteButton from '../../organisms/FavouriteButton/FavouriteButton';
 
 class Transaction extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class Transaction extends Component {
               <Text weight="bold" as="em" style={{wordWrap: "break-word"}}>
                 {transaction && transaction.hash}
               </Text>
+              <FavouriteButton bookmarkVal={transaction.hash} bookmarkType="transaction"/>
             </Text>
             
             {
