@@ -1,8 +1,22 @@
+import axios from "axios";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "grommet";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Page from "../../templates/page";
 import nodeArray from "./ndaunode.json";
-const ndaunodes = () => {
+
+const Ndaunodes = () => {
+
+const [nodesArrayState, setNodesArrayState] = useState([]);
+
+useEffect(() => {
+ async function asyncGetNodesArrayState(){
+  let nodesArr = await axios.get("https://utils.ndau.tech/crawl");
+  setNodesArrayState(nodesArr);
+ }
+ asyncGetNodesArrayState();
+}, [])
+
+
   return (
     <Page>
       <div>
@@ -39,7 +53,7 @@ const ndaunodes = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {nodeArray.map((val) => (
+            {nodesArrayState.map((val) => (
               <>
                 <TableRow
                   style={{
@@ -66,4 +80,4 @@ const ndaunodes = () => {
   );
 };
 
-export default ndaunodes;
+export default Ndaunodes;

@@ -31,7 +31,7 @@ import { useEffect, useContext } from "react";
 import axios from "axios";
 import api from "./api";
 import VerifyUser from "./components/pages/Registration/VerifyUser/VerifyUser";
-import ndaunodes from "./components/pages/ndaunodes/ndaunodes";
+import Ndaunodes from "./components/pages/ndaunodes/ndaunodes";
 import userBookmarks from "./components/pages/userBookmarks/userBookmarks";
 import About from "./components/pages/about/about";
 
@@ -86,7 +86,7 @@ const Routes = () => {
           path="/login/forgot-password-successful"
           component={ForgotPasswordSuccessful}
         />
-        <Route exact path="/ndaunodes" component={ndaunodes} />{" "}
+        <Route exact path="/ndaunodes" component={Ndaunodes} />{" "}
         <Route exact path="/userBookmarks" component={userBookmarks} />
         <Route path="/change-password/:token" component={ChangePassword} />
         <Route exact path="/verify-user/:token" component={VerifyUser} />
