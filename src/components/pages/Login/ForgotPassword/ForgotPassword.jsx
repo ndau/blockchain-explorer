@@ -67,7 +67,7 @@ function ForgotPasswordPage() {
         <StyledForm
           onSubmit={async ({ value }) => {
             const response = await toast.promise(
-              axios.post(`${api}/api/user/forgot-password`, {
+              axios.post(`${api}/user/forgot-password`, {
                 email: value.email,
               }),
               {

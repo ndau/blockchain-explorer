@@ -29,7 +29,7 @@ const UserBookmarks = () => {
   React.useEffect(() => {
     setLoading(true);
     axios
-      .get(`${api}/api/user/bookmarks`, {
+      .get(`${api}/user/bookmarks`, {
         headers: {
           Authorization: jwtToken,
         },

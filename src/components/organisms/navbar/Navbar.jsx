@@ -92,6 +92,9 @@ const SideBar = (props) => {
       <NavbarLink margin="small" to="/ndaunodes">
         Ndau Nodes
       </NavbarLink>
+      <NavbarLink margin="small" to="/richlist">
+      Rich List
+      </NavbarLink>
       {isLoggedIn ? (
         <>
     
@@ -153,7 +156,7 @@ const Navbar = (props) => {
             <Box
               style={{ marginRight: screenSize === "small" ? "100px" : "0px" }}
               pad="small"
-              height={"100%"}
+              height={"80%"}
             >
               {screenSize !== "small" && (
                 <img src={LogoImg} style={{ height: "90%" }} alt="ndau-logo" />
@@ -194,6 +197,16 @@ const Navbar = (props) => {
                       ),
                       onClick: () => {
                         history.push("/ndaunodes");
+                      },
+                    },
+                    {
+                      label: (
+                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                        Rich List
+                        </Text>
+                      ),
+                      onClick: () => {
+                        history.push("/richlist");
                       },
                     },
                   ]}

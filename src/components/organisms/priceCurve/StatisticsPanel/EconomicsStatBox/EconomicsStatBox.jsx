@@ -1,4 +1,5 @@
 import { Grid, Box, Text, ResponsiveContext } from "grommet";
+import { useHistory } from "react-router-dom";
 import { humanizeNumber } from "../../../../../helpers/format";
 import globeImg from "../../../../../img/globe.png";
 import "./EconomicsStatBox.css";
@@ -6,8 +7,13 @@ import "./EconomicsStatBox.css";
 const StatBox = (props) => {
   let gridArea = props.gridArea;
   let background = props.background;
+  const history=useHistory();
   return (
     <Box
+    onClick={()=>{
+    window.open(props.link, "_blank");
+    }
+  }
       justify="center"
       align="center"
       gridArea={gridArea}
@@ -70,7 +76,7 @@ const EconomicsStatBox = (props) => {
     totalNdauIssued,
     nextIssuePrice,
   } = props;
-
+const history=useHistory();
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (
@@ -83,22 +89,24 @@ const EconomicsStatBox = (props) => {
             areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
             back
           >
-            <StatBox gridArea="ndauIssued">
-              <LabelText>Ndau Issued: </LabelText>
+            <StatBox gridArea="ndauIssued" link="https://ndau.io/knowledge-base/how-is-ndau-issued-based-on-supply-and-demand/
+">
+              <LabelText>NDAU ISSUED: </LabelText>
               <StatText>{humanizeNumber(totalNdauIssued, 0)}</StatText>
             </StatBox>
 
-            <StatBox gridArea="nextIssuedPrice">
-              <LabelText>Next Issued Price:</LabelText>
-              <StatText>{humanizeNumber(nextIssuePrice, 4, 4)} $</StatText>
+            <StatBox gridArea="nextIssuedPrice" link="https://ndau.io/knowledge-base/what-is-the-target-price-curve-s-curve/">
+              <LabelText>NEXT ISSUED PRICE:</LabelText>
+              <StatText>${humanizeNumber(nextIssuePrice, 4, 4)}</StatText>
             </StatBox>
 
-            <StatBox gridArea="sibInEffect">
+            <StatBox gridArea="sibInEffect" link="https://ndau.io/knowledge-base/what-is-sib-protection-and-how-does-it-help-balance-ndaus-monetary-policy/">
               <LabelText>SIB IN EFFECT: </LabelText>
               <StatText>{humanizeNumber(sib * 10, 2, 2)} %</StatText>
             </StatBox>
 
-            <StatBox gridArea="ndauInCirculation">
+            <StatBox gridArea="ndauInCirculation" link="https://ndau.io/knowledge-base/why-is-ndau-in-circulation-greater-than-ndau-issued/
+">
               <LabelText>NDAU IN CIRCULATION: </LabelText>
               <StatText>{humanizeNumber(totalNdau, 0)}</StatText>
             </StatBox>
@@ -118,7 +126,7 @@ const EconomicsStatBox = (props) => {
                 align="center"
               >
                 <LabelText>CURRENT MARKET PRICE:</LabelText>
-                <StatText>{humanizeNumber(marketPrice, 4, 4)} $</StatText>
+                <StatText>${humanizeNumber(marketPrice, 4, 4)} </StatText>
               </Box>
             </StatBox>
           </Grid>

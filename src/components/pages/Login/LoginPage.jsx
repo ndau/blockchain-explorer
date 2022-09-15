@@ -67,7 +67,7 @@ const StyledPasswordShowButton = styled(Button)`
   background-color: transparent;
   border-color: #f89d1c;
   border-radius: 5px;
-  right: 0%;
+  right: -2%;
   z-index: 2;
 `;
 
@@ -142,7 +142,7 @@ function LoginPage() {
           <StyledForm
             onSubmit={({ value }) => {
               axios
-                .post(`${api}/api/user/login`, {
+                .post(`${api}/user/login`, {
                   email: value.email,
                   password: value.password,
                   rememberMe: rememberMeCheckedState,

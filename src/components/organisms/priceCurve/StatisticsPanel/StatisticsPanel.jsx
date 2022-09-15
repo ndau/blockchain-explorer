@@ -5,6 +5,7 @@ import { humanizeNumber } from "../../../../helpers/format";
 import EconomicsStatBox from "./EconomicsStatBox/EconomicsStatBox";
 import WidgetBox from "./WidgetBox/WidgetBox";
 import React from 'react';
+import api from "../../../../api";
 
 
 const StatBox = (props) => {
@@ -56,7 +57,7 @@ const StatisticsPanel = (props) => {
   } = props;
   const [numOfAccounts,setNumOfAccounts]=React.useState(0);
 React.useEffect(()=>{
-axios.get("http://localhost:3001/api/numOfAccounts").then((val)=>{
+axios.get(`${api}/numOfAccounts`).then((val)=>{
   setNumOfAccounts(val.data.numOfAccounts);
 })
 },[])

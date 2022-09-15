@@ -52,7 +52,7 @@ class BlockchainSearch extends Component {
       <Box 
         round="xsmall" 
         border
-        width="medium"
+ 
         direction="row"
         // align="end" 
         style={{

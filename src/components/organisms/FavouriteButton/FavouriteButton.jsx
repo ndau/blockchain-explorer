@@ -15,7 +15,7 @@ function FavouriteButton({ bookmarkVal, bookmarkType }) {
   const jwtToken = localStorage.getItem("ndau_user_token");
 React.useEffect(()=>{
   console.log("bookmark",bookmarkVal)
-axios.put("http://localhost:3001/api/user/SpecificBookmarks",{ bookmark_value: bookmarkVal},   {
+axios.put(`${api}/user/SpecificBookmarks`,{ bookmark_value: bookmarkVal},   {
   headers: {
     Authorization: jwtToken,
   },
@@ -32,7 +32,7 @@ setSaved(val.data.status)
       console.log(bookmarkType, "bookmarkType");
       axios
         .post(
-          `${api}/api/bookmark/bookmark`,
+          `${api}/bookmark/bookmark`,
           { bookmark_value: bookmarkVal, bookmark_type: bookmarkType },
           {
             headers: {

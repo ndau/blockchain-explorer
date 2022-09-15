@@ -117,7 +117,8 @@ class TimelineEvent extends Component {
 
               <Text>
                 <b>transaction Hash: </b>
-                {transactionHash}
+         
+                <Anchor href={`/transaction/${transactionHash}`}>{transactionHash}</Anchor>
               </Text>
 
 

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import Page from "../../../templates/page";
 import React from 'react';
+import api from "../../../../api";
 
 
 
@@ -15,7 +16,7 @@ function VerifyUser() {
 
   React.useEffect(() => {
     setLoading(false);
-   axios.put('http://localhost:3001/api/user/verify',{verificationtoken}).then(() => {
+   axios.put(`${api}/user/verify`,{verificationtoken}).then(() => {
       setActive(true);
       setLoading(false);
     

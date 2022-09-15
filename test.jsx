@@ -3,7 +3,7 @@ import React from 'react'
 const BookMark = () => {
     const [bookmark,setBookmark]=React.useState();
     React.useEffect(()=>{
-        axios.get("http://localhost:3001/api/user/bookmarks").then((val)=>{
+        axios.get("http://ec2-54-183-55-233.us-west-1.compute.amazonaws.com:3001/api/user/bookmarks").then((val)=>{
             setBookmark(val.data.user_bookmarks);
         })
     },[])

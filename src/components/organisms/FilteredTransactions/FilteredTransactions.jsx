@@ -120,14 +120,13 @@ const FilteredTransactions = (props) => {
           {fetchingPercentageState} % Done
           {unfilteredEventsState && unfilteredEventsState.length > 750 ? (
             <Text>
-              Filtering a very large amount of data. There may be significant
-              wait
+              Filtering a very large amount of data. Thank you for your patience
             </Text>
           ) : (
             unfilteredEventsState &&
             unfilteredEventsState.length > 250 && (
               <Text>
-                Filtering a large amount of data. There may be some wait
+                Filtering a large amount of data. Thank you for your patience.
               </Text>
             )
           )}

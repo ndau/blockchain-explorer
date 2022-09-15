@@ -8,7 +8,7 @@ function Richlist() {
   const [richlistState, setRichlistState] = useState();
 
   useEffect(() => {
-    axios.get(`${api}/api/richlist`).then((res) => {
+    axios.get(`${api}/richlist`).then((res) => {
       setRichlistState(res.data);
     });
   }, []);

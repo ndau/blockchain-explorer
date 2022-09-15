@@ -184,7 +184,7 @@ class Filters extends Component {
   openFilteredTransactionsInNewTab = () => {
     this.saveTypeFiltersInLocalStorage();
     this.saveUnfilteredEventsInLocalStorage();
-    window.open("http://localhost:3000/filteredTransactions", "_blank");
+    window.open("http://ec2-54-183-55-233.us-west-1.compute.amazonaws.com/filteredTransactions", "_blank");
   };
 
 }

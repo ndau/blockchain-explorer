@@ -69,7 +69,7 @@ function ChangePassword() {
           onSubmit={({ value }) => {
             axios
               .put(
-                `${api}/api/user/reset-password`,
+                `${api}/user/reset-password`,
                 {
                   new_password: value.password,
                 },

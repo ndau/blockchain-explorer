@@ -19,7 +19,7 @@ export default function Profile({}) {
       const jwtToken = localStorage.getItem("ndau_user_token");
 
       axios
-        .get(`${api}/api/user/user-profile-details`, {
+        .get(`${api}/user/user-profile-details`, {
           headers: { authorization: jwtToken },
         })
         .then((res) => {
@@ -27,7 +27,7 @@ export default function Profile({}) {
         });
 
       axios
-        .get(`${api}/api/user/bookmarks`, {
+        .get(`${api}/user/bookmarks`, {
           headers: { authorization: jwtToken },
         })
         .then((res) => {

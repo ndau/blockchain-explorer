@@ -43,7 +43,7 @@ const Routes = () => {
     const jwtToken = localStorage.getItem("ndau_user_token");
     if (jwtToken) {
       axios
-        .get(`${api}/api/user/user-profile-details`, {
+        .get(`${api}/user/user-profile-details`, {
           headers: { authorization: jwtToken },
         })
         .then((res) => {
