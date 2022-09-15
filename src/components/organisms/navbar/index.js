@@ -12,7 +12,6 @@ import React, { Component } from 'react'
 import { Box } from 'grommet'
 import Container from '../../atoms/container'
 import Logo from '../../atoms/logo'
-import BlockchainSearch from '../../molecules/blockchainSearch'
 import BookmarkMenu from '../../molecules/bookmarkMenu'
 import { NAVBAR_COLOR } from '../../../constants'
 import './style.css'
@@ -27,7 +26,6 @@ class Navbar extends Component {
           <Container topPad="0">
             <Box margin={{vertical: "10px"}}>
               <Box height="100%" direction="row" align="center" justify="between">
-              {/* <BlockchainSearch /> */}
                 
                 <Box margin={{left: "medium"}}>
                 <Logo />                  

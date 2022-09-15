@@ -76,7 +76,7 @@ const SideBar = (props) => {
       height={"100vh"}
     >
       <Box pad="small" align="center">
-        <img src={LogoImg} style={{ width: "40%" }} alt="ndau-logo" />
+        <img src={LogoImg} style={{ width: "30%" }} alt="ndau-logo" />
       </Box>
 
       <NavbarLink margin="small" to="/">
@@ -93,21 +93,19 @@ const SideBar = (props) => {
         Ndau Nodes
       </NavbarLink>
       <NavbarLink margin="small" to="/richlist">
-      Rich List
+        Rich List
       </NavbarLink>
       {isLoggedIn ? (
         <>
-    
-          
           <NavbarLink margin="small" to="/profile">
-          Profile
-      </NavbarLink>
+            Profile
+          </NavbarLink>
           <NavbarLink margin="small" to="/userBookmarks">
-          Bookmarks
-      </NavbarLink>
+            Bookmarks
+          </NavbarLink>
           <Text
             size="14px"
-            style={{cursor:"pointer" }}
+            style={{ cursor: "pointer" }}
             margin={{ vertical: "medium", horizontal: "medium" }}
             color={"#D32"}
             weight="600"
@@ -153,13 +151,9 @@ const Navbar = (props) => {
             <NavbarLink to="/about" small={screenSize === "small"}>
               About
             </NavbarLink>
-            <Box
-              style={{ marginRight: screenSize === "small" ? "100px" : "0px" }}
-              pad="small"
-              height={"80%"}
-            >
+            <Box margin={{ top: "small" }} height={"40%"}>
               {screenSize !== "small" && (
-                <img src={LogoImg} style={{ height: "90%" }} alt="ndau-logo" />
+                <img src={LogoImg} style={{ height: "100%" }} alt="ndau-logo" />
               )}
             </Box>
             {screenSize === "small" && (
@@ -172,48 +166,48 @@ const Navbar = (props) => {
               Blockchain
             </NavbarLink> */}
             {screenSize !== "small" ? (
-            <StyledProfileMenu
-                  dropAlign={{ top: "bottom", left: "left" }}
-                  dropBackground={{ color: "#259", opacity: "weak" }}
-                  margin={{ bottom: "14px" }}
-                  icon={true}
-                  label={<Text size="14px">     Blockchain</Text>}
-                  items={[
-                    {
-                      label: (
-                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
-                           Blockchain
-                        </Text>
-                      ),
-                      onClick: () => {
-                        history.push("/blocks");
-                      },
+              <StyledProfileMenu
+                dropAlign={{ top: "bottom", left: "left" }}
+                dropBackground={{ color: "#259", opacity: "weak" }}
+                margin={{ bottom: "14px" }}
+                icon={true}
+                label={<Text size="14px"> Blockchain</Text>}
+                items={[
+                  {
+                    label: (
+                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                        Blockchain
+                      </Text>
+                    ),
+                    onClick: () => {
+                      history.push("/blocks");
                     },
-                    {
-                      label: (
-                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
-                         Ndau Nodes
-                        </Text>
-                      ),
-                      onClick: () => {
-                        history.push("/ndaunodes");
-                      },
+                  },
+                  {
+                    label: (
+                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                        Ndau Nodes
+                      </Text>
+                    ),
+                    onClick: () => {
+                      history.push("/ndaunodes");
                     },
-                    {
-                      label: (
-                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                  },
+                  {
+                    label: (
+                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
                         Rich List
-                        </Text>
-                      ),
-                      onClick: () => {
-                        history.push("/richlist");
-                      },
+                      </Text>
+                    ),
+                    onClick: () => {
+                      history.push("/richlist");
                     },
-                  ]}
-                ></StyledProfileMenu>
-                ): (
-                  ""
-                )}
+                  },
+                ]}
+              ></StyledProfileMenu>
+            ) : (
+              ""
+            )}
             {screenSize !== "small" ? (
               isLoggedIn ? (
                 <StyledProfileMenu
