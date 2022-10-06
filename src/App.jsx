@@ -15,6 +15,7 @@ import { dark as grommetDarkTheme } from "grommet/themes";
 import Routes from "./Routes";
 import "normalize.css";
 import "./components/organisms/priceCurve/StatisticsPanel/WidgetBox/WidgetBox.css";
+import "../src/"
 
 const ndauStyleGuide = {
   global: {

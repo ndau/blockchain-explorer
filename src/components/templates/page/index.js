@@ -12,7 +12,6 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Box, Text } from 'grommet'
 import Container from '../../atoms/container'
-// import Navbar from '../../organisms/navbar/index'
 import Navbar from '../../organisms/navbar/Navbar';
 import Footer from '../../atoms/footer'
 import Anchor from '../../atoms/anchor'

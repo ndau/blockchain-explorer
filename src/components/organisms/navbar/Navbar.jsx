@@ -22,26 +22,20 @@ import {
 import LogoImg from "../../../img/ndau_orange_logo.png";
 import { AppsRounded } from "grommet-icons";
 import "./style.css";
-import { NAVBAR_COLOR } from "../../../constants";
 import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../../../context/context";
 import styled from "styled-components";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 
 const NavbarLink = (props) => {
   return (
-    <>
+    <Box align="center" justify="center">
       {!props.small && (
-        <Anchor
-          as={Link}
-          to={props.to}
-          size="small"
-          margin={{ vertical: "medium", horizontal: "medium" }}
-        >
+        <Anchor as={Link} to={props.to} size="small">
           {props.children}
         </Anchor>
       )}
-    </>
+    </Box>
   );
 };
 
@@ -74,7 +68,7 @@ const SideBar = (props) => {
       width={"60vw"}
       height={"100vh"}
     >
-      <Box pad="small" align="center">
+      <Box pad="small" align="center" justify="center">
         <img src={LogoImg} style={{ width: "30%" }} alt="ndau-logo" />
       </Box>
 
@@ -83,9 +77,10 @@ const SideBar = (props) => {
       </NavbarLink>
 
       <Anchor
-        to="https://ndau.io"
+        href="https://ndau.io"
         size="small"
-        margin={{ vertical: "medium", horizontal: "medium" }}
+        target={"_blank"}
+        rel="_noopener"
       >
         About
       </Anchor>
@@ -110,7 +105,6 @@ const SideBar = (props) => {
           <Text
             size="14px"
             style={{ cursor: "pointer" }}
-            margin={{ vertical: "medium", horizontal: "medium" }}
             color={"#D32"}
             weight="600"
           >
@@ -142,41 +136,41 @@ const Navbar = (props) => {
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (
-        <Box fill={true}>
+        <Box
+          className="Navbar"
+          align={screenSize === "small" ? "center" : ""}
+          justify="between"
+          direction={screenSize === "small" ? "column" : "row"}
+        >
           <Box
-            className="Navbar"
-            justify={screenSize === "small" ? "" : "center"}
-            align={screenSize === "small" ? "center" : ""}
+            basis={"1/2"}
             direction={screenSize === "small" ? "column" : "row"}
+            justify="around"
+            align="center"
           >
-            <NavbarLink to="/" small={screenSize === "small"}>
-              Home
-            </NavbarLink>
-
-            <Anchor
-              href="https://ndau.io"
-              size="small"
-              target={"_blank"}
-              rel="_noopener"
-              margin={{ vertical: "medium", horizontal: "medium" }}
-            >
-              About
-            </Anchor>
-
-            <Box margin={{ top: "small" }} height={"40%"}>
+            <Box style={{ height: "100%" }} pad="medium">
               {screenSize !== "small" && (
                 <img src={LogoImg} style={{ height: "100%" }} alt="ndau-logo" />
               )}
             </Box>
-            {screenSize === "small" && (
-              <NavbarMenuButton
-                currentDrawerState={navbarDrawerState}
-                toggleDrawerStateFunc={setNavbarDrawerState}
-              />
+
+            <NavbarLink to="/" small={screenSize === "small"}>
+              Home
+            </NavbarLink>
+
+            {screenSize !== "small" && (
+              <Box align="center" justify="center">
+                <Anchor
+                  href="https://ndau.io"
+                  size="small"
+                  target={"_blank"}
+                  rel="_noopener"
+                >
+                  About
+                </Anchor>
+              </Box>
             )}
-            {/* <NavbarLink to="/blocks" small={screenSize === "small"}>
-              Blockchain
-            </NavbarLink> */}
+
             {screenSize !== "small" ? (
               <StyledProfileMenu
                 dropAlign={{ top: "bottom", left: "left" }}
@@ -220,6 +214,7 @@ const Navbar = (props) => {
             ) : (
               ""
             )}
+
             {screenSize !== "small" ? (
               isLoggedIn ? (
                 <StyledProfileMenu
@@ -270,6 +265,13 @@ const Navbar = (props) => {
             )}
           </Box>
 
+          {screenSize === "small" && (
+            <NavbarMenuButton
+              currentDrawerState={navbarDrawerState}
+              toggleDrawerStateFunc={setNavbarDrawerState}
+            />
+          )}
+
           {navbarDrawerState && (
             <Box>
               <Layer
@@ -286,6 +288,29 @@ const Navbar = (props) => {
                 <SideBar></SideBar>
               </Layer>
             </Box>
+          )}
+
+          {screenSize !== "small" ? (
+            <Box
+              basis={"small"}
+              direction={screenSize === "small" ? "column" : "row"}
+              justify="around"
+              align="center"
+            >
+              <Anchor>
+                <img src="twitter_icon.svg" />
+              </Anchor>
+
+              <Anchor>
+                <img src="telegram_icon.svg" />
+              </Anchor>
+
+              <Anchor>
+                <img src="github_icon.svg" />
+              </Anchor>
+            </Box>
+          ) : (
+            ""
           )}
         </Box>
       )}
