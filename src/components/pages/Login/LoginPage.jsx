@@ -119,7 +119,7 @@ function LoginPage() {
               marginLeft: "auto",
               marginRight: "auto",
               marginTop: "5%",
-              marginBottom: size !== "small" ? "5%" : "5%",
+              marginBottom: "5%",
             }}
           />
           <Heading margin="none" level={3} size="small" alignSelf="center">
@@ -130,12 +130,22 @@ function LoginPage() {
             align="center"
             width="70%"
             alignSelf="center"
-            margin={{ bottom: "5vh", top: "5vh" }}
+            margin={{ bottom: "2vh", top: "2vh" }}
           >
             <Text size="10px" color={"#999"}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+              Welcome to the ndau blockchain explorer.
+              <br />
+              <br />
+              The ndau blockchain explorer is your window on the ndau
+              blockchain. This website uses ndau's publicly accessible APIs to
+              allow anyone to search and view all ndau transactions and accounts
+              since ndau's mainnet went live in May of 2019.
+              <br />
+              <br />
+              And by creating an account on this ndau blockchain explorer
+              website, you have the ability to save bookmarks to any accounts or
+              transactions you wish to remember. For more information about
+              ndau, please see ndau.io.
             </Text>
           </Box>
 
@@ -149,8 +159,6 @@ function LoginPage() {
                 })
                 .then((res) => {
                   if (res.data.verify === true) {
-             
-                    
                     localStorage.setItem(
                       "ndau_user_token",
                       "bearer " + res.data.user_token
@@ -159,11 +167,9 @@ function LoginPage() {
                     updateLoggedIn(true);
                     history.push("/");
                     toast.success("Logged In");
-                  
-                }
-                else{
-                  toast.error("Please verify your Email")
-                }
+                  } else {
+                    toast.error("Please verify your Email");
+                  }
                 })
                 .catch((e) => {
                   setEmailErrorState("Email or Password Incorrect");

@@ -12,7 +12,6 @@ import {
   Box,
   Anchor,
   ResponsiveContext,
-  Sidebar,
   Nav,
   Button,
   Layer,
@@ -83,9 +82,14 @@ const SideBar = (props) => {
         Home
       </NavbarLink>
 
-      <NavbarLink margin="small" to="/about">
+      <Anchor
+        to="https://ndau.io"
+        size="small"
+        margin={{ vertical: "medium", horizontal: "medium" }}
+      >
         About
-      </NavbarLink>
+      </Anchor>
+
       <NavbarLink margin="small" to="/blockchain">
         Blockchain
       </NavbarLink>
@@ -148,9 +152,17 @@ const Navbar = (props) => {
             <NavbarLink to="/" small={screenSize === "small"}>
               Home
             </NavbarLink>
-            <NavbarLink to="/about" small={screenSize === "small"}>
+
+            <Anchor
+              href="https://ndau.io"
+              size="small"
+              target={"_blank"}
+              rel="_noopener"
+              margin={{ vertical: "medium", horizontal: "medium" }}
+            >
               About
-            </NavbarLink>
+            </Anchor>
+
             <Box margin={{ top: "small" }} height={"40%"}>
               {screenSize !== "small" && (
                 <img src={LogoImg} style={{ height: "100%" }} alt="ndau-logo" />

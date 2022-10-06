@@ -8,213 +8,211 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Box, TextInput, Menu, Text, Stack, Form } from 'grommet'
-import qs from 'query-string'
-import { Search } from 'grommet-icons'
-import { getNodeEndpoint , getNodeStatus, validURL } from '../../../helpers/fetch'
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { Box, TextInput, Menu, Text, Stack, Form } from "grommet";
+import qs from "query-string";
+import { Search } from "grommet-icons";
+import {
+  getNodeEndpoint,
+  getNodeStatus,
+  validURL,
+} from "../../../helpers/fetch";
 
 class BlockchainSearch extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       invalidNode: null,
-      searchTerm: '',
+      searchTerm: "",
       searchType: null,
-      invalidType: null
-    }
+      invalidType: null,
+    };
   }
-  
+
   render() {
     const { searchTerm, invalidType, invalidNode } = this.state;
     const query = qs.parse(window.location.search);
     const currentNode = query.node;
     const nodes = [
       {
-        label:"mainnet",
+        label: "mainnet",
         onClick: () => this.changeNode("mainnet"),
       },
       {
-        label:"testnet",
-        onClick: () => this.changeNode("testnet")
+        label: "testnet",
+        onClick: () => this.changeNode("testnet"),
       },
-      {
-        label:"devnet",
-        onClick: () => this.changeNode("devnet")
-      },
-    ]
-    const invalidEntry = invalidType || invalidNode
-    const selectableNodes = nodes && nodes.filter(node => node && node.label !== currentNode)
+    ];
+    const invalidEntry = invalidType || invalidNode;
+    const selectableNodes =
+      nodes && nodes.filter((node) => node && node.label !== currentNode);
 
     return (
-      <Box 
-        round="xsmall" 
+      <Box
+        round="xsmall"
         border
- 
         direction="row"
-        // align="end" 
+        // align="end"
         style={{
-          borderColor: invalidEntry ? "rgba(255,0,0,0.5)" : "rgba(255,255,255,0.15)",
-          background: invalidEntry ? "rgba(255,0,0,0.05)" : "transparent"
+          borderColor: invalidEntry
+            ? "rgba(255,0,0,0.5)"
+            : "rgba(255,255,255,0.15)",
+          background: invalidEntry ? "rgba(255,0,0,0.05)" : "transparent",
         }}
-      >   
+      >
         <Stack fill>
-          {
-            invalidEntry &&
-            <Box 
-              justify="end" 
-              height="44px" 
+          {invalidEntry && (
+            <Box
+              justify="end"
+              height="44px"
               align="center"
-              animation={{type: "fadeIn", delay: 0, duration: 300 }}
+              animation={{ type: "fadeIn", delay: 0, duration: 300 }}
             >
-              {
-                invalidNode ? (
-                  <Text color="red" size="xsmall" weight="bold">
-                    {invalidNode || "node"} may be down!
-                  </Text>
-                ) : (
-                  <Text color="red" size="xsmall" weight="bold">
-                    invalid entry!
-                  </Text>
-                )
-              }
+              {invalidNode ? (
+                <Text color="red" size="xsmall" weight="bold">
+                  {invalidNode || "node"} may be down!
+                </Text>
+              ) : (
+                <Text color="red" size="xsmall" weight="bold">
+                  invalid entry!
+                </Text>
+              )}
             </Box>
-          }
+          )}
 
           <Box justify="center" height="100%" width="100%">
             <Form onSubmit={this.onSearch}>
               <TextInput
-                type="search" 
+                type="search"
                 value={searchTerm}
                 onChange={this.changeSearchTerm}
                 spellCheck={false}
                 plain
                 size="small"
                 placeholder="search for blocks, transactions or accounts..."
-                style={{paddingRight: "5px",zIndex:0}}
+                style={{ paddingRight: "5px", zIndex: 0 }}
               />
             </Form>
-            
           </Box>
         </Stack>
-        
+
         {/* {
           currentNode && */}
-        <Box 
-          background="rgba(0, 0, 0, 0.0)"
-          align="center"
-        > 
+        <Box background="rgba(0, 0, 0, 0.0)" align="center">
           <Menu
             size="xsmall"
             icon={false}
             items={selectableNodes}
-            margin={{horizontal: "small"}}
+            margin={{ horizontal: "small" }}
             label={
               <Text color="#f99d1c" size="small">
-                {!currentNode || validURL(currentNode) ? 'network' : currentNode}
+                {!currentNode || validURL(currentNode)
+                  ? "network"
+                  : currentNode}
               </Text>
             }
           />
         </Box>
-      
-        <Box 
-          onClick={this.onSearch} 
-          pad={{right: "20px", left: "small"}}
+
+        <Box
+          onClick={this.onSearch}
+          pad={{ right: "20px", left: "small" }}
           justify="center"
           style={{
             height: "44px",
             background: "rgba(0, 0, 0, 0.15)",
-            borderRadius: "0 100% 100% 0"
+            borderRadius: "0 100% 100% 0",
           }}
           round="100%"
         >
-          <Search color="rgba(255,255,255,0.7)"/>
+          <Search color="rgba(255,255,255,0.7)" />
         </Box>
       </Box>
-    )
+    );
   }
 
   changeNode = async (selectedNode) => {
-    const { history } = this.props; 
-    const nodeEnpoints = await getNodeEndpoint(selectedNode)
-    getNodeStatus(nodeEnpoints)
-      .then(status => {
-        if(status) {
-          history.push(`${history.location.pathname}?node=${selectedNode}`)
-    
-          this.setState({invalidNode: false })
-        }
-        else {
-          this.setState({ invalidNode: selectedNode })
-        }
-      })
-  }
+    const { history } = this.props;
+    const nodeEnpoints = await getNodeEndpoint(selectedNode);
+    getNodeStatus(nodeEnpoints).then((status) => {
+      if (status) {
+        history.push(`${history.location.pathname}?node=${selectedNode}`);
+
+        this.setState({ invalidNode: false });
+      } else {
+        this.setState({ invalidNode: selectedNode });
+      }
+    });
+  };
 
   changeSearchTerm = (event) => {
     const { value } = event.target;
-    this.setState({ 
-      searchTerm: value && value.trim(), 
+    this.setState({
+      searchTerm: value && value.trim(),
       invalidType: null,
-      invalidNode: null
-    })
-  }
+      invalidNode: null,
+    });
+  };
 
   onSearch = (event) => {
-    event.preventDefault()
-  
+    event.preventDefault();
+
     if (this.state.searchTerm) {
-      const searchType = this.termType()
-      return this.setState({ 
-        searchType,
-        invalidType: searchType ? false : true
-      }, this.goToURL) 
+      const searchType = this.termType();
+      return this.setState(
+        {
+          searchType,
+          invalidType: searchType ? false : true,
+        },
+        this.goToURL
+      );
     }
-  }
+  };
 
   termType = () => {
-    const { searchTerm } = this.state 
-    if(!searchTerm) {
-      return null
-    }  
-
-    const term = searchTerm.trim()
-    const isInteger = Number(term)
-    const termLength = searchTerm.length
-    
-    if(isInteger && isInteger < 10000000) {
-      return 'blockHeight'
+    const { searchTerm } = this.state;
+    if (!searchTerm) {
+      return null;
     }
 
-    if(termLength === 48 && searchTerm.slice(0,2) === 'nd') {
-      return 'address'
+    const term = searchTerm.trim();
+    const isInteger = Number(term);
+    const termLength = searchTerm.length;
+
+    if (isInteger && isInteger < 10000000) {
+      return "blockHeight";
     }
 
-    if(termLength === 22) {
-      return 'transactionHash'
+    if (termLength === 48 && searchTerm.slice(0, 2) === "nd") {
+      return "address";
     }
 
-    return null
-  }
+    if (termLength === 22) {
+      return "transactionHash";
+    }
+
+    return null;
+  };
 
   goToURL = () => {
-    const { searchTerm , searchType } = this.state
-    const query = window.location.search
-    const { history } = this.props
+    const { searchTerm, searchType } = this.state;
+    const query = window.location.search;
+    const { history } = this.props;
 
     if (searchType === "blockHeight") {
-      return history.push(`/block/${searchTerm}/${query}`)
+      return history.push(`/block/${searchTerm}/${query}`);
     }
 
     if (searchType === "address") {
-      return history.push(`/account/${searchTerm}/${query}`)
+      return history.push(`/account/${searchTerm}/${query}`);
     }
-  
+
     if (searchType === "transactionHash") {
-      return history.push(`/transaction/${searchTerm}/${query}`)
+      return history.push(`/transaction/${searchTerm}/${query}`);
     }
-  }
+  };
 }
 
 export default withRouter(BlockchainSearch);
