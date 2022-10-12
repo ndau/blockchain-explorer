@@ -4,9 +4,8 @@ import { humanizeNumber } from "../../../../helpers/format";
 
 import EconomicsStatBox from "./EconomicsStatBox/EconomicsStatBox";
 import WidgetBox from "./WidgetBox/WidgetBox";
-import React from 'react';
+import React from "react";
 import api from "../../../../api";
-
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
@@ -31,7 +30,6 @@ const bigScreenGrid = [
   { name: "numOfAccounts", start: [1, 2], end: [1, 2] },
 ];
 
-
 const smallScreenGrid = [
   { name: "EconomicsStat", start: [0, 0], end: [1, 0] },
   { name: "staked", start: [0, 1], end: [0, 1] },
@@ -47,6 +45,8 @@ const bigScreenColumns = ["large", "small"];
 const smallScreenColumns = ["40vw", "40vw"];
 
 const StatisticsPanel = (props) => {
+  const [numOfAccounts, setNumOfAccounts] = React.useState(0);
+
   const {
     totalNdau,
     marketPrice,
@@ -55,12 +55,13 @@ const StatisticsPanel = (props) => {
     totalNdauIssued,
     nextIssuePrice,
   } = props;
-  const [numOfAccounts,setNumOfAccounts]=React.useState(0);
-React.useEffect(()=>{
-axios.get(`${api}/numOfAccounts`).then((val)=>{
-  setNumOfAccounts(val.data.numOfAccounts);
-})
-},[])
+
+  React.useEffect(() => {
+    axios.get(`${api}/numOfAccounts`).then((val) => {
+            setNumOfAccounts(new Intl.NumberFormat().format(val.data.numOfAccounts));
+    });
+  }, []);
+
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (
@@ -93,11 +94,14 @@ axios.get(`${api}/numOfAccounts`).then((val)=>{
             </StatBox>
           )}
 
-      
-          
-
           {/* <StatBox gridArea="numOfAccounts" ><div style={{textAlign:"center"}}>Number of Accounts<br/>{numOfAccounts}</div></StatBox> */}
-          <StatBox gridArea="staked"><div style={{textAlign:"center"}}>Number of Accounts<br/>{numOfAccounts}</div></StatBox>
+          <StatBox gridArea="staked">
+            <div style={{ textAlign: "center" }}>
+              Number of Accounts
+              <br />
+              {numOfAccounts}
+            </div>
+          </StatBox>
         </Grid>
       )}
     </ResponsiveContext.Consumer>

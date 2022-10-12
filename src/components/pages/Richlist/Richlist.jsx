@@ -57,7 +57,9 @@ function Richlist() {
 
               <Box Box width={"medium"}>
                 <Text margin={{ right: "small" }} color={"#CCC"} truncate>
-                  {item[1].balance}
+                  {new Intl.NumberFormat("en", {
+                    minimumSignificantDigits: 14,
+                  }).format(Number(item[1].balance / 10 ** 8))}
                 </Text>
               </Box>
             </Box>

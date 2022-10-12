@@ -297,15 +297,15 @@ const Navbar = (props) => {
               justify="around"
               align="center"
             >
-              <Anchor>
+              <Anchor href="https://twitter.com/ndaucollective" target={"_blank"}>
                 <img src="twitter_icon.svg" />
               </Anchor>
 
-              <Anchor>
+              <Anchor href="https://t.me/ndau_community" target={"_blank"}>
                 <img src="telegram_icon.svg" />
               </Anchor>
 
-              <Anchor>
+              <Anchor href="https://github.com/ndau" target={"_blank"}>
                 <img src="github_icon.svg" />
               </Anchor>
             </Box>
