@@ -55,11 +55,6 @@ const StyledForm = styled(Form)`
 `;
 
 function ForgotPasswordPage() {
-  const loggedInContext = useContext(UserContext);
- 
-  const isLoggedIn = loggedInContext.loggedIn;
-  const updateLoggedIn = loggedInContext.updateLoggedIn;
-
   const history = useHistory();
   return (
     <Page>
