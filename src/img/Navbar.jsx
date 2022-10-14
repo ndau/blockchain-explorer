@@ -20,9 +20,7 @@ import {
 } from "grommet";
 
 import LogoImg from "../../../img/ndau_orange_logo.png";
-import twitterImg from "../../../img/telegram_icon.svg";
-import telegramImg from "../../../img/twitter_icon.svg";
-import githubImg from "../../../img/github_icon.svg";
+import twitterImg from "../../../img/"
 import { AppsRounded } from "grommet-icons";
 import "./style.css";
 import { Link, useHistory } from "react-router-dom";
@@ -302,15 +300,15 @@ const Navbar = (props) => {
                 href="https://twitter.com/ndaucollective"
                 target={"_blank"}
               >
-                <img src={twitterImg} />
+                <img src="twitter_icon.svg" />
               </Anchor>
 
               <Anchor href="https://t.me/ndau_community" target={"_blank"}>
-                <img src={telegramImg} />
+                <img src="telegram_icon.svg" />
               </Anchor>
 
               <Anchor href="https://github.com/ndau" target={"_blank"}>
-                <img src={githubImg} />
+                <img src="github_icon.svg" />
               </Anchor>
             </Box>
           ) : (
