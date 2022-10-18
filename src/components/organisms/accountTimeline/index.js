@@ -58,9 +58,6 @@ class AccountTimeline extends Component {
 
   render() {
     const { events, balance, getAccountData } = this.props;
-    if (!events) {
-      return null;
-    }
 
     const {
       typeFilters,

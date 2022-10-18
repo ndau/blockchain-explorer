@@ -124,12 +124,12 @@ class Account extends Component {
               />
             </Box>
           </>
-        ) : this.state.history === 0 ? (
-          <Box align="center">
-            <Spinner size="medium" color="#F29A1D" />
-          </Box>
         ) : (
-          "All else"
+          this.state.history === 0 && (
+            <Box align="center">
+              <Spinner size="medium" color="#F29A1D" />
+            </Box>
+          )
         )}
       </Details>
     );
