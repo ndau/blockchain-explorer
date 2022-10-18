@@ -52,7 +52,7 @@ class Account extends Component {
                   >
                     {account && account.address}
                   </Text>
-                  <FavouriteButton bookmarkVal={account.address} bookmarkType="account"/>
+                  {account && <FavouriteButton bookmarkVal={account.address} bookmarkType="account"/>}
                   <Text
                     size="xsmall"
                     color="#aaa"
