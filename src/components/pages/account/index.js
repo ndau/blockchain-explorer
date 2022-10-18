@@ -23,7 +23,7 @@ class Account extends Component {
 
     this.state = {
       account: {},
-      history: null,
+      history: 0,
       hideDetails: false,
       valid: false,
       loading: false,
@@ -34,10 +34,12 @@ class Account extends Component {
     const { account, history, hideDetails } = this.state;
     const showDetails = !hideDetails;
 
+    console.log(this.state, "State");
+
     return (
       <Details browserHistory={this.props.history} notFound={!account}>
-        {/* {this.state.history ? ( */}
-        {true ? (
+        {/* {true ? ( */}
+        {this.state.history ? (
           <>
             <Box margin={{ bottom: "20px" }}>
               <Text size="large">
@@ -52,7 +54,12 @@ class Account extends Component {
                   >
                     {account && account.address}
                   </Text>
-                  {account && <FavouriteButton bookmarkVal={account.address} bookmarkType="account"/>}
+                  {account && (
+                    <FavouriteButton
+                      bookmarkVal={account.address}
+                      bookmarkType="account"
+                    />
+                  )}
                   <Text
                     size="xsmall"
                     color="#aaa"
@@ -98,7 +105,8 @@ class Account extends Component {
               style={
                 showDetails
                   ? {
-                      margin: "10px 0px 0px 15px",
+                      margin:
+                        "10pndapcbexsq2zh9i7m2ze3rqr5wzp8fb2jvqw2zsh5nufbct5x 0px 0px 15px",
                       paddingLeft: "11px",
                       borderLeft: "1px solid rgba(255,255, 255, 0.3)",
                     }
@@ -116,12 +124,14 @@ class Account extends Component {
               />
             </Box>
           </>
-        ) : this.state.valid ? (
+        ) : this.state.history === null ? (
           "This account currently has no transactions on the blockchain."
-        ) : (
+        ) : this.state.history === 0 ? (
           <Box align="center">
             <Spinner size="medium" color="#F29A1D" />
           </Box>
+        ) : (
+          "ALl else"
         )}
       </Details>
     );
@@ -153,6 +163,9 @@ class Account extends Component {
         }
 
         getAccountHistory(address, fromDate, toDate).then((history) => {
+          console.log(history, "history");
+          console.log(this.state.account, "this.state.account");
+
           if ((history && history.length === 0) || history[0] === null) {
             this.setState({
               history: null,
@@ -162,7 +175,11 @@ class Account extends Component {
             return;
           }
 
-          this.setState({ history, loading: false });
+          this.setState({
+            history,
+            loading: false,
+            valid: history.length ? true : false,
+          });
 
           return;
         });
