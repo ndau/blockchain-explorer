@@ -39,7 +39,7 @@ class Account extends Component {
     return (
       <Details browserHistory={this.props.history} notFound={!account}>
         {/* {true ? ( */}
-        {this.state.history ? (
+        {this.state.account ? (
           <>
             <Box margin={{ bottom: "20px" }}>
               <Text size="large">
@@ -124,14 +124,12 @@ class Account extends Component {
               />
             </Box>
           </>
-        ) : this.state.history === null ? (
-          "This account currently has no transactions on the blockchain."
         ) : this.state.history === 0 ? (
           <Box align="center">
             <Spinner size="medium" color="#F29A1D" />
           </Box>
         ) : (
-          "ALl else"
+          "All else"
         )}
       </Details>
     );
