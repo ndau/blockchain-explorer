@@ -23,7 +23,7 @@ class Account extends Component {
 
     this.state = {
       account: {},
-      history: null,
+      history: 0,
       hideDetails: false,
       valid: false,
       loading: false,
@@ -34,10 +34,11 @@ class Account extends Component {
     const { account, history, hideDetails } = this.state;
     const showDetails = !hideDetails;
 
+    console.log(this.state, "state");
+
     return (
       <Details browserHistory={this.props.history} notFound={!account}>
-        {/* {this.state.history ? ( */}
-        {true ? (
+        {this.state.valid ? (
           <>
             <Box margin={{ bottom: "20px" }}>
               <Text size="large">
@@ -52,7 +53,10 @@ class Account extends Component {
                   >
                     {account && account.address}
                   </Text>
-                  <FavouriteButton bookmarkVal={account.address} bookmarkType="account"/>
+                  <FavouriteButton
+                    bookmarkVal={account.address}
+                    bookmarkType="account"
+                  />
                   <Text
                     size="xsmall"
                     color="#aaa"
@@ -88,40 +92,45 @@ class Account extends Component {
                 <DetailsCard data={account} keywordMap={this.keywordMap} />
               </Box>
             </Collapsible>
-
-            <Box animation="fadeIn">
-              <Text>
-                <b>History{showDetails && ":"}</b>
-              </Text>
-            </Box>
-            <Box
-              style={
-                showDetails
-                  ? {
-                      margin: "10px 0px 0px 15px",
-                      paddingLeft: "11px",
-                      borderLeft: "1px solid rgba(255,255, 255, 0.3)",
-                    }
-                  : {}
-              }
-            >
-              <AccountTimeline
-                events={history && [...history].reverse()}
-                balance={account && account.balance}
-                fill={hideDetails}
-                getAccountData={this.getData}
-                loading={this.state.loading}
-                setLoadingTrueFunc={this.setLoadingTrue}
-                setLoadingFalseFunc={this.setLoadingFalse}
-              />
-            </Box>
+            {this.state.history === 0 ? (
+              <Box align="center">
+                <Spinner size="medium" color="#F29A1D" />
+              </Box>
+            ) : this.state.history !== null ? (
+              <>
+                <Box animation="fadeIn">
+                  <Text>
+                    <b>History{showDetails && ":"}</b>
+                  </Text>
+                </Box>
+                <Box
+                  style={
+                    showDetails
+                      ? {
+                          margin: "10px 0px 0px 15px",
+                          paddingLeft: "11px",
+                          borderLeft: "1px solid rgba(255,255, 255, 0.3)",
+                        }
+                      : {}
+                  }
+                >
+                  <AccountTimeline
+                    events={history && [...history].reverse()}
+                    balance={account && account.balance}
+                    fill={hideDetails}
+                    getAccountData={this.getData}
+                    loading={this.state.loading}
+                    setLoadingTrueFunc={this.setLoadingTrue}
+                    setLoadingFalseFunc={this.setLoadingFalse}
+                  />
+                </Box>
+              </>
+            ) : (
+              "This account has had no activity in the past month"
+            )}
           </>
-        ) : this.state.valid ? (
-          "This account currently has no transactions on the blockchain."
         ) : (
-          <Box align="center">
-            <Spinner size="medium" color="#F29A1D" />
-          </Box>
+          "This is not a valid account address"
         )}
       </Details>
     );
