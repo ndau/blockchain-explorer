@@ -34,11 +34,12 @@ class Account extends Component {
     const { account, history, hideDetails } = this.state;
     const showDetails = !hideDetails;
 
-    console.log(this.state, "state");
+    console.log(this.state, "State");
 
     return (
       <Details browserHistory={this.props.history} notFound={!account}>
-        {this.state.valid ? (
+        {/* {true ? ( */}
+        {this.state.account ? (
           <>
             <Box margin={{ bottom: "20px" }}>
               <Text size="large">
@@ -53,10 +54,12 @@ class Account extends Component {
                   >
                     {account && account.address}
                   </Text>
-                  <FavouriteButton
-                    bookmarkVal={account.address}
-                    bookmarkType="account"
-                  />
+                  {account && (
+                    <FavouriteButton
+                      bookmarkVal={account.address}
+                      bookmarkType="account"
+                    />
+                  )}
                   <Text
                     size="xsmall"
                     color="#aaa"
@@ -92,45 +95,41 @@ class Account extends Component {
                 <DetailsCard data={account} keywordMap={this.keywordMap} />
               </Box>
             </Collapsible>
-            {this.state.history === 0 ? (
-              <Box align="center">
-                <Spinner size="medium" color="#F29A1D" />
-              </Box>
-            ) : this.state.history !== null ? (
-              <>
-                <Box animation="fadeIn">
-                  <Text>
-                    <b>History{showDetails && ":"}</b>
-                  </Text>
-                </Box>
-                <Box
-                  style={
-                    showDetails
-                      ? {
-                          margin: "10px 0px 0px 15px",
-                          paddingLeft: "11px",
-                          borderLeft: "1px solid rgba(255,255, 255, 0.3)",
-                        }
-                      : {}
-                  }
-                >
-                  <AccountTimeline
-                    events={history && [...history].reverse()}
-                    balance={account && account.balance}
-                    fill={hideDetails}
-                    getAccountData={this.getData}
-                    loading={this.state.loading}
-                    setLoadingTrueFunc={this.setLoadingTrue}
-                    setLoadingFalseFunc={this.setLoadingFalse}
-                  />
-                </Box>
-              </>
-            ) : (
-              "This account has had no activity in the past month"
-            )}
+
+            <Box animation="fadeIn">
+              <Text>
+                <b>History{showDetails && ":"}</b>
+              </Text>
+            </Box>
+            <Box
+              style={
+                showDetails
+                  ? {
+                      margin:
+                        "0px 0px 0px 15px",
+                      paddingLeft: "11px",
+                      borderLeft: "1px solid rgba(255,255, 255, 0.3)",
+                    }
+                  : {}
+              }
+            >
+              <AccountTimeline
+                events={history && [...history].reverse()}
+                balance={account && account.balance}
+                fill={hideDetails}
+                getAccountData={this.getData}
+                loading={this.state.loading}
+                setLoadingTrueFunc={this.setLoadingTrue}
+                setLoadingFalseFunc={this.setLoadingFalse}
+              />
+            </Box>
           </>
         ) : (
-          "This is not a valid account address"
+          this.state.history === 0 && (
+            <Box align="center">
+              <Spinner size="medium" color="#F29A1D" />
+            </Box>
+          )
         )}
       </Details>
     );
@@ -162,6 +161,9 @@ class Account extends Component {
         }
 
         getAccountHistory(address, fromDate, toDate).then((history) => {
+          console.log(history, "history");
+          console.log(this.state.account, "this.state.account");
+
           if ((history && history.length === 0) || history[0] === null) {
             this.setState({
               history: null,
@@ -171,7 +173,11 @@ class Account extends Component {
             return;
           }
 
-          this.setState({ history, loading: false });
+          this.setState({
+            history,
+            loading: false,
+            valid: history.length ? true : false,
+          });
 
           return;
         });

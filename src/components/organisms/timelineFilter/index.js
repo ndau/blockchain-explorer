@@ -24,9 +24,9 @@ class TimelineFilter extends Component {
   }
 
   render() {
-    if (!this.props.events) {
-      return null;
-    }
+    // if (!this.props.events) {
+    //   return null;
+    // }
 
     const { showFilters } = this.state;
     const {

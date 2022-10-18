@@ -1,3 +1,4 @@
+import { Box } from "grommet";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import TimelineEvent from "../../molecules/timelineEvent";
@@ -7,9 +8,11 @@ function DisplayedEvents(props) {
   const currentPageEvents = props.currentPageEvents;
   const lastPreviousEvent = props.lastPreviousEvent;
 
+  console.log(currentPageEvents, "currentPageEvents");
+
   return (
     <>
-      {currentPageEvents &&
+      {currentPageEvents && currentPageEvents.length ? (
         currentPageEvents.map((event, index, currentPageEventsArr) => {
           let previousEventVal = currentPageEventsArr[index + 1];
 
@@ -24,7 +27,10 @@ function DisplayedEvents(props) {
               previousEvent={previousEventVal}
             />
           );
-        })}
+        })
+      ) : (
+        <Box align="center">No transactions found for this time period</Box>
+      )}
     </>
   );
 }
