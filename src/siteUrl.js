@@ -1,1 +1,1 @@
-export const siteUrl = "http://explorer1.ndau.tech/";
+export const siteUrl = "http://explorer1.ndau.tech";
