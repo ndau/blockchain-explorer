@@ -237,17 +237,17 @@ export const pollForTransactions = ({
 /// //////////////////////////////////////
 
 export const getAccount = async (address) => {
-  const accountStateEndpoint = `${await getNodeEndpoint()}/account/account/${address}`;
+  const accountDetailsEndpoint = `${await getNodeEndpoint()}/account/account/${address}`;
 
   try {
-    let accountStateEndpointResponse = await axios.get(
-      accountStateEndpoint,
+    let accountDetailsEndpointResponse = await axios.get(
+      accountDetailsEndpoint,
       HTTP_REQUEST_HEADER
     );
 
     const account = {
       address,
-      ...accountStateEndpointResponse.data[address],
+      ...accountDetailsEndpointResponse.data[address],
     };
 
     let formattedAccount = formatAccount(account);
@@ -316,21 +316,27 @@ export const getAccountHistory = async (
 
   //
 
-  const limitedAccountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}?after=${oldestBlockInRange}`;
+  const startingAccountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}?after=${oldestBlockInRange}`;
 
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`;
 
-  //
+  const firstEntryEndpoint = `${accountHistoryEndpoint}?limit=1`;
+  const firstEntryResponse = await axios.get(
+    firstEntryEndpoint,
+    HTTP_REQUEST_HEADER
+  );
 
   let allItems = [];
+
   let offset = 0;
-  let MAX_LOOPS = 100;
-  while (true && MAX_LOOPS) {
+
+  while (true) {
     const url = offset
       ? `${accountHistoryEndpoint}?after=${offset}`
-      : limitedAccountHistoryEndpoint;
+      : startingAccountHistoryEndpoint;
 
     const response = await axios.get(url, HTTP_REQUEST_HEADER);
+
     let history = response.data && response.data.Items;
 
     if (response.data && response.data.Next === "") {
@@ -352,7 +358,16 @@ export const getAccountHistory = async (
     }
   }
 
-  return allItems;
+  let isOldestInRangeFirstEntry =
+    allItems[0].TxHash === firstEntryResponse.data.Items[0].TxHash;
+
+  const allItemsObj = {
+    allItems,
+    isOldestInRangeFirstEntry,
+  };
+
+  // return allItems;
+  return allItemsObj;
 };
 
 export const pollForAccountUpdates = ({ metadata, success }) => {

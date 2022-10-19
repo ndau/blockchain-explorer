@@ -17,7 +17,6 @@ import AccountTimeline from "../../organisms/accountTimeline";
 import { getAccount, getAccountHistory } from "../../../helpers/fetch";
 
 class Account extends Component {
-  displaystring;
   constructor(props) {
     super(props);
 
@@ -27,14 +26,13 @@ class Account extends Component {
       hideDetails: false,
       valid: false,
       loading: false,
+      isOldestInRangeFirstEntry: false
     };
   }
 
   render() {
     const { account, history, hideDetails } = this.state;
     const showDetails = !hideDetails;
-
-    console.log(this.state, "State");
 
     return (
       <Details browserHistory={this.props.history} notFound={!account}>
@@ -105,8 +103,7 @@ class Account extends Component {
               style={
                 showDetails
                   ? {
-                      margin:
-                        "0px 0px 0px 15px",
+                      margin: "0px 0px 0px 15px",
                       paddingLeft: "11px",
                       borderLeft: "1px solid rgba(255,255, 255, 0.3)",
                     }
@@ -121,6 +118,7 @@ class Account extends Component {
                 loading={this.state.loading}
                 setLoadingTrueFunc={this.setLoadingTrue}
                 setLoadingFalseFunc={this.setLoadingFalse}
+                isOldestInRangeFirstEntry={this.state.isOldestInRangeFirstEntry}
               />
             </Box>
           </>
@@ -160,11 +158,11 @@ class Account extends Component {
           return;
         }
 
-        getAccountHistory(address, fromDate, toDate).then((history) => {
-          console.log(history, "history");
-          console.log(this.state.account, "this.state.account");
-
-          if ((history && history.length === 0) || history[0] === null) {
+        getAccountHistory(address, fromDate, toDate).then((historyResponse) => {
+          if (
+            (historyResponse && historyResponse.length === 0) ||
+            historyResponse[0] === null
+          ) {
             this.setState({
               history: null,
               valid: true,
@@ -174,9 +172,10 @@ class Account extends Component {
           }
 
           this.setState({
-            history,
+            history: historyResponse.allItems,
+            isOldestInRangeFirstEntry: historyResponse.isOldestInRangeFirstEntry,
             loading: false,
-            valid: history.length ? true : false,
+            valid: historyResponse.allItems.length ? true : false,
           });
 
           return;

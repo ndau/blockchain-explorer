@@ -8,99 +8,104 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Text, Box, Collapsible } from 'grommet'
-import { Expand, Contract } from 'grommet-icons'
-import Card from '../../atoms/card'
-import Age from '../../atoms/age'
-import Anchor from '../../atoms/anchor'
-import { formatAccountEvent, convertNapuToNdau } from '../../../helpers/format'
+import React, { Component } from "react";
+import { Text, Box, Collapsible } from "grommet";
+import { Expand, Contract } from "grommet-icons";
+import Card from "../../atoms/card";
+import Age from "../../atoms/age";
+import Anchor from "../../atoms/anchor";
+import { formatAccountEvent, convertNapuToNdau } from "../../../helpers/format";
 
 class TimelineEvent extends Component {
-  state = { active: false }
-  render () {
+  state = { active: false };
+  render() {
     if (!this.props.event) {
-      return null
+      return null;
     }
 
-    const { event, previousEvent, index, selected } = this.props
-    const { active: activeState } = this.state
-    const active = selected || activeState
-    const accountEvent = formatAccountEvent(event)
-    const { balance, timestamp, transactionHash, blockHeight } = accountEvent
+    const { event, previousEvent, index, selected, isOldestInRangeFirstEntry } =
+      this.props;
+
+    const { active: activeState } = this.state;
+    const active = selected || activeState;
+    const accountEvent = formatAccountEvent(event);
+    const { balance, timestamp, transactionHash, blockHeight } = accountEvent;
 
     const formattedPreviousEvent = previousEvent
       ? formatAccountEvent(previousEvent)
-      : accountEvent
+      : isOldestInRangeFirstEntry
+      ? { raw: { balance } }
+      : accountEvent;
+
     const napuAmount =
-      accountEvent.raw.balance - formattedPreviousEvent.raw.balance
-    const ndauAmount = convertNapuToNdau(napuAmount)
+      accountEvent.raw.balance - formattedPreviousEvent.raw.balance;
+    const ndauAmount = convertNapuToNdau(napuAmount);
 
     return (
       <Card
         header={
           <header>
             <Text>
-              <Text style={{ float: 'right' }}>
+              <Text style={{ float: "right" }}>
                 {active ? (
                   <Contract
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: "pointer" }}
                     onClick={this.toggleActiveState}
-                    size='12px'
-                    color='#777'
+                    size="12px"
+                    color="#777"
                   />
                 ) : (
                   <Expand
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: "pointer" }}
                     onClick={this.toggleActiveState}
-                    size='12px'
-                    color='#777'
+                    size="12px"
+                    color="#777"
                   />
                 )}
               </Text>
 
-              <Text size='xsmall' color='#aaa'>
+              <Text size="xsmall" color="#aaa">
                 <i>
-                  <Age timestamp={accountEvent.raw.timestamp} suffix='ago' />
+                  <Age timestamp={accountEvent.raw.timestamp} suffix="ago" />
                 </i>
               </Text>
 
               <Text
-                size='medium'
+                size="medium"
                 color={
                   napuAmount === 0
-                    ? 'rgba(255,255,255, 0.7)'
+                    ? "rgba(255,255,255, 0.7)"
                     : napuAmount < 0
-                    ? 'rgba(255,0,0,0.7)'
-                    : 'rgba(0,255,0,0.7)'
+                    ? "rgba(255,0,0,0.7)"
+                    : "rgba(0,255,0,0.7)"
                 }
-                margin={{ left: 'medium' }}
+                margin={{ left: "medium" }}
               >
                 <b>
-                  {napuAmount === 0 ? '' : napuAmount < 0 ? '-' : '+'}
-                  {napuAmount === 0 ? '--' : ndauAmount}
+                  {napuAmount === 0 ? "" : napuAmount < 0 ? "-" : "+"}
+                  {napuAmount === 0 ? "--" : ndauAmount}
                 </b>
               </Text>
             </Text>
           </header>
         }
-        pad='15px'
-        animation='fadeIn'
+        pad="15px"
+        animation="fadeIn"
       >
         <Collapsible open={active}>
           <Box
-            margin={{ top: '10px' }}
+            margin={{ top: "10px" }}
             animation={
               active
-                ? 'fadeIn'
+                ? "fadeIn"
                 : {
-                    type: 'fadeOut',
+                    type: "fadeOut",
                     delay: 0,
-                    duration: 100
+                    duration: 100,
                   }
             }
           >
-            <Box key={index} margin={{ bottom: 'small' }}>
+            <Box key={index} margin={{ bottom: "small" }}>
               <Text>
                 <b>amount: </b>
                 {ndauAmount}
@@ -112,15 +117,15 @@ class TimelineEvent extends Component {
               <Text>
                 <b>previous balance: </b>
                 {formattedPreviousEvent.balance}
-
               </Text>
 
               <Text>
                 <b>transaction Hash: </b>
-         
-                <Anchor href={`/transaction/${transactionHash}`}>{transactionHash}</Anchor>
-              </Text>
 
+                <Anchor href={`/transaction/${transactionHash}`}>
+                  {transactionHash}
+                </Anchor>
+              </Text>
 
               <Text>
                 <b>time: </b>
@@ -141,15 +146,15 @@ class TimelineEvent extends Component {
           </Box>
         </Collapsible>
       </Card>
-    )
+    );
   }
 
-  toggleActiveState = event => {
-    event.stopPropagation()
+  toggleActiveState = (event) => {
+    event.stopPropagation();
     this.setState(({ active }) => {
-      return { active: !active }
-    })
-  }
+      return { active: !active };
+    });
+  };
 }
 
-export default TimelineEvent
+export default TimelineEvent;
