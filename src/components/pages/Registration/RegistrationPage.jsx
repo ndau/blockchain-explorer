@@ -126,7 +126,7 @@ function RegistrationPage() {
           <StyledForm
             onSubmit={({ value }) => {
               axios
-                .post(`http://ec2-54-183-55-233.us-west-1.compute.amazonaws.com:3001/api/user/register`, {
+                .post(`${api}/user/register`, {
                   email: value.email,
                   password: value.password,
                   username: value.username,
@@ -138,9 +138,8 @@ function RegistrationPage() {
                   ) {
                     toast.success("Signed Up Successfully. Please Login");
                     history.push("/login");
-                  }
-                  else{
-                    console.log("test register")
+                  } else {
+                    console.log("test register");
                   }
                 })
                 .catch((e) => {
