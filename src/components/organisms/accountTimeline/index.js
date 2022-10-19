@@ -57,7 +57,7 @@ class AccountTimeline extends Component {
   };
 
   render() {
-    const { events, balance, getAccountData } = this.props;
+    const { events, balance, getAccountData,isOldestInRangeFirstEntry } = this.props;
 
     const {
       typeFilters,
@@ -104,6 +104,7 @@ class AccountTimeline extends Component {
             <PaginatedEvents
               itemsPerPage={10}
               totalEventsToDisplay={this.state.filteredEventsState}
+              isOldestInRangeFirstEntry={isOldestInRangeFirstEntry}
             />
           </Box>
         ) : (
@@ -123,8 +124,8 @@ class AccountTimeline extends Component {
   componentDidUpdate(prevProps) {
     if (JSON.stringify(this.props) !== JSON.stringify(prevProps)) {
      
-      const filteredEventsDidMount = this.filterEvents(this.props.events);
-      this.setState({ filteredEventsState: filteredEventsDidMount });
+      const newEventsFiltered = this.filterEvents(this.props.events);
+      this.setState({ filteredEventsState: newEventsFiltered });
     } else {
      
     }

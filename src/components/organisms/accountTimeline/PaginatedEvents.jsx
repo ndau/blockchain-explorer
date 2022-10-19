@@ -8,8 +8,6 @@ function DisplayedEvents(props) {
   const currentPageEvents = props.currentPageEvents;
   const lastPreviousEvent = props.lastPreviousEvent;
 
-  console.log(currentPageEvents, "currentPageEvents");
-
   return (
     <>
       {currentPageEvents && currentPageEvents.length ? (
@@ -25,6 +23,7 @@ function DisplayedEvents(props) {
               index={index}
               event={event}
               previousEvent={previousEventVal}
+              isOldestInRangeFirstEntry={props.isOldestInRangeFirstEntry}
             />
           );
         })
@@ -90,6 +89,7 @@ export default function PaginatedEvents(props) {
         currentPageEvents={currentEventsState}
         itemsPerPage={itemsPerPage}
         lastPreviousEvent={lastPreviousEventState}
+        isOldestInRangeFirstEntry={props.isOldestInRangeFirstEntry}
       />
 
       <ReactPaginate
