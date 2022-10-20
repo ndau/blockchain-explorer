@@ -109,7 +109,7 @@ const FilteredTransactions = (props) => {
   }, [unfilteredEventsState]);
 
   return (
-    <Box>
+    <Box basis="full" fill={true} height={{ min: "100vh", max: "101vh" }}>
       <Heading level={2} textAlign="center" fill>
         Filtered Transactions
       </Heading>

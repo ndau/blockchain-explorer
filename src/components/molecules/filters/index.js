@@ -13,7 +13,6 @@ import { Box, Text, Button } from "grommet";
 import { StatusGood, Radial } from "grommet-icons";
 import DateRangePicker from "../../molecules/dateRangePicker";
 import { TRANSACTION_TYPES } from "../../../constants";
-import { siteUrl } from "../../../siteUrl";
 
 class Filters extends Component {
   constructor(props) {
@@ -185,7 +184,7 @@ class Filters extends Component {
   openFilteredTransactionsInNewTab = () => {
     this.saveTypeFiltersInLocalStorage();
     this.saveUnfilteredEventsInLocalStorage();
-    window.open(`${siteUrl}/filteredTransactions`, "_blank");
+    window.open(`/filteredTransactions`, "_blank");
   };
 }
 
