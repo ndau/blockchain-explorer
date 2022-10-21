@@ -1,4 +1,1 @@
-const api = "http://backend.explorer1.ndau.tech/api";
-
-
-export default api;
+export default process.env.SERVICE_ENDPOINT || "api";
