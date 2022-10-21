@@ -320,12 +320,6 @@ export const getAccountHistory = async (
 
   const accountHistoryEndpoint = `${await getNodeEndpoint()}/account/history/${address}`;
 
-  const firstEntryEndpoint = `${accountHistoryEndpoint}?limit=1`;
-  const firstEntryResponse = await axios.get(
-    firstEntryEndpoint,
-    HTTP_REQUEST_HEADER
-  );
-
   let allItems = [];
 
   let offset = 0;
@@ -358,12 +352,55 @@ export const getAccountHistory = async (
     }
   }
 
-  let isOldestInRangeFirstEntry =
-    allItems[0].TxHash === firstEntryResponse.data.Items[0].TxHash;
+  const oldestTxInRange = allItems[0];
+
+  offset = 0;
+
+  let oldestTransactionInRangeMinusOne = 0;
+  let isOldestMinusOneFound = false;
+
+  while (isOldestMinusOneFound === false) {
+    const url = offset
+      ? `${accountHistoryEndpoint}?after=${offset}`
+      : accountHistoryEndpoint;
+
+    const response = await axios.get(url, HTTP_REQUEST_HEADER);
+
+    let history = response.data && response.data.Items;
+
+    for (let i = 0; i < history.length; i++) {
+      if (history[i].TxHash === oldestTxInRange.TxHash) {
+        if (i === 0) {
+          oldestTransactionInRangeMinusOne = 0;
+        } else oldestTransactionInRangeMinusOne = history[i - 1];
+        isOldestMinusOneFound = true;
+        break;
+      }
+    }
+
+    if (isOldestMinusOneFound) break;
+
+    if (response.data && response.data.Next === "") {
+      console.log("reached end of history");
+      break;
+    }
+
+    if (response.data && response.data.Next) {
+      // assert this format in the Next field since it's not a useable address by itself
+      if (!response.data.Next.match(/account\/history\/\?after=\d*/)) {
+        throw new Error(
+          `Expected /account/history?after=N, got ${response.data.Next}`
+        );
+      }
+
+      // remove everything but the numbers from the url
+      offset = response.data.Next.replace(/[^\d]/g, "");
+    }
+  }
 
   const allItemsObj = {
     allItems,
-    isOldestInRangeFirstEntry,
+    oldestTransactionInRangeMinusOne,
   };
 
   // return allItems;

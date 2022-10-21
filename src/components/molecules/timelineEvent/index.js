@@ -23,8 +23,13 @@ class TimelineEvent extends Component {
       return null;
     }
 
-    const { event, previousEvent, index, selected, isOldestInRangeFirstEntry } =
-      this.props;
+    const {
+      event,
+      previousEvent,
+      index,
+      selected,
+      oldestTransactionInRangeMinusOne,
+    } = this.props;
 
     const { active: activeState } = this.state;
     const active = selected || activeState;
@@ -33,9 +38,7 @@ class TimelineEvent extends Component {
 
     const formattedPreviousEvent = previousEvent
       ? formatAccountEvent(previousEvent)
-      : isOldestInRangeFirstEntry
-      ? { raw: { balance } }
-      : accountEvent;
+      : formatAccountEvent(oldestTransactionInRangeMinusOne);
 
     const napuAmount =
       accountEvent.raw.balance - formattedPreviousEvent.raw.balance;

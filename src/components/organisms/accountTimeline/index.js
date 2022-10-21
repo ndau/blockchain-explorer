@@ -38,14 +38,14 @@ class AccountTimeline extends Component {
     };
   }
 
-  filterEvents = (givenEvents) => {
-    if (!givenEvents || givenEvents.length === 0 || givenEvents[0] === null) {
+  filterEvents = (allEvents) => {
+    if (!allEvents || allEvents.length === 0 || allEvents[0] === null) {
       return [];
     }
 
     const { filterStartDate, filterEndDate } = this.state;
 
-    const filteredEventsTemp = givenEvents.filter((event) => {
+    const filteredEvents = allEvents.filter((event) => {
       const eventDate = moment(event.Timestamp);
       const isWithinFilterRange =
         eventDate.isAfter(filterStartDate) && eventDate.isBefore(filterEndDate);
@@ -53,11 +53,14 @@ class AccountTimeline extends Component {
       return isWithinFilterRange;
     });
 
-    return filteredEventsTemp;
+    return filteredEvents;
   };
 
   render() {
-    const { events, balance, getAccountData,isOldestInRangeFirstEntry } = this.props;
+    const { events, balance, getAccountData } = this.props;
+
+    let eventsAllItems = 0;
+    if (events.allItems) eventsAllItems = events.allItems.reverse();
 
     const {
       typeFilters,
@@ -73,8 +76,8 @@ class AccountTimeline extends Component {
         {this.state.filteredEventsState.length > 1 && (
           <Box margin={{ bottom: "20px" }}>
             <TimelineChart
-              events={[this.state.filteredEventsState, this.initialEvent]}
-              filteredEvents={this.state.filteredEventsState || events}
+              events={[...eventsAllItems, this.initialEvent]}
+              filteredEvents={this.state.filteredEventsState || events.allItems}
               balance={balance}
               selectedEvent={selectedEvent}
               activeEvent={activeEvent}
@@ -85,7 +88,7 @@ class AccountTimeline extends Component {
 
         <Box>
           <TimelineFilter
-            events={events}
+            events={eventsAllItems}
             filterStartDate={filterStartDate}
             filterEndDate={filterEndDate}
             filterRange={filterRange}
@@ -104,7 +107,9 @@ class AccountTimeline extends Component {
             <PaginatedEvents
               itemsPerPage={10}
               totalEventsToDisplay={this.state.filteredEventsState}
-              isOldestInRangeFirstEntry={isOldestInRangeFirstEntry}
+              oldestTransactionInRangeMinusOne={
+                events.oldestTransactionInRangeMinusOne
+              }
             />
           </Box>
         ) : (
@@ -117,27 +122,36 @@ class AccountTimeline extends Component {
   }
 
   componentDidMount() {
-    const filteredEventsDidMount = this.filterEvents(this.props.events);
-    this.setState({ filteredEventsState: filteredEventsDidMount });
+    if (this.props.events.allItems) {
+      // const eventsAllItems = this.props.events.allItems.reverse();
+      const eventsAllItems = this.props.events.allItems;
+
+      const filteredEvents = this.filterEvents(eventsAllItems);
+      this.setState({ filteredEventsState: filteredEvents });
+    }
   }
 
   componentDidUpdate(prevProps) {
     if (JSON.stringify(this.props) !== JSON.stringify(prevProps)) {
-     
-      const newEventsFiltered = this.filterEvents(this.props.events);
-      this.setState({ filteredEventsState: newEventsFiltered });
-    } else {
-     
+      if (this.props.events.allItems) {
+        // const eventsAllItems = this.props.events.allItems.reverse();
+        const eventsAllItems = this.props.events.allItems;
+        const newEventsFiltered = this.filterEvents(eventsAllItems);
+        this.setState({ filteredEventsState: newEventsFiltered });
+      }
     }
   }
 
   getPreviousEvent = (currentEvent) => {
-    const { events } = this.props;
+    const eventsAllItems = this.props.events.allItems.reverse();
+
     const isFirstEvent =
       JSON.stringify(currentEvent) ===
-      JSON.stringify(events[events.length - 1]);
+      JSON.stringify(eventsAllItems[eventsAllItems.length - 1]);
 
-    return isFirstEvent ? this.initialEvent : events[currentEvent.index + 1];
+    return isFirstEvent
+      ? this.initialEvent
+      : eventsAllItems[currentEvent.index + 1];
   };
 
   getDateRange = (numberOfMonths) => {
@@ -151,9 +165,6 @@ class AccountTimeline extends Component {
     const { filterStartDate, filterEndDate } =
       this.getDateRange(numberOfMonths);
 
-   
-   
-   
     this.props.getAccountData(
       filterStartDate.toISOString(),
       filterEndDate.toISOString()

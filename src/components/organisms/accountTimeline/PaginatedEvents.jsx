@@ -23,7 +23,9 @@ function DisplayedEvents(props) {
               index={index}
               event={event}
               previousEvent={previousEventVal}
-              isOldestInRangeFirstEntry={props.isOldestInRangeFirstEntry}
+              oldestTransactionInRangeMinusOne={
+                props.oldestTransactionInRangeMinusOne
+              }
             />
           );
         })
@@ -39,10 +41,14 @@ export default function PaginatedEvents(props) {
 
   const itemsPerPage = props.itemsPerPage;
 
+  const oldestTransactionInRangeMinusOne =
+    props.oldestTransactionInRangeMinusOne;
+
   const [totalEventRecievedState, setTotalEventRecievedState] = useState(null);
   const [currentEventsState, setCurrentEventsState] = useState(null);
   const [pageCountState, setPageCountState] = useState(0);
   const [lastPreviousEventState, setLastPreviousEventState] = useState(null);
+
   // Here we use item offsets; we could also use page offsets
   // following the API or data you're working with.
   const [itemOffsetState, setItemOffsetState] = useState(0);
@@ -89,7 +95,7 @@ export default function PaginatedEvents(props) {
         currentPageEvents={currentEventsState}
         itemsPerPage={itemsPerPage}
         lastPreviousEvent={lastPreviousEventState}
-        isOldestInRangeFirstEntry={props.isOldestInRangeFirstEntry}
+        oldestTransactionInRangeMinusOne={oldestTransactionInRangeMinusOne}
       />
 
       <ReactPaginate

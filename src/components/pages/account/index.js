@@ -26,7 +26,6 @@ class Account extends Component {
       hideDetails: false,
       valid: false,
       loading: false,
-      isOldestInRangeFirstEntry: false
     };
   }
 
@@ -111,14 +110,13 @@ class Account extends Component {
               }
             >
               <AccountTimeline
-                events={history && [...history].reverse()}
+                events={history}
                 balance={account && account.balance}
                 fill={hideDetails}
                 getAccountData={this.getData}
                 loading={this.state.loading}
                 setLoadingTrueFunc={this.setLoadingTrue}
                 setLoadingFalseFunc={this.setLoadingFalse}
-                isOldestInRangeFirstEntry={this.state.isOldestInRangeFirstEntry}
               />
             </Box>
           </>
@@ -158,28 +156,31 @@ class Account extends Component {
           return;
         }
 
-        getAccountHistory(address, fromDate, toDate).then((historyResponse) => {
-          if (
-            (historyResponse && historyResponse.length === 0) ||
-            historyResponse[0] === null
-          ) {
+        getAccountHistory(address, fromDate, toDate).then(
+          (historyResponseObj) => {
+
+            if (
+              (historyResponseObj.allItems &&
+                historyResponseObj.allItems.length === 0) ||
+              historyResponseObj[0] === null
+            ) {
+              this.setState({
+                history: null,
+                valid: true,
+                loading: false,
+              });
+              return;
+            }
+
             this.setState({
-              history: null,
-              valid: true,
+              history: historyResponseObj,
               loading: false,
+              valid: historyResponseObj.allItems.length ? true : false,
             });
+
             return;
           }
-
-          this.setState({
-            history: historyResponse.allItems,
-            isOldestInRangeFirstEntry: historyResponse.isOldestInRangeFirstEntry,
-            loading: false,
-            valid: historyResponse.allItems.length ? true : false,
-          });
-
-          return;
-        });
+        );
       });
   };
 
