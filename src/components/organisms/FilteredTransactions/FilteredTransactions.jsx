@@ -14,7 +14,7 @@ const FilteredTransactions = (props) => {
 
   useEffect(() => {
     setIsLoadingState(true);
-    function setUnfilteredEventsFromLocalStorage() {
+    function getUnfilteredEventsFromLocalStorage() {
       const unfilteredEventsString = localStorage.getItem("unfilteredEvents");
       if (unfilteredEventsString) {
         const unfilteredEventsArr = JSON.parse(unfilteredEventsString);
@@ -23,18 +23,22 @@ const FilteredTransactions = (props) => {
       }
     }
 
-    function setTypeFiltersFromLocalStorage() {
+    function getTypeFiltersFromLocalStorage() {
       const typeFiltersString = localStorage.getItem("typeFilters");
 
       if (typeFiltersString) {
         const typeFiltersArr = typeFiltersString.split(",");
         setFiltersAppliedState(typeFiltersArr);
         localStorage.removeItem("typeFilters");
-      }
+        return true;
+      } else return false;
     }
 
-    setUnfilteredEventsFromLocalStorage();
-    setTypeFiltersFromLocalStorage();
+    const isAnyFilterApplied = getTypeFiltersFromLocalStorage();
+    if (isAnyFilterApplied) getUnfilteredEventsFromLocalStorage();
+    else {
+      setIsLoadingState(false);
+    }
   }, []);
 
   useEffect(() => {
