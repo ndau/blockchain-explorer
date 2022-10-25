@@ -158,7 +158,6 @@ class Account extends Component {
 
         getAccountHistory(address, fromDate, toDate).then(
           (historyResponseObj) => {
-
             if (
               (historyResponseObj.allItems &&
                 historyResponseObj.allItems.length === 0) ||

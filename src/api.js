@@ -1,1 +1,1 @@
-export default process.env.SERVICE_ENDPOINT || "api";
+export default process.env.REACT_APP_SERVICE_ENDPOINT || "api";
