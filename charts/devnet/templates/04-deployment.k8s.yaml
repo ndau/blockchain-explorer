@@ -1,0 +1,80 @@
+{{- if eq .Values.type "deployment" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "blockchain-explorer.fullname" . }}
+  labels:
+    {{- include "blockchain-explorer.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "blockchain-explorer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "blockchain-explorer.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "blockchain-explorer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: settings
+                  key: ENVIRONMENT
+            - name: PORT
+              value: "{{ .Values.service.port }}"
+          volumeMounts:
+            - name: config
+              subPath: nginx.conf
+              mountPath: /etc/nginx/nginx.conf
+
+{{- if hasKey .Values "livenessProbe" }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | trim | indent 12 }}
+{{- end }}
+{{- if hasKey .Values "readinessProbe" }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | trim | indent 12 }}
+{{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end}}
