@@ -65,12 +65,12 @@ ingress:
       more_set_headers "Referrer-Policy: origin";
       more_set_headers "X-Content-Type-Options: nosniff";
   hosts:
-    - host: dev.explorer.ndau.io
+    - host: dev.explorer1.ndau.tech
       paths: ["/"]
   tls:
     - secretName: explorer-dev-tls
       hosts:
-        - dev.explorer.ndau.io
+        - dev.explorer1.ndau.tech
 
 resources:
   limits:
