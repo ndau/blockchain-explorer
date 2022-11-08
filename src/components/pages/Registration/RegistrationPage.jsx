@@ -66,7 +66,7 @@ const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  height: 60%;
+  height: 50%;
 `;
 
 function RegistrationPage() {
@@ -117,9 +117,16 @@ function RegistrationPage() {
 
           <Box align="center" width="70%" alignSelf="center" margin="small">
             <Text size="10px" color={"#999"}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+              The ndau blockchain explorer is your window on the ndau
+              blockchain. This website uses ndau's publicly accessible APIs to
+              allow anyone to search and view all ndau transactions and accounts
+              since ndau's mainnet went live in May of 2019.
+              <br />
+              <br />
+              And by creating an account on this ndau blockchain explorer
+              website, you have the ability to save bookmarks to any accounts or
+              transactions you wish to remember. For more information about
+              ndau, please see ndau.io.
             </Text>
           </Box>
 

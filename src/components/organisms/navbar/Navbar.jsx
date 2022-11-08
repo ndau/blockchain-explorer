@@ -20,8 +20,8 @@ import {
 } from "grommet";
 
 import LogoImg from "../../../img/ndau_orange_logo.png";
-import twitterImg from "../../../img/telegram_icon.svg";
-import telegramImg from "../../../img/twitter_icon.svg";
+import telegramImg  from "../../../img/telegram_icon.svg";
+import twitterImg from "../../../img/twitter_icon.svg";
 import githubImg from "../../../img/github_icon.svg";
 import { AppsRounded } from "grommet-icons";
 import "./style.css";
@@ -176,7 +176,8 @@ const Navbar = (props) => {
               <StyledProfileMenu
                 dropAlign={{ top: "bottom", left: "left" }}
                 dropBackground={{ color: "#259", opacity: "weak" }}
-                margin={{ bottom: "14px" }}
+                margin={{ bottom: "4px" }}
+                disabled={true}
                 icon={true}
                 label={<Text size="14px"> Blockchain</Text>}
                 items={[
