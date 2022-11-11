@@ -8,27 +8,18 @@
  * - -- --- ---- -----
  */
 
-import {
-  Box,
-  Anchor,
-  ResponsiveContext,
-  Nav,
-  Button,
-  Layer,
-  Menu,
-  Text,
-} from "grommet";
+import { Box, Anchor, ResponsiveContext, Nav, Button, Layer, Menu, Text } from 'grommet';
 
-import LogoImg from "../../../img/ndau_orange_logo.png";
-import telegramImg  from "../../../img/telegram_icon.svg";
-import twitterImg from "../../../img/twitter_icon.svg";
-import githubImg from "../../../img/github_icon.svg";
-import { AppsRounded } from "grommet-icons";
-import "./style.css";
-import { Link, useHistory } from "react-router-dom";
-import { UserContext } from "../../../context/context";
-import styled from "styled-components";
-import React, { useContext, useState } from "react";
+import LogoImg from '../../../img/ndau_orange_logo.png';
+import telegramImg from '../../../img/telegram_icon.svg';
+import twitterImg from '../../../img/twitter_icon.svg';
+import githubImg from '../../../img/github_icon.svg';
+import { AppsRounded } from 'grommet-icons';
+import './style.css';
+import { Link, useHistory, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../../context/context';
+import styled from 'styled-components';
+import React, { useContext, useState } from 'react';
 
 const NavbarLink = (props) => {
   return (
@@ -61,40 +52,34 @@ const SideBar = (props) => {
   const isLoggedIn = loggedInContext.loggedIn;
 
   return (
-    <Nav
-      direction="column"
-      background="black"
-      pad="medium"
-      align="center"
-      width={"60vw"}
-      height={"100vh"}
-    >
+    <Nav direction="column" background="black" pad="medium" align="center" width={'60vw'} height={'100vh'}>
       <Box pad="small" align="center" justify="center">
-        <img src={LogoImg} style={{ width: "30%" }} alt="ndau-logo" />
+        <img src={LogoImg} style={{ width: '30%' }} alt="ndau-logo" />
       </Box>
 
       <NavbarLink margin="small" to="/">
         Home
       </NavbarLink>
 
-      <Anchor
-        href="https://ndau.io"
-        size="small"
-        target={"_blank"}
-        rel="_noopener"
-      >
+      <Anchor href="https://ndau.io" size="small" target={'_blank'} rel="_noopener">
         About
       </Anchor>
 
-      <NavbarLink margin="small" to="/blockchain">
-        Blockchain
-      </NavbarLink>
-      <NavbarLink margin="small" to="/ndaunodes">
-        Ndau Nodes
-      </NavbarLink>
-      <NavbarLink margin="small" to="/richlist">
-        Rich List
-      </NavbarLink>
+      {false && (
+        <NavbarLink margin="small" to="/blockchain">
+          Blockchain
+        </NavbarLink>
+      )}
+      {false && (
+        <NavbarLink margin="small" to="/ndaunodes">
+          Ndau Nodes
+        </NavbarLink>
+      )}
+      {false && (
+        <NavbarLink margin="small" to="/richlist">
+          Rich List
+        </NavbarLink>
+      )}
       {isLoggedIn ? (
         <>
           <NavbarLink margin="small" to="/profile">
@@ -103,12 +88,7 @@ const SideBar = (props) => {
           <NavbarLink margin="small" to="/userBookmarks">
             Bookmarks
           </NavbarLink>
-          <Text
-            size="14px"
-            style={{ cursor: "pointer" }}
-            color={"#D32"}
-            weight="600"
-          >
+          <Text size="14px" style={{ cursor: 'pointer' }} color={'#D32'} weight="600">
             Sign Out
           </Text>
         </>
@@ -130,7 +110,8 @@ const Navbar = (props) => {
   const isLoggedIn = loggedInContext.loggedIn;
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
-  const history = useHistory();
+  // const history =  useHistory();
+  const navigate = useNavigate();
 
   const [navbarDrawerState, setNavbarDrawerState] = useState(false);
 
@@ -139,116 +120,109 @@ const Navbar = (props) => {
       {(screenSize) => (
         <Box
           className="Navbar"
-          align={screenSize === "small" ? "center" : ""}
+          align={screenSize === 'small' ? 'center' : ''}
           justify="between"
-          direction={screenSize === "small" ? "column" : "row"}
+          direction={screenSize === 'small' ? 'column' : 'row'}
         >
-          <Box
-            basis={"1/2"}
-            direction={screenSize === "small" ? "column" : "row"}
-            justify="around"
-            align="center"
-          >
-            <Box style={{ height: "100%" }} pad="medium">
-              {screenSize !== "small" && (
-                <img src={LogoImg} style={{ height: "100%" }} alt="ndau-logo" />
-              )}
+          <Box basis={'1/2'} direction={screenSize === 'small' ? 'column' : 'row'} justify="around" align="center">
+            <Box style={{ height: '100%' }} pad="medium">
+              {screenSize !== 'small' && <img src={LogoImg} style={{ height: '100%' }} alt="ndau-logo" />}
             </Box>
 
-            <NavbarLink to="/" small={screenSize === "small"}>
+            <NavbarLink to="/" small={screenSize === 'small'}>
               Home
             </NavbarLink>
 
-            {screenSize !== "small" && (
+            {screenSize !== 'small' && (
               <Box align="center" justify="center">
-                <Anchor
-                  href="https://ndau.io"
-                  size="small"
-                  target={"_blank"}
-                  rel="_noopener"
-                >
+                <Anchor href="https://ndau.io" size="small" target={'_blank'} rel="_noopener">
                   About
                 </Anchor>
               </Box>
             )}
 
-            {screenSize !== "small" ? (
+            {screenSize !== 'small' && false ? (
               <StyledProfileMenu
-                dropAlign={{ top: "bottom", left: "left" }}
-                dropBackground={{ color: "#259", opacity: "weak" }}
-                margin={{ bottom: "4px" }}
+                dropAlign={{ top: 'bottom', left: 'left' }}
+                dropBackground={{ color: '#259', opacity: 'weak' }}
+                margin={{ bottom: '4px' }}
                 disabled={true}
                 icon={true}
                 label={<Text size="14px"> Blockchain</Text>}
                 items={[
                   {
                     label: (
-                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                      <Text weight={1000} size="xsmall" color={'#F6931D'}>
                         Blockchain
                       </Text>
                     ),
                     onClick: () => {
-                      history.push("/blocks");
+                      // history.push('/blocks');
+                      navigate('/blocks')
                     },
                   },
                   {
                     label: (
-                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                      <Text weight={1000} size="xsmall" color={'#F6931D'}>
                         Ndau Nodes
                       </Text>
                     ),
                     onClick: () => {
-                      history.push("/ndaunodes");
+                      // history.push('/ndaunodes');
+                      navigate('/ndaunodes')
                     },
                   },
                   {
                     label: (
-                      <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                      <Text weight={1000} size="xsmall" color={'#F6931D'}>
                         Rich List
                       </Text>
                     ),
                     onClick: () => {
-                      history.push("/richlist");
+                      // history.push('/richlist');
+                      navigate('/richlist')
                     },
                   },
                 ]}
               ></StyledProfileMenu>
             ) : (
-              ""
+              ''
             )}
 
-            {screenSize !== "small" ? (
+            {screenSize !== 'small' ? (
               isLoggedIn ? (
                 <StyledProfileMenu
-                  dropAlign={{ top: "bottom", left: "left" }}
-                  dropBackground={{ color: "#259", opacity: "weak" }}
-                  margin={{ bottom: "14px" }}
+                  dropAlign={{ top: 'bottom', left: 'left' }}
+                  dropBackground={{ color: '#259', opacity: 'weak' }}
+                  margin={{ bottom: '14px' }}
                   icon={true}
                   label={<Text size="14px">Profile</Text>}
                   items={[
                     {
                       label: (
-                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                        <Text weight={1000} size="xsmall" color={'#F6931D'}>
                           Profile
                         </Text>
                       ),
                       onClick: () => {
-                        history.push("/profile");
+                        // history.push('/profile');
+                        navigate('/profile')
                       },
                     },
                     {
                       label: (
-                        <Text weight={1000} size="xsmall" color={"#F6931D"}>
+                        <Text weight={1000} size="xsmall" color={'#F6931D'}>
                           Bookmarks
                         </Text>
                       ),
                       onClick: () => {
-                        history.push("/userBookmarks");
+                        // history.push('/userBookmarks');
+                        navigate('/userBookmarks')
                       },
                     },
                     {
                       label: (
-                        <Text weight={1000} size="xsmall" color={"#D32"}>
+                        <Text weight={1000} size="xsmall" color={'#D32'}>
                           Sign Out
                         </Text>
                       ),
@@ -263,15 +237,12 @@ const Navbar = (props) => {
                 <NavbarLink to="/login">Login</NavbarLink>
               )
             ) : (
-              ""
+              ''
             )}
           </Box>
 
-          {screenSize === "small" && (
-            <NavbarMenuButton
-              currentDrawerState={navbarDrawerState}
-              toggleDrawerStateFunc={setNavbarDrawerState}
-            />
+          {screenSize === 'small' && (
+            <NavbarMenuButton currentDrawerState={navbarDrawerState} toggleDrawerStateFunc={setNavbarDrawerState} />
           )}
 
           {navbarDrawerState && (
@@ -283,8 +254,8 @@ const Navbar = (props) => {
                 onEsc={() => setNavbarDrawerState(false)}
                 onClickOutside={() => setNavbarDrawerState(false)}
                 background={{
-                  color: "black",
-                  opacity: "medium",
+                  color: 'black',
+                  opacity: 'medium',
                 }}
               >
                 <SideBar></SideBar>
@@ -292,30 +263,22 @@ const Navbar = (props) => {
             </Box>
           )}
 
-          {screenSize !== "small" ? (
-            <Box
-              basis={"small"}
-              direction={screenSize === "small" ? "column" : "row"}
-              justify="around"
-              align="center"
-            >
-              <Anchor
-                href="https://twitter.com/ndaucollective"
-                target={"_blank"}
-              >
+          {screenSize !== 'small' ? (
+            <Box basis={'small'} direction={screenSize === 'small' ? 'column' : 'row'} justify="around" align="center">
+              <Anchor href="https://twitter.com/ndaucollective" target={'_blank'}>
                 <img src={twitterImg} />
               </Anchor>
 
-              <Anchor href="https://t.me/ndau_community" target={"_blank"}>
+              <Anchor href="https://t.me/ndau_community" target={'_blank'}>
                 <img src={telegramImg} />
               </Anchor>
 
-              <Anchor href="https://github.com/ndau" target={"_blank"}>
+              <Anchor href="https://github.com/ndau" target={'_blank'}>
                 <img src={githubImg} />
               </Anchor>
             </Box>
           ) : (
-            ""
+            ''
           )}
         </Box>
       )}

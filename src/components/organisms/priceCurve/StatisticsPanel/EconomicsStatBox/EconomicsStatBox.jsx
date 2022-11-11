@@ -1,5 +1,4 @@
 import { Grid, Box, Text, ResponsiveContext } from "grommet";
-import { useHistory } from "react-router-dom";
 import { humanizeNumber } from "../../../../../helpers/format";
 import globeImg from "../../../../../img/globe.png";
 import "./EconomicsStatBox.css";
@@ -7,7 +6,6 @@ import "./EconomicsStatBox.css";
 const StatBox = (props) => {
   let gridArea = props.gridArea;
   let background = props.background;
-  const history = useHistory();
   return (
     <Box
       onClick={() => {
@@ -75,7 +73,6 @@ const EconomicsStatBox = (props) => {
     totalNdauIssued,
     nextIssuePrice,
   } = props;
-  const history = useHistory();
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (

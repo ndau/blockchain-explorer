@@ -1,23 +1,19 @@
+
+import {  useNavigate, useParams } from "react-router-dom";
+import {  Lock } from "grommet-icons";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import axios from "axios";
+
 import {
   Button,
   Form,
   FormField,
-  Heading,
-  Text,
   Box,
-  ResponsiveContext,
   TextInput,
-  Anchor,
-  CheckBox,
 } from "grommet";
 import Page from "../../../../templates/page";
-import styled from "styled-components";
-import { User, Mail, Lock } from "grommet-icons";
-import { toast } from "react-toastify";
-import { UserContext } from "../../../../../context/context";
-import { useHistory, Link, useLocation, useParams } from "react-router-dom";
-import axios from "axios";
-import { useContext, useState } from "react";
+
 import api from "../../../../../api";
 
 const StyledFormField = styled(FormField)`
@@ -55,11 +51,7 @@ const StyledForm = styled(Form)`
 `;
 
 function ChangePassword() {
-  const loggedInContext = useContext(UserContext);
-
-  const isLoggedIn = loggedInContext.loggedIn;
-
-  const history = useHistory();
+  const navigate = useNavigate();
   const { token } = useParams();
 
   return (
@@ -80,7 +72,8 @@ function ChangePassword() {
                 }
               )
               .then((res) => {
-                history.push("/login/");
+                // history.push("/login/");
+                navigate('/login/')
                 toast.success("Password Changed. Please Log In");
               })
               .catch((e) => {

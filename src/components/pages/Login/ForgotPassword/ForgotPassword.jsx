@@ -1,24 +1,11 @@
-import {
-  Button,
-  Form,
-  FormField,
-  Heading,
-  Text,
-  Box,
-  ResponsiveContext,
-  TextInput,
-  Anchor,
-  CheckBox,
-} from "grommet";
-import Page from "../../../templates/page";
-import styled from "styled-components";
-import { User, Mail, Lock } from "grommet-icons";
-import { UserContext } from "../../../../context/context";
-import { toast } from "react-toastify";
-import { useHistory, Link } from "react-router-dom";
-import axios from "axios";
-import { useContext, useState } from "react";
-import api from "../../../../api";
+import { Button, Form, FormField, Box, TextInput } from 'grommet';
+import Page from '../../../templates/page';
+import styled from 'styled-components';
+import { Mail } from 'grommet-icons';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import api from '../../../../api';
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
@@ -55,10 +42,11 @@ const StyledForm = styled(Form)`
 `;
 
 function ForgotPasswordPage() {
-  const history = useHistory();
+  // const history = useHistory();
+  const navigate = useNavigate();
   return (
     <Page>
-      <Box width={"medium"} alignSelf="center">
+      <Box width={'medium'} alignSelf="center">
         <StyledForm
           onSubmit={async ({ value }) => {
             const response = await toast.promise(
@@ -66,13 +54,14 @@ function ForgotPasswordPage() {
                 email: value.email,
               }),
               {
-                pending: "Resetting Password",
-                success: "Password Reset Link Sent to Email",
-                error: "No such email found",
+                pending: 'Resetting Password',
+                success: 'Password Reset Link Sent to Email',
+                error: 'No such email found',
               }
             );
             if (response.status === 200) {
-              history.push("/login/forgot-password-successful");
+              // history.push("/login/forgot-password-successful");
+              navigate('/login/forgot-password-successful');
             }
           }}
         >
@@ -81,8 +70,8 @@ function ForgotPasswordPage() {
             name="email"
             validate={{
               regexp: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-              message: "Email Incorrectly entered",
-              status: "error",
+              message: 'Email Incorrectly entered',
+              status: 'error',
             }}
             htmlFor="StyledTextInput-id"
           >
@@ -96,11 +85,7 @@ function ForgotPasswordPage() {
           </StyledFormField>
 
           <Box alignSelf="end">
-            <StyledForgotPassword
-              type="submit"
-              primary
-              label="Reset Password"
-            />
+            <StyledForgotPassword type="submit" primary label="Reset Password" />
           </Box>
         </StyledForm>
       </Box>

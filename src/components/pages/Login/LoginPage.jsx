@@ -17,7 +17,7 @@ import styled from "styled-components";
 import { Mail, Lock, FormView } from "grommet-icons";
 import { UserContext } from "../../../context/context";
 import { toast } from "react-toastify";
-import { useHistory, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { useContext, useState } from "react";
 import api from "../../../api";
@@ -79,6 +79,7 @@ const StyledForm = styled(Form)`
 `;
 
 function LoginPage() {
+  const navigate = useNavigate();
   const loggedInContext = useContext(UserContext);
 
   const updateLoggedIn = loggedInContext.updateLoggedIn;
@@ -87,7 +88,6 @@ function LoginPage() {
   const [emailErrorState, setEmailErrorState] = useState("");
   const [showPasswordState, setShowPasswordState] = useState(false);
   const size = useContext(ResponsiveContext);
-  const history = useHistory();
 
   return (
     <Page>
@@ -165,8 +165,9 @@ function LoginPage() {
                     );
 
                     updateLoggedIn(true);
-                    history.push("/");
+                    // history.push("/");
                     toast.success("Logged In");
+                    navigate("/")
                   } else {
                     toast.error("Please verify your Email");
                   }
@@ -229,7 +230,7 @@ function LoginPage() {
               />
               <Anchor
                 as={Link}
-                to="login/forgot-password"
+                to="forgot-password"
                 align="center"
                 margin={{ left: "5px" }}
               >

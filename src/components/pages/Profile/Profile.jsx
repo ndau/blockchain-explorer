@@ -1,13 +1,13 @@
-import { UserContext } from "../../../context/context";
-import Page from "../../templates/page";
-import axios from "axios";
-import { Text, Heading, Box } from "grommet";
-import { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
-import api from "../../../api";
+import { UserContext } from '../../../context/context';
+import Page from '../../templates/page';
+import axios from 'axios';
+import { Text, Heading, Box } from 'grommet';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../../../api';
 
-export default function Profile({}) {
-  const history = useHistory();
+export default function Profile(props) {
+  const navigate = useNavigate();
   const [userEmailState, setUserEmailState] = useState(null);
   const [userBookmarksState, setUserBookmarksState] = useState(null);
 
@@ -16,7 +16,7 @@ export default function Profile({}) {
 
   useEffect(() => {
     if (isLoggedIn) {
-      const jwtToken = localStorage.getItem("ndau_user_token");
+      const jwtToken = localStorage.getItem('ndau_user_token');
 
       axios
         .get(`${api}/user/user-profile-details`, {
@@ -33,9 +33,9 @@ export default function Profile({}) {
         .then((res) => {
           setUserBookmarksState(res.data.email);
         })
-        .catch((e) => console.log(e, "printing bookmarks error"));
+        .catch((e) => console.log(e, 'printing bookmarks error'));
     } else {
-      history.push("/");
+      navigate('/');
     }
   }, [isLoggedIn]);
 
@@ -43,9 +43,7 @@ export default function Profile({}) {
     <Page>
       <Box align="center">
         <Heading>User Profile</Heading>
-        {userEmailState ? <Text>Email:{userEmailState}</Text> : "Loading..."}
-
-       
+        {userEmailState ? <Text>Email:{userEmailState}</Text> : 'Loading...'}
       </Box>
     </Page>
   );

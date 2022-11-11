@@ -10,12 +10,11 @@
 
 import React, { Component } from "react";
 import axios from "axios";
-import { Box, Heading, Text, Grid, ResponsiveContext } from "grommet";
+import { Box, Text, Grid, ResponsiveContext } from "grommet";
 import Age from "../../atoms/age";
 import Dashboard from "../../templates/dashboard";
 import BlockchainSearch from "../../molecules/blockchainSearch";
 import LatestBlocks from "../../organisms/latestBlocks";
-import TransactionsList from "../../organisms/transactionsList";
 import LatestTransactions from "../../organisms/LatestTransactions/LatestTransactions";
 import PriceCurve from "../../organisms/priceCurve";
 import { formatTime } from "../../../helpers/format";

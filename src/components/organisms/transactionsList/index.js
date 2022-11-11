@@ -8,22 +8,15 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from "react";
-import { Box, Text } from "grommet";
-import TransactionCard from "../../molecules/transactionCard";
+import React, { Component } from 'react';
+import { Box, Text } from 'grommet';
+import TransactionCard from '../../molecules/transactionCard';
 
 class TransactionsList extends Component {
   state = { activeTransactionIndex: null };
 
   render() {
-    const {
-      numberOfTransactions,
-      transactionHashes,
-      loading,
-      blockHeight,
-      active,
-      exclude
-    } = this.props;
+    const { numberOfTransactions, transactionHashes, loading, active } = this.props;
     if (parseInt(numberOfTransactions) === 0) {
       return (
         <Text size="medium" weight="bold">
@@ -32,22 +25,18 @@ class TransactionsList extends Component {
       );
     }
 
-    const gap = "small";
     return (
       <>
         {active && (
           <Box>
             <Text onClick={this.toggleShowTransactions} as="span" color="#fff">
-              <b>transaction{transactionHashes.length > 1 && "s"}:</b>
+              <b>transaction{transactionHashes.length > 1 && 's'}:</b>
             </Text>
           </Box>
         )}
 
         {loading && (
-          <Box
-            pad={{ horizontal: "xlarge", vertical: "10px" }}
-            animation="pulse"
-          >
+          <Box pad={{ horizontal: 'xlarge', vertical: '10px' }} animation="pulse">
             <Text alignSelf="center" size="xsmall">
               Loading transactions...
             </Text>

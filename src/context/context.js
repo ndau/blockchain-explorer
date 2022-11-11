@@ -12,7 +12,7 @@ const UserContextProvider = (props) => {
     loggedIn: loggedInState,
     updateLoggedIn: setLoggedInState,
   };
-
+  
   return (
     <UserContext.Provider value={loggedInContextValue}>
       {props.children}

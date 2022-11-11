@@ -8,78 +8,65 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from 'react'
-import { Box, Text, Collapsible } from 'grommet'
-import { Filter } from 'grommet-icons'
-import Filters from '../../molecules/filters'
-import { TRANSACTION_TYPES } from '../../../constants'
+import React, { Component } from 'react';
+import { Box, Text, Collapsible } from 'grommet';
+import { Filter } from 'grommet-icons';
+import { TRANSACTION_TYPES } from '../../../constants';
 
 const DEFAULT_TYPE_FILTERS = [
-  "Transfer",
-	"ChangeValidation",
-  "ChangeRecoursePeriod",
-  "Delegate",
-	"Lock",
-	"Notify",
-	"SetRewardsDestination",
-	"SetValidation",
-]
+  'Transfer',
+  'ChangeValidation',
+  'ChangeRecoursePeriod',
+  'Delegate',
+  'Lock',
+  'Notify',
+  'SetRewardsDestination',
+  'SetValidation',
+];
 
 class TransactionFilter extends Component {
   constructor(props) {
-    super(props)
-     
+    super(props);
+
     this.state = {
       typeFilters: DEFAULT_TYPE_FILTERS,
       showFilters: false,
-    }
+    };
   }
-  
+
   render() {
     const { transactions } = this.props;
-    if(!transactions) {
-      return null
+    if (!transactions) {
+      return null;
     }
-    
-    const { 
-      typeFilters,
-      filterStartDate,
-      filterEndDate,
-      filterRange,
-      showFilters,
-     } = this.state
-    
-    const transanctionTypes = Object.values(TRANSACTION_TYPES)
-    
+
+    const { typeFilters, filterStartDate, filterEndDate, filterRange, showFilters } = this.state;
+
+    const transanctionTypes = Object.values(TRANSACTION_TYPES);
+
     return (
       <Box>
         <Box onClick={this.toggleShowFilter} alignSelf="end">
-          <Text 
-            size="xsmall"
-            style={{fontStyle: "italic", color: "rgba(255,255,255, 0.7)"}}
-          >
+          <Text size="xsmall" style={{ fontStyle: 'italic', color: 'rgba(255,255,255, 0.7)' }}>
             {`Showing transactions of the ${typeFilters.length} / ${transanctionTypes.length} selected types.`}
-            <Text 
+            <Text
               size="xsmall"
               color="rgba(255,255,255, 0.7)"
               style={{
-                marginLeft: "5px", 
-                lineHeight: "10px",
-                fontStyle: "normal", 
-                fontWeight: "bold",
-                borderBottom: "0.5px dashed #ffe7c6"
+                marginLeft: '5px',
+                lineHeight: '10px',
+                fontStyle: 'normal',
+                fontWeight: 'bold',
+                borderBottom: '0.5px dashed #ffe7c6',
               }}
               bold
             >
-              {showFilters ? "Hide" : "Show"} filter options
-              <Filter 
-                size="small" color="rgba(255,255,255, 0.8)" 
-                style={{paddingLeft: "2px"}}
-              />
+              {showFilters ? 'Hide' : 'Show'} filter options
+              <Filter size="small" color="rgba(255,255,255, 0.8)" style={{ paddingLeft: '2px' }} />
             </Text>
           </Text>
         </Box>
-        
+
         <Collapsible open={showFilters}>
           {/* <Filters 
             showFilters={showFilters}
@@ -99,7 +86,7 @@ class TransactionFilter extends Component {
 
   // componentDidUpdate = (prevProps) => {
   //   //
-  //  
+  //
   //   //
   //   if(!prevProps.state) {
   //     return
@@ -109,26 +96,26 @@ class TransactionFilter extends Component {
   //   }
   // }
 
-  
-
   toggleFilter = (type) => {
-    const {typeFilters} = this.state
+    const { typeFilters } = this.state;
     let newTypeFilters = typeFilters;
     if (!typeFilters.includes(type)) {
-      newTypeFilters = [...typeFilters, type]
-    }
-    else {
-      newTypeFilters = [...typeFilters].filter(filter => filter !== type)
+      newTypeFilters = [...typeFilters, type];
+    } else {
+      newTypeFilters = [...typeFilters].filter((filter) => filter !== type);
     }
 
-    this.setState({
-      typeFilters: newTypeFilters
-    }, ()=> this.props.updateFilters(this.state.typeFilters))
-  }
+    this.setState(
+      {
+        typeFilters: newTypeFilters,
+      },
+      () => this.props.updateFilters(this.state.typeFilters)
+    );
+  };
 
   toggleShowFilter = () => {
-    this.setState(({showFilters}) => ({ showFilters: !showFilters }))
-  }
+    this.setState(({ showFilters }) => ({ showFilters: !showFilters }));
+  };
 }
 
-export default TransactionFilter
+export default TransactionFilter;

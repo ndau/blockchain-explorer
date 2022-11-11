@@ -2,7 +2,6 @@ import axios from "axios";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "grommet";
 import React, { useEffect, useState } from "react";
 import Page from "../../templates/page";
-import nodeArray from "./ndaunode.json";
 
 const Ndaunodes = () => {
   const [nodesArrayState, setNodesArrayState] = useState([]);

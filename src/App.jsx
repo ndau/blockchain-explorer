@@ -7,55 +7,60 @@
  * https://www.apache.org/licenses/LICENSE-2.0.txt
  * - -- --- ---- -----
  */
+import React, { useEffect, useContext } from "react";
+import { RouterProvider } from 'react-router-dom';
+import { Grommet } from 'grommet';
+import { deepMerge } from 'grommet/utils';
+import { dark as grommetDarkTheme } from 'grommet/themes';
+import axios from "axios";
 
-import UserContextProvider from "./context/context";
-import { Grommet } from "grommet";
-import { deepMerge } from "grommet/utils";
-import { dark as grommetDarkTheme } from "grommet/themes";
-import Routes from "./Routes";
-import "normalize.css";
-import "./components/organisms/priceCurve/StatisticsPanel/WidgetBox/WidgetBox.css";
-import "../src/"
+import UserContextProvider, { UserContext } from './context/context';
+import router from './Routes';
+import api from "./api";
+
+import 'normalize.css';
+import './components/organisms/priceCurve/StatisticsPanel/WidgetBox/WidgetBox.css';
+import '../src/';
 
 const ndauStyleGuide = {
   global: {
     colors: {
-      background: "#0a1724",
+      background: '#0a1724',
       text: {
-        dark: "#fff",
-        light: "#fff",
+        dark: '#fff',
+        light: '#fff',
       },
     },
     drop: {
-      background: "#132844",
+      background: '#132844',
       extend: {
-        fontSize: "small",
+        fontSize: 'small',
       },
     },
     font: {
-      family: "Titillium Web",
+      family: 'Titillium Web',
     },
     input: {
       weight: 500,
     },
     elevation: {
       dark: {
-        none: "none",
-        xsmall: "0px 1px 2px rgba(0, 0, 0, 0.20)",
-        small: "0px 2px 4px rgba(0, 0, 0, 0.20)",
-        medium: "0px 4px 8px rgba(0, 0, 0, 0.20)",
-        large: "0px 8px 16px rgba(0, 0, 0, 0.20)",
-        xlarge: "0px 12px 24px rgba(0, 0, 0, 0.20)",
+        none: 'none',
+        xsmall: '0px 1px 2px rgba(0, 0, 0, 0.20)',
+        small: '0px 2px 4px rgba(0, 0, 0, 0.20)',
+        medium: '0px 4px 8px rgba(0, 0, 0, 0.20)',
+        large: '0px 8px 16px rgba(0, 0, 0, 0.20)',
+        xlarge: '0px 12px 24px rgba(0, 0, 0, 0.20)',
       },
     },
   },
   anchor: {
-    color: "#f99d1c",
+    color: '#f99d1c',
   },
 
   checkBox: {
     color: {
-      dark: "#f99d1c",
+      dark: '#f99d1c',
     },
     hover: {
       border: {
@@ -64,17 +69,17 @@ const ndauStyleGuide = {
     },
     toggle: {
       color: {
-        dark: "#aaa",
+        dark: '#aaa',
       },
     },
-    size: "18px",
+    size: '18px',
   },
   formField: {
     error: {
-      color: "#B25",
-      size: "10px",
+      color: '#B25',
+      size: '10px',
       margin: {
-        vertical: "xxsmall",
+        vertical: 'xxsmall',
       },
     },
   },
@@ -83,10 +88,29 @@ const ndauStyleGuide = {
 const ndauTheme = deepMerge(grommetDarkTheme, ndauStyleGuide);
 
 function App(props) {
+  const loggedInContext = useContext(UserContext);
+  const updateLoggedIn = loggedInContext.updateLoggedIn;
+
+  useEffect(() => {
+    const jwtToken = localStorage.getItem("ndau_user_token");
+    if (jwtToken) {
+      axios
+        .get(`${api}/user/user-profile-details`, {
+          headers: { authorization: jwtToken },
+        })
+        .then((res) => {
+          updateLoggedIn(true);
+        })
+        .catch((e) => {
+          console.log(e, "loginError");
+        });
+    }
+  }, [updateLoggedIn]);
+
   return (
     <Grommet full theme={ndauTheme}>
       <UserContextProvider>
-        <Routes />
+        <RouterProvider router={router}></RouterProvider>
       </UserContextProvider>
     </Grommet>
   );
