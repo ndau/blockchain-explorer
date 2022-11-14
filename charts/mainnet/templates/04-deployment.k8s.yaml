@@ -44,6 +44,26 @@ spec:
                 configMapKeyRef:
                   name: settings
                   key: ENVIRONMENT
+            - name: FRONT_END_URL
+              valueFrom:
+                secretKeyRef:
+                  name: explorer
+                  key: FRONT_END_URL
+            - name: HOST_USER
+              valueFrom:
+                secretKeyRef:
+                  name: explorer
+                  key: HOST_USER
+            - name: HOST_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: explorer
+                  key: HOST_PASS
+            - name: TOKEN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: explorer
+                  key: TOKEN_KEY
             - name: PORT
               value: "{{ .Values.service.port }}"
           volumeMounts:

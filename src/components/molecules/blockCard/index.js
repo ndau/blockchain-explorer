@@ -8,33 +8,26 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from "react";
-import { Text, Box, Collapsible } from "grommet";
+import React, { Component } from 'react';
+import { Text, Box, Collapsible } from 'grommet';
 
-import TransactionsList from "../../organisms/transactionsList";
-import Value from "../../molecules/value";
-import Card from "../../atoms/card";
-import "../detailsCard/style.css";
+import TransactionsList from '../../organisms/transactionsList';
+import Value from '../../molecules/value';
+import '../detailsCard/style.css';
 
 class BlockCard extends Component {
   render() {
-    const { block, active, txLoading,exclude } = this.props;
+    const { block, active, txLoading, exclude } = this.props;
 
     if (!block) {
       return <h3>Loading...</h3>;
     }
 
-
     const { raw, ...blockDetails } = block;
 
     const { transactionHashes, height, numberOfTransactions } = blockDetails;
 
-    const notDisplayed = [
-      "transactions",
-      "numberOfTransactions",
-      "transactionHashes",
-      "timestamp",
-    ];
+    const notDisplayed = ['transactions', 'numberOfTransactions', 'transactionHashes', 'timestamp'];
     return (
       <div>
         <Collapsible open={!exclude}>
@@ -56,15 +49,15 @@ class BlockCard extends Component {
           </>
         </Collapsible>
 
-
-         {!exclude && <TransactionsList
-          transactionHashes={transactionHashes}
-          numberOfTransactions={numberOfTransactions}
-          blockHeight={height}
-          active={active}
-          loading={txLoading}
-        />
-  }
+        {!exclude && (
+          <TransactionsList
+            transactionHashes={transactionHashes}
+            numberOfTransactions={numberOfTransactions}
+            blockHeight={height}
+            active={active}
+            loading={txLoading}
+          />
+        )}
       </div>
     );
   }

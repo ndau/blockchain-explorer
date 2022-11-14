@@ -57,6 +57,15 @@ data:
           send_timeout 7200;
         }
 
+        location /login/api/ {
+          proxy_pass http://explorer-backend.main.svc.cluster.local/api/;
+
+          proxy_connect_timeout 120;
+          proxy_send_timeout 7200;
+          proxy_read_timeout 7200;
+          send_timeout 7200;
+        }
+
         # redirect server error pages to the static page /50x.html
         # error_page  404              /404.html;
         error_page   500 502 503 504  /50x.html;
