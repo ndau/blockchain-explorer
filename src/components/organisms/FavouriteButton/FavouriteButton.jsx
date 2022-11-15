@@ -40,7 +40,7 @@ function FavouriteButton({ bookmarkVal, bookmarkType }) {
       console.log(bookmarkType, "bookmarkType");
       axios
         .post(
-          `${api}/bookmark/bookmark`,
+          `${api}/user/bookmark`,
           { bookmark_value: bookmarkVal, bookmark_type: bookmarkType },
           {
             headers: {

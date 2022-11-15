@@ -22,11 +22,9 @@ data:
       include       /etc/nginx/mime.types;
       default_type  application/octet-stream;
 
-      log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+      log_format  upstream_logging  '$remote_addr - $remote_user [$time_local] "$request" '
                         '$status $body_bytes_sent "$http_referer" '
                         '"$http_user_agent" "$http_x_forwarded_for"';
-
-      access_log  /var/log/nginx/access.log  main;
 
       sendfile        on;
       #tcp_nopush     on;
@@ -35,35 +33,43 @@ data:
 
       gzip  on;
 
+      ###################################
+      ## Microservices root URLs
+      ## !!! upstream name MUST be equal to the service subdomain name
+
+      upstream explorer-backend {
+        # server explorer-backend.main.svc.cluster.local;
+        server explorer-backend.ndau.tech:443;
+      }
+
       server {
         listen       80;
         server_name  localhost;
+        access_log /dev/stdout upstream_logging;
+        resolver 1.1.1.1;
+
+        proxy_set_header Host explorer-backend.ndau.tech;
 
         client_max_body_size 64M;
+        
+        ##################################
+        ## API forwarding rules
+
+        location ~* /([a-z]+)/api/(.+)$ {
+          proxy_pass https://explorer-backend/api/$2$is_args$args;
+        }
+
+        location ~* ^/api/ {
+          proxy_pass https://explorer-backend;
+        }
+
+        ## End of API forwarding rules
+        ####################################
 
         location / {
           root   /usr/share/nginx/html;
           index  index.html index.htm;
-          
-          try_files $uri /index.html;
-        }
-        
-        location /api/ {
-          proxy_pass http://explorer-backend.main.svc.cluster.local/api/;
-
-          proxy_connect_timeout 120;
-          proxy_send_timeout 7200;
-          proxy_read_timeout 7200;
-          send_timeout 7200;
-        }
-
-        location /login/api/ {
-          proxy_pass http://explorer-backend.main.svc.cluster.local/api/;
-
-          proxy_connect_timeout 120;
-          proxy_send_timeout 7200;
-          proxy_read_timeout 7200;
-          send_timeout 7200;
+          try_files $uri $uri/ /index.html;
         }
 
         # redirect server error pages to the static page /50x.html
