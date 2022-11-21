@@ -41,7 +41,7 @@ const LatestTransations = (props) => {
             >
               <Anchor
                 color="white"
-                href="/"
+                href="/transactions"
                 label="LATEST TRANSACTIONS"
                 alignSelf="center"
               />

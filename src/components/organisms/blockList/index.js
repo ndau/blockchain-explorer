@@ -40,7 +40,7 @@ class BlockList extends Component {
         >
           <Anchor
             color="white"
-            href="/blocks/"
+            href="/blocks"
             label="LATEST BLOCKS"
             alignSelf="center"
           />

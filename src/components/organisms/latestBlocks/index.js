@@ -9,15 +9,13 @@
  */
 
 import React, { Component } from "react";
-import { Box, Text } from "grommet";
-import Anchor from "../../atoms/anchor";
-import BlocksList from "../../organisms/blocksList";
+import BlockList from "../blockList";
 
 class LatestBlocks extends Component {
   render() {
     const { blocks } = this.props;
 
-    return <BlocksList blocks={blocks} />;
+    return <BlockList blocks={blocks} />;
   }
 }
 

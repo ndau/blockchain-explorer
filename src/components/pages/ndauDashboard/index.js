@@ -8,24 +8,18 @@
  * - -- --- ---- -----
  */
 
-import React, { Component } from "react";
-import axios from "axios";
-import { Box, Text, Grid, ResponsiveContext } from "grommet";
-import Age from "../../atoms/age";
-import Dashboard from "../../templates/dashboard";
-import BlockchainSearch from "../../molecules/blockchainSearch";
-import LatestBlocks from "../../organisms/latestBlocks";
-import LatestTransactions from "../../organisms/LatestTransactions/LatestTransactions";
-import PriceCurve from "../../organisms/priceCurve";
-import { formatTime } from "../../../helpers/format";
-import { POLL_INTERVAL } from "../../../constants";
-import {
-  getNodeStatus,
-  getCurrentOrder,
-  getBlocks,
-  pollForBlocks,
-  getNodeEndpoint,
-} from "../../../helpers/fetch";
+import React, { Component } from 'react';
+import axios from 'axios';
+import { Box, Text, Grid, ResponsiveContext } from 'grommet';
+import Age from '../../atoms/age';
+import Dashboard from '../../templates/dashboard';
+import BlockchainSearch from '../../molecules/blockchainSearch';
+import LatestBlocks from '../../organisms/latestBlocks';
+import LatestTransactions from '../../organisms/LatestTransactions/LatestTransactions';
+import PriceCurve from '../../organisms/priceCurve';
+import { formatTime } from '../../../helpers/format';
+import { POLL_INTERVAL } from '../../../constants';
+import { getNodeStatus, getCurrentOrder, getBlocks, pollForBlocks, getNodeEndpoint } from '../../../helpers/fetch';
 
 const BLOCK_LIST_LENGTH = 5;
 
@@ -33,36 +27,30 @@ const LastUpdated = (props) => {
   const lastUpdated = props.lastUpdated;
 
   return (
-    <Box align="center" margin={{ bottom: "large" }}>
-      <Text
-        color="#343E49"
-        size="xsmall"
-        margin={{ left: "small" }}
-        style={{ fontStyle: "italic" }}
-      >
-        {"LAST UPDATED "}
-        <Age timestamp={lastUpdated} recent="JUST NOW" suffix="AGO" />,{" "}
-        {formatTime(lastUpdated)}
+    <Box align="center" margin={{ bottom: 'large' }}>
+      <Text color="#343E49" size="xsmall" margin={{ left: 'small' }} style={{ fontStyle: 'italic' }}>
+        {'LAST UPDATED '}
+        <Age timestamp={lastUpdated} recent="JUST NOW" suffix="AGO" />, {formatTime(lastUpdated)}
       </Text>
     </Box>
   );
 };
 
 const bigScreenGrid = [
-  { name: "latestBlocks", start: [0, 0], end: [0, 0] },
-  { name: "latestTransactions", start: [1, 0], end: [1, 0] },
+  { name: 'latestBlocks', start: [0, 0], end: [0, 0] },
+  { name: 'latestTransactions', start: [1, 0], end: [1, 0] },
 ];
 
 const smallScreenGrid = [
-  { name: "latestBlocks", start: [0, 0], end: [0, 0] },
-  { name: "latestTransactions", start: [0, 1], end: [0, 1] },
+  { name: 'latestBlocks', start: [0, 0], end: [0, 0] },
+  { name: 'latestTransactions', start: [0, 1], end: [0, 1] },
 ];
 
-const bigScreenRows = ["large"];
-const smallScreenRows = ["500px", "medium"];
+const bigScreenRows = ['large'];
+const smallScreenRows = ['500px', 'medium'];
 
-const bigScreenColumns = ["40vw", "40vw"];
-const smallScreenColumns = ["90vw"];
+const bigScreenColumns = ['40vw', '40vw'];
+const smallScreenColumns = ['90vw'];
 
 class NdauDashboard extends Component {
   constructor(props) {
@@ -88,13 +76,11 @@ class NdauDashboard extends Component {
           <Dashboard browserHistory={this.props.history} selectNode>
             <Box
               margin={{
-                bottom: "large",
-                top: screenSize === "small" ? "4%" : "",
+                bottom: 'large',
+                top: screenSize === 'small' ? '4%' : '',
               }}
             >
-         
-
-              <Box align="left" margin={{ bottom: "xsmall" }}>
+              <Box align="left" margin={{ bottom: 'xsmall' }}>
                 <BlockchainSearch />
               </Box>
 
@@ -106,13 +92,12 @@ class NdauDashboard extends Component {
             </Box>
 
             <Grid
+              style={{ zIndex: 1 }}
               justifyContent="center"
-              rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
-              columns={
-                screenSize === "small" ? smallScreenColumns : bigScreenColumns
-              }
+              rows={screenSize === 'small' ? smallScreenRows : bigScreenRows}
+              columns={screenSize === 'small' ? smallScreenColumns : bigScreenColumns}
               gap="medium"
-              areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
+              areas={screenSize === 'small' ? smallScreenGrid : bigScreenGrid}
             >
               <Box gridArea="latestBlocks">
                 <LatestBlocks blocks={blocks} range={BLOCK_LIST_LENGTH} />
@@ -155,50 +140,47 @@ class NdauDashboard extends Component {
         const limit = BLOCK_LIST_LENGTH;
         const hideEmpty = this.state.hideEmpty;
 
-        getBlocks({ before: latestBlockHeight, filter: hideEmpty, limit }).then(
-          async ({ blocks }) => {
-
-            if (!blocks) {
-              return null;
-            }
-
-            let latestFiveTransactions = [];
-            let i = 0;
-            while (latestFiveTransactions.length < 5) {
-              try {
-                let blockHeight = blocks[i].height;
-                const nodeEndpoint = await getNodeEndpoint();
-                const blockEndpoint = `${nodeEndpoint}/block/transactions/${blockHeight}`;
-                let result = await axios.get(blockEndpoint);
-                for (let j = 0; j < result.data.length; j++) {
-                  latestFiveTransactions.push(result.data[j]);
-                }
-                i++;
-              } catch (e) {
-                // console.error(e);
-               
-                break;
-              }
-              // }
-            }
-
-            this.setState(
-              {
-                blocks,
-                latestBlockHeight,
-                priceInfo,
-                latestFiveTransactions,
-              },
-              () => {
-                this.startPolling({
-                  after: this.state.latestBlockHeight,
-                  filter: hideEmpty,
-                  success: this.resetData,
-                });
-              }
-            );
+        getBlocks({ before: latestBlockHeight, filter: hideEmpty, limit }).then(async ({ blocks }) => {
+          if (!blocks) {
+            return null;
           }
-        );
+
+          let latestFiveTransactions = [];
+          let i = 0;
+          while (latestFiveTransactions.length < 5) {
+            try {
+              let blockHeight = blocks[i].height;
+              const nodeEndpoint = await getNodeEndpoint();
+              const blockEndpoint = `${nodeEndpoint}/block/transactions/${blockHeight}`;
+              let result = await axios.get(blockEndpoint);
+              for (let j = 0; j < result.data.length; j++) {
+                latestFiveTransactions.push(result.data[j]);
+              }
+              i++;
+            } catch (e) {
+              // console.error(e);
+
+              break;
+            }
+            // }
+          }
+
+          this.setState(
+            {
+              blocks,
+              latestBlockHeight,
+              priceInfo,
+              latestFiveTransactions,
+            },
+            () => {
+              this.startPolling({
+                after: this.state.latestBlockHeight,
+                filter: hideEmpty,
+                success: this.resetData,
+              });
+            }
+          );
+        });
       });
       return status;
     });
@@ -211,10 +193,7 @@ class NdauDashboard extends Component {
   startPolling = ({ after, filter, success }) => {
     this.endPolling();
 
-    this.pollInterval = window.setInterval(
-      pollForBlocks({ after, filter, success }),
-      POLL_INTERVAL
-    );
+    this.pollInterval = window.setInterval(pollForBlocks({ after, filter, success }), POLL_INTERVAL);
   };
 
   endPolling = () => {
