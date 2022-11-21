@@ -61,10 +61,6 @@ const SideBar = (props) => {
         Home
       </NavbarLink>
 
-      <Anchor href="https://ndau.io/knowledge-base/bpc-dao/" size="small" target={'_blank'} rel="_noopener">
-        Help
-      </Anchor>
-
       <Anchor href="https://ndau.io" size="small" target={'_blank'} rel="_noopener">
         About
       </Anchor>
@@ -136,14 +132,6 @@ const Navbar = (props) => {
             <NavbarLink to="/" small={screenSize === 'small'}>
               Home
             </NavbarLink>
-
-            {screenSize !== 'small' && (
-              <Box align="center" justify="center">
-                <Anchor href="https://ndau.io/knowledge-base/bpc-dao/" size="small" target={'_blank'} rel="_noopener">
-                  Help
-                </Anchor>
-              </Box>
-            )}
 
             {screenSize !== 'small' && (
               <Box align="center" justify="center">
