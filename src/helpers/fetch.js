@@ -8,20 +8,10 @@
  * - -- --- ---- -----
  */
 
-import axios from "axios";
-import qs from "query-string";
-import {
-  HTTP_REQUEST_HEADER,
-  DEFUALT_NODE_NAME,
-  NODES_ENDPOINT,
-} from "../constants.js";
-import {
-  formatBlock,
-  formatBlocks,
-  formatTransaction,
-  formatAccount,
-  formatPriceInfo,
-} from "./format";
+import axios from 'axios';
+import qs from 'query-string';
+import { HTTP_REQUEST_HEADER, DEFUALT_NODE_NAME, NODES_ENDPOINT } from '../constants.js';
+import { formatBlock, formatBlocks, formatTransaction, formatAccount, formatPriceInfo } from './format';
 
 /// //////////////////////////////////////
 // BLOCK
@@ -41,9 +31,7 @@ export const getBlock = async (blockHeight) => {
 };
 
 export const getBlocks = async ({ before, after, filter, limit }) => {
-  const query = `?after=${after || "1"}&filter=${
-    filter ? "noempty" : ""
-  }&limit=${limit || ""}`;
+  const query = `?after=${after || '1'}&filter=${filter ? 'noempty' : ''}&limit=${limit || ''}`;
   const blocksEndpoint = `${await getNodeEndpoint()}/block/before/${before}${query}`;
 
   return axios
@@ -165,8 +153,7 @@ export const getNewestTransaction = async () => {
   await axios
     .get(transactionsEndpoint, HTTP_REQUEST_HEADER)
     .then((response) => {
-      const transaction =
-        response.data && response.data.Txs && response.data.Txs[0];
+      const transaction = response.data && response.data.Txs && response.data.Txs[0];
       tx = formatTransaction(transaction);
     })
     .catch((error) => {
@@ -177,7 +164,7 @@ export const getNewestTransaction = async () => {
 };
 
 export const getTransactionsBefore = async (txHash, typeFilters) => {
-  const query = typeFilters ? `?type=${typeFilters.join(";&type=")}` : "";
+  const query = typeFilters ? `?type=${typeFilters.join(';&type=')}` : '';
   const transactionsEndpoint = `${await getNodeEndpoint()}/transaction/before/${txHash}${query}`;
 
   return axios
@@ -190,11 +177,7 @@ export const getTransactionsBefore = async (txHash, typeFilters) => {
     });
 };
 
-export const pollForTransactions = ({
-  currentTxHash,
-  success,
-  typeFilters,
-}) => {
+export const pollForTransactions = ({ currentTxHash, success, typeFilters }) => {
   const fetchNewTransactions = () => {
     getNodeStatus()
       .then(async (status) => {
@@ -207,7 +190,7 @@ export const pollForTransactions = ({
           return;
         }
 
-        await getTransactionsBefore("start", typeFilters).then(({ Txs }) => {
+        await getTransactionsBefore('start', typeFilters).then(({ Txs }) => {
           const newTransactions = [];
           let counter = 0;
           const newCurrentTxHash = Txs[0].TxHash;
@@ -240,10 +223,7 @@ export const getAccount = async (address) => {
   const accountDetailsEndpoint = `${await getNodeEndpoint()}/account/account/${address}`;
 
   try {
-    let accountDetailsEndpointResponse = await axios.get(
-      accountDetailsEndpoint,
-      HTTP_REQUEST_HEADER
-    );
+    let accountDetailsEndpointResponse = await axios.get(accountDetailsEndpoint, HTTP_REQUEST_HEADER);
 
     const account = {
       address,
@@ -257,18 +237,15 @@ export const getAccount = async (address) => {
     const systemEAIRateEndpoint = `${await getNodeEndpoint()}/system/eai/rate`;
 
     //hitting System EAI rate
-    const systemEAIRateEndpointResponse = await axios.post(
-      systemEAIRateEndpoint,
-      [
-        {
-          address,
-          weightedAverageAge,
-        },
-      ]
-    );
+    const systemEAIRateEndpointResponse = await axios.post(systemEAIRateEndpoint, [
+      {
+        address,
+        weightedAverageAge,
+      },
+    ]);
 
     let EAIRate = systemEAIRateEndpointResponse.data[0].eairate;
-    EAIRate = (EAIRate / 10 ** 10).toString() + "%";
+    EAIRate = (EAIRate / 10 ** 10).toString() + '%';
 
     return { ...formattedAccount, EAIRate };
   } catch (e) {
@@ -296,11 +273,7 @@ const initDate30DaysAgo = new Date(Date.now());
 initDate30DaysAgo.setDate(initDate30DaysAgo.getDate() - 30);
 let Date30DaysAgo = initDate30DaysAgo.toISOString();
 
-export const getAccountHistory = async (
-  address,
-  fromDate = Date30DaysAgo,
-  toDate = dateToday
-) => {
+export const getAccountHistory = async (address, fromDate = Date30DaysAgo, toDate = dateToday) => {
   const dateToday = new Date(Date.now()).toISOString();
   const getAccountHistoryFromDate = fromDate ?? Date30DaysAgo;
   const getAccountHistoryToDate = toDate ?? dateToday;
@@ -325,15 +298,13 @@ export const getAccountHistory = async (
   let offset = 0;
 
   while (true) {
-    const url = offset
-      ? `${accountHistoryEndpoint}?after=${offset}`
-      : startingAccountHistoryEndpoint;
+    const url = offset ? `${accountHistoryEndpoint}?after=${offset}` : startingAccountHistoryEndpoint;
 
     const response = await axios.get(url, HTTP_REQUEST_HEADER);
 
     let history = response.data && response.data.Items;
 
-    if (response.data && response.data.Next === "") {
+    if (response.data && response.data.Next === '') {
       allItems = allItems.concat(history); // accumulate
       break;
     }
@@ -341,14 +312,12 @@ export const getAccountHistory = async (
     if (response.data && response.data.Next) {
       // assert this format in the Next field since it's not a useable address by itself
       if (!response.data.Next.match(/account\/history\/\?after=\d*/)) {
-        throw new Error(
-          `Expected /account/history?after=N, got ${response.data.Next}`
-        );
+        throw new Error(`Expected /account/history?after=N, got ${response.data.Next}`);
       }
       allItems = allItems.concat(history); // accumulate
 
       // remove everything but the numbers from the url
-      offset = response.data.Next.replace(/[^\d]/g, "");
+      offset = response.data.Next.replace(/[^\d]/g, '');
     }
   }
 
@@ -360,41 +329,38 @@ export const getAccountHistory = async (
   let isOldestMinusOneFound = false;
 
   while (isOldestMinusOneFound === false) {
-    const url = offset
-      ? `${accountHistoryEndpoint}?after=${offset}`
-      : accountHistoryEndpoint;
+    const url = offset ? `${accountHistoryEndpoint}?after=${offset}` : accountHistoryEndpoint;
 
     const response = await axios.get(url, HTTP_REQUEST_HEADER);
 
     let history = response.data && response.data.Items;
-
-    for (let i = 0; i < history.length; i++) {
-      if (history[i].TxHash === oldestTxInRange.TxHash) {
-        if (i === 0) {
-          oldestTransactionInRangeMinusOne = 0;
-        } else oldestTransactionInRangeMinusOne = history[i - 1];
-        isOldestMinusOneFound = true;
-        break;
+    if (history) {
+      for (let i = 0; i < history.length; i++) {
+        if (history[i].TxHash === oldestTxInRange.TxHash) {
+          if (i === 0) {
+            oldestTransactionInRangeMinusOne = 0;
+          } else oldestTransactionInRangeMinusOne = history[i - 1];
+          isOldestMinusOneFound = true;
+          break;
+        }
       }
     }
 
     if (isOldestMinusOneFound) break;
 
-    if (response.data && response.data.Next === "") {
-      console.log("reached end of history");
+    if (response.data && response.data.Next === '') {
+      console.log('reached end of history');
       break;
     }
 
     if (response.data && response.data.Next) {
       // assert this format in the Next field since it's not a useable address by itself
       if (!response.data.Next.match(/account\/history\/\?after=\d*/)) {
-        throw new Error(
-          `Expected /account/history?after=N, got ${response.data.Next}`
-        );
+        throw new Error(`Expected /account/history?after=N, got ${response.data.Next}`);
       }
 
       // remove everything but the numbers from the url
-      offset = response.data.Next.replace(/[^\d]/g, "");
+      offset = response.data.Next.replace(/[^\d]/g, '');
     }
   }
 
@@ -409,7 +375,7 @@ export const getAccountHistory = async (
 
 export const pollForAccountUpdates = ({ metadata, success }) => {
   return () => {
-    if (metadata && metadata.type === "account") {
+    if (metadata && metadata.type === 'account') {
       getAccountHistory(metadata.identifier)
         .then((history) => {
           success && success(history);
@@ -447,7 +413,7 @@ export const getNodeHealth = async (nodeEndpoint) => {
   const timeout = setTimeout(() => {
     source.cancel();
     axios.defaults.timeout = 0;
-    return "Offline";
+    return 'Offline';
   }, 2000);
 
   return axios
@@ -469,7 +435,7 @@ export const getNodeEndpoint = async (node) => {
   while (true) {
     nodeEndpoint = await tryNodeEndpoint(node);
     health = await getNodeHealth(nodeEndpoint);
-    if (health === "OK") {
+    if (health === 'OK') {
       //      catchingUp = await getNodeStatus(node)
       //      if (catchingUp.catching_up) {
       //
@@ -496,20 +462,18 @@ export const tryNodeEndpoint = async (node) => {
       query = { node: nodeName };
       const newSearch = `?${qs.stringify(query)}`;
       const validURL = `${location.origin}${location.pathname}${newSearch}`;
-      history.replaceState({}, "", validURL);
+      history.replaceState({}, '', validURL);
     }
     await axios.get(NODES_ENDPOINT, HTTP_REQUEST_HEADER).then((response) => {
       const { networks } = response.data;
       const nodeKey = networks[nodeName] ? nodeName : DEFUALT_NODE_NAME;
-      const nodes = networks[nodeKey] && networks[nodeKey]["nodes"];
-      const randomNodeIndex = Math.floor(
-        Math.random() * Object.keys(nodes).length
-      );
+      const nodes = networks[nodeKey] && networks[nodeKey]['nodes'];
+      const randomNodeIndex = Math.floor(Math.random() * Object.keys(nodes).length);
       const randomNode = Object.values(nodes)[randomNodeIndex];
       nodeEndpoint = randomNode && randomNode.api;
     });
     //
-    return "https://" + nodeEndpoint;
+    return 'https://' + nodeEndpoint;
   }
 };
 
@@ -534,13 +498,13 @@ export const getCurrentOrder = async () => {
 //
 export const validURL = (str) => {
   var pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
+    '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
   ); // fragment locator
   return !!pattern.test(str);
 };

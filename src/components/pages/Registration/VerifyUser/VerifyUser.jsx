@@ -1,47 +1,48 @@
-import axios from "axios";
-import { Text, Box } from "grommet";
-import { useParams } from "react-router-dom";
+import axios from 'axios';
+import { Text, Box } from 'grommet';
+import { useParams } from 'react-router-dom';
 
-import Page from "../../../templates/page";
+import Page from '../../../templates/page';
 import React from 'react';
-import api from "../../../../api";
-
-
+import api from '../../../../api';
 
 function VerifyUser() {
-  const { token :verificationtoken} = useParams();
+  const { token: verificationtoken } = useParams();
 
   const [active, setActive] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     setLoading(false);
-   axios.put(`${api}/user/verify`,{verificationtoken}).then(() => {
-      setActive(true);
-      setLoading(false);
-    
-    }).catch(()=>{
-      setLoading(false);
-    });
+    axios
+      .put(`${api}/user/verify`, { verificationtoken })
+      .then(() => {
+        setActive(true);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
-
 
   return (
     <>
-      {loading? <Page>
-        <Box width={"medium"} alignSelf="center">
-          <Text>Loading...</Text>
-        </Box>
-      </Page>:!active ? (
+      {loading ? (
         <Page>
-        <Box width={"medium"} alignSelf="center">
-          <Text>Token has been Expired</Text>
-        </Box>
-      </Page>
+          <Box width={'medium'} alignSelf="center">
+            <Text>Loading...</Text>
+          </Box>
+        </Page>
+      ) : !active ? (
+        <Page>
+          <Box width={'medium'} alignSelf="center">
+            <Text>Token has expired</Text>
+          </Box>
+        </Page>
       ) : (
         <Page>
-          <Box width={"medium"} alignSelf="center">
-            <Text>Your Email has been Verified</Text>
+          <Box width={'medium'} alignSelf="center">
+            <Text>Your email is verified successfully</Text>
           </Box>
         </Page>
       )}

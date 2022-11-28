@@ -25,7 +25,7 @@ import api from "../../../api";
 const StyledFormField = styled(FormField)`
   position: relative;
   border-bottom: none;
-  width: 70%;
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
 
@@ -40,7 +40,7 @@ const StyledTextInput = styled(TextInput)`
   padding-right: 10%;
   padding-top: 20px;
   padding-bottom: 20px;
-  font-size: xx-small;
+  font-size: small;
   border: none;
   border-radius: 6px;
 `;
@@ -128,11 +128,11 @@ function LoginPage() {
 
           <Box
             align="center"
-            width="70%"
+            width="90%"
             alignSelf="center"
             margin={{ bottom: "2vh", top: "2vh" }}
           >
-            <Text size="10px" color={"#999"}>
+            <Text size="12px" color={"#999"}>
               Welcome to the ndau blockchain explorer.
               <br />
               <br />
@@ -165,7 +165,6 @@ function LoginPage() {
                     );
 
                     updateLoggedIn(true);
-                    // history.push("/");
                     toast.success("Logged In");
                     navigate("/")
                   } else {
@@ -243,7 +242,7 @@ function LoginPage() {
             </Box>
           </StyledForm>
           <Box align="center" direction="row" alignSelf="center">
-            <Text size="xsmall" color={"#AAA"}>
+            <Text size="small" color={"#AAA"}>
               Don't have an account?
               <Anchor
                 as={Link}

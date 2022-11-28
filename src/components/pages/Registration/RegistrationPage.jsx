@@ -12,7 +12,7 @@ import api from '../../../api';
 
 const StyledFormField = styled(FormField)`
   border-bottom: none;
-  width: 70%;
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 0;
@@ -24,7 +24,7 @@ const StyledTextInput = styled(TextInput)`
   padding-right: 10%;
   padding-top: 15px;
   padding-bottom: 15px;
-  font-size: xx-small;
+  font-size: small;
   border: none;
   border-radius: 6px;
 `;
@@ -59,7 +59,6 @@ const StyledForm = styled(Form)`
 `;
 
 function RegistrationPage() {
-  // const history = useHistory();
   const navigate = useNavigate();
   const size = useContext(ResponsiveContext);
 
@@ -103,8 +102,8 @@ function RegistrationPage() {
             Welcome to ndau
           </Heading>
 
-          <Box align="center" width="70%" alignSelf="center" margin="small">
-            <Text size="10px" color={'#999'}>
+          <Box align="center" width="90%" alignSelf="center" margin="small">
+            <Text size="12px" color={'#999'}>
               The ndau blockchain explorer is your window on the ndau blockchain. This website uses ndau's publicly
               accessible APIs to allow anyone to search and view all ndau transactions and accounts since ndau's mainnet
               went live in May of 2019.
@@ -127,7 +126,6 @@ function RegistrationPage() {
                 .then((res) => {
                   if (res.data.message === 'User registered successfully' && res.data.status === true) {
                     toast.success('Signed Up Successfully. Please Login');
-                    // history.push("/login");
                     navigate('/login');
                   } else {
                     console.log('test register');
@@ -225,7 +223,7 @@ function RegistrationPage() {
             </Box>
           </StyledForm>
           <Box align="center" direction="row" alignSelf="center">
-            <Text size="xsmall" color={'#AAA'}>
+            <Text size="small" color={'#AAA'}>
               Already Registered?
               <Anchor as={Link} to="/login" align="center" margin={{ left: '5px' }}>
                 {'Sign In'}

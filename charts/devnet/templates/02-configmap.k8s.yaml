@@ -25,7 +25,7 @@ data:
       log_format  upstream_logging  '$remote_addr - $remote_user [$time_local] "$request" '
                         '$status $body_bytes_sent "$http_referer" '
                         '"$http_user_agent" "$http_x_forwarded_for"';
-      
+
       sendfile        on;
       #tcp_nopush     on;
 
@@ -37,30 +37,32 @@ data:
       ## Microservices root URLs
       ## !!! upstream name MUST be equal to the service subdomain name
 
-      upstream dev-explorer-backend {
-        # server explorer-backend.dev.svc.cluster.local;
-        server dev.explorer-backend.ndau.tech;
+      upstream explorer-backend {
+        server explorer-backend.dev.svc.cluster.local;
+        # server explorer-backend.ndau.tech:443;
       }
 
       server {
         listen       80;
         server_name  localhost;
         access_log /dev/stdout upstream_logging;
-        resolver 1.1.1.1;
-
-        proxy_set_header Host dev.explorer-backend.ndau.tech;
 
         client_max_body_size 64M;
         
         ##################################
         ## API forwarding rules
 
-        location ~* /([a-z]+)/api/(.+)$ {
-          proxy_pass http://dev-explorer-backend/api/$2$is_args$args;
+        location ~* /([a-z,-]+)/api/(.+)$ {
+          proxy_http_version 1.1;
+          proxy_set_header Host explorer-backend.dev.svc.cluster.local;
+          proxy_pass http://explorer-backend/api/$2$is_args$args;
+          proxy_redirect off;
         }
 
-        location ~* ^/api/ {
-          proxy_pass http://dev-explorer-backend;
+        location ~* ^/api/(.+)$ {
+          proxy_http_version 1.1;
+          proxy_set_header Host explorer-backend.dev.svc.cluster.local;
+          proxy_pass http://explorer-backend/api/$1$is_args$args;
         }
 
         ## End of API forwarding rules
@@ -71,10 +73,6 @@ data:
           index  index.html index.htm;
           try_files $uri $uri/ /index.html;
         }
-        
-
-        # To allow POST on static pages
-        error_page  405     =200 $uri;
 
         # redirect server error pages to the static page /50x.html
         # error_page  404              /404.html;

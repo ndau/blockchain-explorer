@@ -38,29 +38,33 @@ data:
       ## !!! upstream name MUST be equal to the service subdomain name
 
       upstream explorer-backend {
-        # server explorer-backend.main.svc.cluster.local;
-        server explorer-backend.ndau.tech:443;
+        server explorer-backend.main.svc.cluster.local;
+        # server explorer-backend.ndau.tech:443;
       }
 
       server {
         listen       80;
         server_name  localhost;
         access_log /dev/stdout upstream_logging;
-        resolver 1.1.1.1;
-
-        proxy_set_header Host explorer-backend.ndau.tech;
+        # resolver 1.1.1.1;
+        # proxy_set_header Host explorer-backend.ndau.tech;
 
         client_max_body_size 64M;
         
         ##################################
         ## API forwarding rules
 
-        location ~* /([a-z]+)/api/(.+)$ {
-          proxy_pass https://explorer-backend/api/$2$is_args$args;
+        location ~* /([a-z,-]+)/api/(.+)$ {
+          proxy_http_version 1.1;
+          proxy_set_header Host explorer-backend.main.svc.cluster.local;
+          proxy_pass http://explorer-backend/api/$2$is_args$args;
+          proxy_redirect off;
         }
 
-        location ~* ^/api/ {
-          proxy_pass https://explorer-backend;
+        location ~* ^/api/(.+)$ {
+          proxy_http_version 1.1;
+          proxy_set_header Host explorer-backend.main.svc.cluster.local;
+          proxy_pass http://explorer-backend/api/$1$is_args$args;
         }
 
         ## End of API forwarding rules
