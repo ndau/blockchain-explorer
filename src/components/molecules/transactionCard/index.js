@@ -9,12 +9,9 @@
  */
 
 import React, { Component } from "react";
-import { Text, Collapsible, Box, Avatar } from "grommet";
+import { Text, Box } from "grommet";
 import Anchor from "../../atoms/anchor";
-import { Expand, Contract } from "grommet-icons";
 import Card from "../../atoms/card";
-import DetailsCard from "../../molecules/detailsCard";
-import TruncatedText from "../../atoms/truncatedText";
 import Age from "../../atoms/age";
 import { getTransaction } from "../../../helpers/fetch";
 import moment from "moment";

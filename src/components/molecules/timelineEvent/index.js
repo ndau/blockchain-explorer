@@ -41,7 +41,7 @@ class TimelineEvent extends Component {
       : formatAccountEvent(oldestTransactionInRangeMinusOne);
 
     const napuAmount =
-      accountEvent.raw.balance - formattedPreviousEvent.raw.balance;
+      accountEvent.raw.balance - (formattedPreviousEvent?.raw?.balance || 0);
     const ndauAmount = convertNapuToNdau(napuAmount);
 
     return (
@@ -119,7 +119,7 @@ class TimelineEvent extends Component {
               </Text>
               <Text>
                 <b>previous balance: </b>
-                {formattedPreviousEvent.balance}
+                {formattedPreviousEvent?.balance || 0}
               </Text>
 
               <Text>

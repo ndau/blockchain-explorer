@@ -7,16 +7,16 @@
  * https://www.apache.org/licenses/LICENSE-2.0.txt
  * - -- --- ---- -----
  */
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { Grommet } from 'grommet';
 import { deepMerge } from 'grommet/utils';
 import { dark as grommetDarkTheme } from 'grommet/themes';
-import axios from "axios";
+import axios from 'axios';
 
 import UserContextProvider, { UserContext } from './context/context';
 import router from './Routes';
-import api from "./api";
+import api from './api';
 
 import 'normalize.css';
 import './components/organisms/priceCurve/StatisticsPanel/WidgetBox/WidgetBox.css';
@@ -92,7 +92,7 @@ function App(props) {
   const updateLoggedIn = loggedInContext.updateLoggedIn;
 
   useEffect(() => {
-    const jwtToken = localStorage.getItem("ndau_user_token");
+    const jwtToken = localStorage.getItem('ndau_user_token');
     if (jwtToken) {
       axios
         .get(`${api}/user/user-profile-details`, {
@@ -102,7 +102,7 @@ function App(props) {
           updateLoggedIn(true);
         })
         .catch((e) => {
-          console.log(e, "loginError");
+          console.log(e, 'loginError');
         });
     }
   }, [updateLoggedIn]);

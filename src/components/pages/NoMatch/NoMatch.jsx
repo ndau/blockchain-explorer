@@ -21,7 +21,7 @@ const NoMatch = () => {
               textAlign: 'center',
             }}
           >
-            No match found for this route!
+            No match found. Please check again
           </h1>
         </div>
       </div>

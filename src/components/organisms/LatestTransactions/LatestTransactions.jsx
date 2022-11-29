@@ -50,6 +50,7 @@ const LatestTransations = (props) => {
             {numberOfTransactions &&
               transactionHashes.map((hash, index) => (
                 <TransactionCard
+                  key={hash}
                   transactionHash={hash}
                   open={index === activeTransactionIndexState}
                   index={index}

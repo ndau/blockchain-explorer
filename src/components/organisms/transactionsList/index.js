@@ -45,10 +45,10 @@ class TransactionsList extends Component {
 
         {transactionHashes.map((hash, index) => (
           <TransactionCard
+            key={hash}
             transactionHash={hash}
             open={index === this.state.activeTransactionIndex}
             index={index}
-            key={index}
             setActiveTransaction={this.setActiveTransactionIndex}
           />
         ))}
