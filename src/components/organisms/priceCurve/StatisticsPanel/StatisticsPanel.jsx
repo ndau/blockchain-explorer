@@ -1,11 +1,8 @@
-import axios from "axios";
-import { Grid, Box, Text, ResponsiveContext } from "grommet";
-import { humanizeNumber } from "../../../../helpers/format";
+import React from 'react';
+import { Grid, Box, Text, ResponsiveContext } from 'grommet';
 
-import EconomicsStatBox from "./EconomicsStatBox/EconomicsStatBox";
-import WidgetBox from "./WidgetBox/WidgetBox";
-import React from "react";
-import api from "../../../../api";
+import EconomicsStatBox from './EconomicsStatBox/EconomicsStatBox';
+import WidgetBox from './WidgetBox/WidgetBox';
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
@@ -13,71 +10,43 @@ const StatBox = (props) => {
   let align = props.align;
 
   return (
-    <Box
-      justify={justify ?? "center"}
-      align={align ?? "center"}
-      gridArea={gridArea}
-    >
+    <Box justify={justify ?? 'center'} align={align ?? 'center'} gridArea={gridArea}>
       {props.children}
     </Box>
   );
 };
 
 const bigScreenGrid = [
-  { name: "EconomicsStat", start: [0, 0], end: [1, 0] },
-  { name: "Graph", start: [0, 1], end: [0, 2] },
-  { name: "staked", start: [1, 1], end: [1, 1] },
-  { name: "numOfAccounts", start: [1, 2], end: [1, 2] },
+  { name: 'EconomicsStat', start: [0, 0], end: [1, 0] },
+  { name: 'Graph', start: [0, 1], end: [1, 1] },
+  { name: 'staked', start: [0, 2], end: [1, 2] },
 ];
 
 const smallScreenGrid = [
-  { name: "EconomicsStat", start: [0, 0], end: [1, 0] },
-  { name: "staked", start: [0, 1], end: [0, 1] },
-  { name: "numOfAccounts", start: [1, 1], end: [1, 1] },
+  { name: 'EconomicsStat', start: [0, 0], end: [1, 0] },
+  { name: 'staked', start: [0, 1], end: [0, 1] },
 ];
 
-const bigScreenRows = ["small", "small", "small"];
+const bigScreenRows = ['small', 'small', 'small'];
+const smallScreenRows = ['xsmall', 'xxsmall'];
 
-const smallScreenRows = ["small", "xsmall"];
-
-const bigScreenColumns = ["large", "small"];
-
-const smallScreenColumns = ["40vw", "40vw"];
+const bigScreenColumns = ['large', 'small'];
+const smallScreenColumns = ['1/2', '1/2'];
 
 const StatisticsPanel = (props) => {
-  const [numOfAccounts, setNumOfAccounts] = React.useState(0);
-
-  const {
-    totalNdau,
-    marketPrice,
-    sib,
-    active,
-    totalNdauIssued,
-    nextIssuePrice,
-  } = props;
-
-  React.useEffect(() => {
-    axios.get(`${api}/numOfAccounts`).then((val) => {
-            setNumOfAccounts(new Intl.NumberFormat().format(val.data.numOfAccounts));
-    });
-  }, []);
+  const { totalNdau, marketPrice, sib, active, totalNdauIssued, nextIssuePrice } = props;
 
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (
         <Grid
+          style={{ width: '100%' }}
           gap=" small"
-          rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
-          columns={
-            screenSize === "small" ? smallScreenColumns : bigScreenColumns
-          }
-          areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
+          rows={screenSize === 'small' ? smallScreenRows : bigScreenRows}
+          columns={screenSize === 'small' ? smallScreenColumns : bigScreenColumns}
+          areas={screenSize === 'small' ? smallScreenGrid : bigScreenGrid}
         >
-          <StatBox
-            justify={screenSize === "small" ? "center" : "start"}
-            align={screenSize === "small" ? "center" : "start"}
-            gridArea="EconomicsStat"
-          >
+          <StatBox justify="center" align="center" gridArea="EconomicsStat">
             <EconomicsStatBox
               totalNdau={totalNdau}
               marketPrice={marketPrice}
@@ -88,20 +57,11 @@ const StatisticsPanel = (props) => {
             />
           </StatBox>
 
-          {screenSize !== "small" && (
-            <StatBox gridArea="Graph">
+          {screenSize !== 'small' && (
+            <StatBox justify="center" align="center" gridArea="Graph">
               <WidgetBox />
             </StatBox>
           )}
-
-          {/* <StatBox gridArea="numOfAccounts" ><div style={{textAlign:"center"}}>Number of Accounts<br/>{numOfAccounts}</div></StatBox> */}
-          <StatBox gridArea="staked">
-            <div style={{ textAlign: "center" }}>
-              Number of Accounts
-              <br />
-              {numOfAccounts}
-            </div>
-          </StatBox>
         </Grid>
       )}
     </ResponsiveContext.Consumer>

@@ -1,7 +1,7 @@
 .widget-container {
   position: relative;
   height: 100%;
-  width: 95%;
+  width: 100%;
 }
 
 .widget {
@@ -14,4 +14,5 @@
   background-color: #446 !important;
   width: 100% !important;
   height: 100% !important;
+  max-width: 1800px !important;
 }

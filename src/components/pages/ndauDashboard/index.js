@@ -47,9 +47,9 @@ const smallScreenGrid = [
 ];
 
 const bigScreenRows = ['large'];
-const smallScreenRows = ['500px', 'medium'];
+const smallScreenRows = ['450px', 'small'];
 
-const bigScreenColumns = ['40vw', '40vw'];
+const bigScreenColumns = ['1/2', '1/2'];
 const smallScreenColumns = ['90vw'];
 
 class NdauDashboard extends Component {

@@ -9,11 +9,9 @@
  */
 
 import React, { Component } from "react";
-import { Box, Text, Heading } from "grommet";
-import Age from "../../atoms/age";
-import ChartLegend from "../chartLegend";
+import { Box, Text } from "grommet";
 import StatisticsPanel from "./StatisticsPanel/StatisticsPanel";
-import { humanizeNumber, formatTime } from "../../../helpers/format";
+import { humanizeNumber } from "../../../helpers/format";
 import { price_at_unit } from "../../../helpers/ndauMath";
 
 export default class PriceCurve extends Component {

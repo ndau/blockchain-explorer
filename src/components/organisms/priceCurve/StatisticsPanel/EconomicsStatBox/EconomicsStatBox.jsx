@@ -1,7 +1,11 @@
-import { Grid, Box, Text, ResponsiveContext } from "grommet";
-import { humanizeNumber } from "../../../../../helpers/format";
-import globeImg from "../../../../../img/globe.png";
-import "./EconomicsStatBox.css";
+import React from 'react';
+import axios from 'axios';
+
+import { Grid, Box, Text, ResponsiveContext } from 'grommet';
+import { humanizeNumber } from '../../../../../helpers/format';
+
+import api from '../../../../../api';
+import './EconomicsStatBox.css';
 
 const StatBox = (props) => {
   let gridArea = props.gridArea;
@@ -9,12 +13,12 @@ const StatBox = (props) => {
   return (
     <Box
       onClick={() => {
-        window.open(props.link, "_blank");
+        window.open(props.link, '_blank');
       }}
       justify="center"
       align="center"
       gridArea={gridArea}
-      background={background || "#132A47"}
+      background={background || '#132A47'}
       border={true}
     >
       {props.children}
@@ -31,7 +35,7 @@ const StatText = (props) => {
 };
 
 const LabelText = (props) => {
-  const screenSize = props.screenSize === "small";
+  const screenSize = props.screenSize === 'small';
 
   return (
     <Text weight="lighter" size="small" color="#7B8898">
@@ -41,48 +45,49 @@ const LabelText = (props) => {
 };
 
 const bigScreenGrid = [
-  { name: "ndauIssued", start: [0, 0], end: [0, 0] },
-  { name: "nextIssuedPrice", start: [1, 0], end: [1, 0] },
-  { name: "sibInEffect", start: [0, 1], end: [0, 1] },
-  { name: "ndauInCirculation", start: [1, 1], end: [1, 1] },
-  { name: "currentMarketPrice", start: [2, 0], end: [2, 1] },
+  { name: 'ndauIssued', start: [0, 0], end: [0, 0] },
+  { name: 'nextIssuedPrice', start: [1, 0], end: [1, 0] },
+  { name: 'sibInEffect', start: [0, 1], end: [0, 1] },
+  { name: 'ndauInCirculation', start: [1, 1], end: [1, 1] },
+  { name: 'currentMarketPrice', start: [2, 0], end: [2, 0] },
+  { name: 'numberOfAccount', start: [2, 1], end: [2, 1] },
 ];
 
 const smallScreenGrid = [
-  { name: "ndauIssued", start: [0, 0], end: [0, 0] },
-  { name: "nextIssuedPrice", start: [1, 0], end: [1, 0] },
-  { name: "sibInEffect", start: [0, 1], end: [0, 1] },
-  { name: "ndauInCirculation", start: [1, 1], end: [1, 1] },
-  { name: "currentMarketPrice", start: [0, 2], end: [1, 2] },
+  { name: 'ndauIssued', start: [0, 0], end: [0, 0] },
+  { name: 'nextIssuedPrice', start: [1, 0], end: [1, 0] },
+  { name: 'sibInEffect', start: [0, 1], end: [0, 1] },
+  { name: 'ndauInCirculation', start: [1, 1], end: [1, 1] },
+  { name: 'currentMarketPrice', start: [0, 2], end: [0, 2] },
+  { name: 'numberOfAccount', start: [1, 2], end: [1, 2] },
 ];
 
-const bigScreenRows = ["xsmall", "xsmall"];
+const bigScreenRows = ['xsmall', 'xsmall', 'xxsmall'];
 
-const smallScreenRows = ["xxsmall", "xxsmall", "xsmall"];
+const smallScreenRows = ['xxsmall', 'xxsmall', 'xxsmall'];
 
-const bigScreenColumns = ["280px", "280px", "380px"];
-
-const smallScreenColumns = ["30vw", "50vw"];
+const bigScreenColumns = ['1/3', '1/3', '1/3'];
+const smallScreenColumns = ['1/2', '1/2'];
 
 const EconomicsStatBox = (props) => {
-  const {
-    totalNdau,
-    marketPrice,
-    sib,
-    active,
-    totalNdauIssued,
-    nextIssuePrice,
-  } = props;
+  const { totalNdau, marketPrice, sib, active, totalNdauIssued, nextIssuePrice } = props;
+  const [numOfAccounts, setNumOfAccounts] = React.useState(0);
+
+  React.useEffect(() => {
+    axios.get(`${api}/numOfAccounts`).then((val) => {
+      setNumOfAccounts(val.data.numOfAccounts);
+    });
+  }, []);
+
   return (
     <ResponsiveContext.Consumer>
       {(screenSize) => (
         <>
           <Grid
-            rows={screenSize === "small" ? smallScreenRows : bigScreenRows}
-            columns={
-              screenSize === "small" ? smallScreenColumns : bigScreenColumns
-            }
-            areas={screenSize === "small" ? smallScreenGrid : bigScreenGrid}
+            style={{ width: '100%' }}
+            rows={screenSize === 'small' ? smallScreenRows : bigScreenRows}
+            columns={screenSize === 'small' ? smallScreenColumns : bigScreenColumns}
+            areas={screenSize === 'small' ? smallScreenGrid : bigScreenGrid}
             back
           >
             <StatBox
@@ -112,8 +117,7 @@ const EconomicsStatBox = (props) => {
 
             <StatBox
               gridArea="ndauInCirculation"
-              link="https://ndau.io/knowledge-base/why-is-ndau-in-circulation-greater-than-ndau-issued/
-"
+              link="https://ndau.io/knowledge-base/why-is-ndau-in-circulation-greater-than-ndau-issued/"
             >
               <LabelText>NDAU IN CIRCULATION: </LabelText>
               <StatText>{humanizeNumber(totalNdau, 0)}</StatText>
@@ -122,21 +126,17 @@ const EconomicsStatBox = (props) => {
             <StatBox
               gridArea="currentMarketPrice"
               link="https://ndau.io/knowledge-base/what-is-market-price-and-how-is-it-recorded-on-the-ndau-blockchain/"
-              background={{
-                size: screenSize === "small" ? "30vh" : "70%",
-                position: screenSize === "small" ? "50% 0vh" : "center",
-                color: "#132A47",
-                image: `url(${globeImg})`,
-              }}
             >
-              <Box
-                margin={{ top: screenSize === "small" ? "10vh" : "30%" }}
-                justify="center"
-                align="center"
-              >
-                <LabelText>CURRENT MARKET PRICE:</LabelText>
-                <StatText>${humanizeNumber(marketPrice, 4, 4)} </StatText>
-              </Box>
+              <LabelText>CURRENT MARKET PRICE:</LabelText>
+              <StatText>${humanizeNumber(marketPrice, 4, 4)} </StatText>
+            </StatBox>
+
+            <StatBox
+              gridArea="numberOfAccount"
+              link="https://ndau.io/knowledge-base/what-is-market-price-and-how-is-it-recorded-on-the-ndau-blockchain/"
+            >
+              <LabelText>NUMBER OF ACCOUNTS:</LabelText>
+              <StatText>{humanizeNumber(numOfAccounts, 4, 0)} </StatText>
             </StatBox>
           </Grid>
         </>
